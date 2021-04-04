@@ -1,0 +1,14 @@
+-   If the user logs out from a service and a chunk of a file is saved into 2+ different services, then the
+file will not be served and an error message will be displayed.
+
+Routes:
+    -   /, /index, /index.html
+        -   Redirect to login page if not registered or the home screen if registered
+    -   /login
+        ->  Provides the login functionality
+    -   /report
+        ->  The Scholarly HTML Report
+    -   /about
+        ->  Info about the web application
+    -   /account
+        ->  Display user info and statistics
