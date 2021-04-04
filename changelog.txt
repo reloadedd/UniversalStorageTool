@@ -1,0 +1,8 @@
+v0.1.0:
+    - First release
+
+v0.2.0:
+    -   First working version of the NodeJS app
+    -   Create the routes: /about, /credits, /report, / (<-- also /index and /index.html point here)
+    -   Display app banner when ran in the terminal
+    -   Create the not found page

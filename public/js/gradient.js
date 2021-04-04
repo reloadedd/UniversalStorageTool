@@ -1,4 +1,5 @@
-let body = document.getElementById("gradient");
+// let body = document.getElementById("gradient");
+let body = document.getElementsByTagName("body")[0];
 
 function setGradient(firstColor, secondColor) {
   body.style.background = "linear-gradient(to left," + firstColor + "," + secondColor + ")";
