@@ -9,4 +9,6 @@ document.getElementById("navbar").innerHTML = `
         <li class="nav-link">
           <a href="about">About</a>
         </li>
+        <li class="nav-link" id="menu-button">
+        </li>
       </ul>`;
