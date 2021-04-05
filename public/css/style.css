@@ -1,3 +1,9 @@
+html,
+body {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
 @font-face {
   font-family: 'Nexa Text Demo Light';
   src: url('../fonts/NexaTextDemo-Light.eot') format('embedded-opentype');
@@ -9,12 +15,13 @@
 
 body {
   font-family: 'Nexa Text Demo Light', Helvetica, sans-serif;
-  font-size: 3em;
+  font-size: 2em;
   text-transform: uppercase;
   text-align: center;
-  color: white;
+  color: purple;
   /* Default background gradient in case something goes wrong */
-  background: linear-gradient(to right, red, yellow);
+  /*background: linear-gradient(to right, red, yellow); */
+  background: white;
 }
 
 img.logo {

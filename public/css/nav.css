@@ -1,0 +1,31 @@
+.nav-bar {
+    margin: 0;
+    display: flex;
+    justify-content: flex-end;
+    background: purple;
+}
+.nav-link {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 42px;
+    margin-right: 10px;
+    margin-left: 10px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link a{
+
+    text-decoration: none;
+    color: white;
+}
+
+.nav-link a:hover{
+    text-decoration: underline;
+}
+
+.nav-link img {
+    height: 40px;
+    width: auto;
+}
