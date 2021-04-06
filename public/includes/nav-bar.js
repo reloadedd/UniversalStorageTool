@@ -1,4 +1,4 @@
-document.getElementById("navbar").innerHTML = `
+document.getElementById("nav-bar").innerHTML = `
       <a href="index.html">
         <img src="public/img/logo.png" class="logo" >
       </a>
@@ -9,6 +9,8 @@ document.getElementById("navbar").innerHTML = `
         <li class="nav-link">
           <a href="about">About</a>
         </li>
-        <li class="nav-link" id="menu-button">
+        <li class="nav-link">
+          <a href="credits">Credits</a>
         </li>
+        <li class="nav-link" id="menu-button"></li>
       </ul>`;
