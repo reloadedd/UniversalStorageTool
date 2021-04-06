@@ -1,5 +1,5 @@
 .container {
-    display: inline-block;
+    display: none;
     cursor: pointer;
 }
 
@@ -19,4 +19,10 @@
 
 .change .bar3 {
     transform: rotate(45deg) translate(-9px, -7px);
+}
+
+@media screen and (max-width: 678px) {
+    .container{
+        display: inline-block;
+    }
 }

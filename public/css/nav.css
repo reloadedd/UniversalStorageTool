@@ -11,9 +11,15 @@
     height: 42px;
     margin-right: 10px;
     margin-left: 10px;
+    border: 0;
+    padding: 0;
     list-style: none;
     display: flex;
     align-items: center;
+}
+
+.nav-link#menu-button {
+    margin-right: 0;
 }
 
 .nav-link a{
@@ -27,5 +33,31 @@
 }
 
 @media screen and (max-width: 678px) {
+    .nav-link a{
+        display: none;
+    }
+
+    .change.nav-bar{
+        width: 150px;
+        display: flex;
+        align-items: flex-end;
+        flex-direction: column-reverse;
+    }
+    .change.nav-link{
+        margin-right: 0;
+        margin-left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        background-color: purple;
+        opacity: 80%;
+        transition: 400ms;
+    }
+    .change.nav-link#menu-button{
+        opacity: 100%;
+    }
+    .change.nav-link a{
+        display: flex;
+    }
 
 }
