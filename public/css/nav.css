@@ -47,7 +47,7 @@
         width: 100%;
         display: flex;
         justify-content: flex-end;
-        background-color: mediumpurple;
+        background-color: darkmagenta;
         opacity: 80%;
     }
     .change.nav-link#menu-button{
