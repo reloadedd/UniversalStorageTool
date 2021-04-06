@@ -16,10 +16,7 @@
     list-style: none;
     display: flex;
     align-items: center;
-}
-
-.nav-link#menu-button {
-    margin-right: 0;
+    transition: 400ms;
 }
 
 .nav-link a{
@@ -29,7 +26,8 @@
 }
 
 .nav-link a:hover{
-    text-decoration: underline;
+    font-weight: 800;
+    transition: 400ms;
 }
 
 @media screen and (max-width: 678px) {
@@ -49,9 +47,8 @@
         width: 100%;
         display: flex;
         justify-content: flex-end;
-        background-color: purple;
+        background-color: mediumpurple;
         opacity: 80%;
-        transition: 400ms;
     }
     .change.nav-link#menu-button{
         opacity: 100%;
@@ -60,4 +57,7 @@
         display: flex;
     }
 
+    .change{
+        transition: 400ms;
+    }
 }

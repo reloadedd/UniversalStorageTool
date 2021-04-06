@@ -23,6 +23,7 @@
 
 @media screen and (max-width: 678px) {
     .container{
+        height: 100%;
         display: inline-block;
     }
 }
