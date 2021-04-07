@@ -1,4 +1,8 @@
+body{
+    background: #333;
+}
 .account-details-container {
+
     width: 80%;
     display: flex;
     padding-left: 10%;
@@ -7,8 +11,8 @@
 }
 
 .left-side-details {
-    background: #f2f2f2;
-    min-width: 250px;
+    background: #666;
+    min-width: 320px;
     width: 30%;
     text-align: left;
 
@@ -28,7 +32,7 @@
 
 }
 
-span {
+.user-info-span {
     padding-left: 25%;
 }
 
@@ -49,10 +53,92 @@ span {
 
 .right-side-details {
     width: 50%;
+    list-style-type: none;
+    margin: 60px auto;
+    color: white;
 }
 
-.nav-bar-components {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+.right-side-details li{
+    margin: 20px 0;
 }
+
+.bar{
+    background: #353b48;
+    display: block;
+    height: 2px;
+    border: 1px solid rgba(0,0,0,0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 0 10px #00ff00b3;
+}
+
+.bar span{
+    height: 2px;
+    float: left;
+    background: #00ff00;
+}
+.dropbox-space{
+    width: 25%;
+    animation: dropbox-anim 2s;
+}
+
+.google-drive-space{
+    width:100%;
+    animation: google-drive-anim 2s;
+}
+
+.microsoft-onedrive-space{
+    width: 75%;
+    animation: microsoft-onedrive-anim 2s;
+}
+
+.box-space{
+    width:50%;
+    animation: box-anim 2s;
+}
+
+@keyframes dropbox-anim {
+    0%{
+        width: 0%;
+    }
+    100%{
+        width: 25%
+    }
+}
+
+@keyframes microsoft-onedrive-anim {
+    0%{
+        width: 0%;
+    }
+    100%{
+        width: 75%
+    }
+}
+
+@keyframes google-drive-anim {
+    0%{
+        width: 0%;
+    }
+    100%{
+        width: 100%
+    }
+}
+
+@keyframes box-anim {
+    0%{
+        width: 0%;
+    }
+    100%{
+        width: 50%
+    }
+}
+
+.add-drive-button{
+    margin-top: 5%;
+    margin-left: 45%;
+    font-size: 24px;
+}
+
+
+
+

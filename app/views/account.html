@@ -11,27 +11,27 @@
     <div class="account-details-container">
         <div class="left-side-details">
             <div class="avatar-container">
-                <img id="avatar-img" src="../../public/img/avatar.png" title="Profile avatar">
+                <img id="avatar-img" src="../../public/img/avatar.png" title="Profile avatar" alt="">
             </div>
             <div class="list-account-info">
-                <span>
+                <span class="user-info-span">
                     <i class="fas fa-user"></i>   #
                 </span>
-                </br>
-                <span>
+                <br/>
+                <span class="user-info-span">
                     <i class="fas fa-clock"></i>    Registered on #
                 </span>
-                </br>
-                <span>
+                <br/>
+                <span class="user-info-span">
                     <i class="fas fa-cloud-upload-alt"></i>   # Gb uploaded
                 </span>
             </div>
             <div class="list-account-options">
                 <button class="account-button">
-                    <i class="fas fa-user-edit"></i>   Edit account
+                    <i class="fas fa-user-edit">  Edit account</i>
                 </button>
                 <button class="account-button">
-                    <i class="fas fa-user-slash"></i>  Delete account</i>
+                    <i class="fas fa-user-slash">  Delete account</i>
                 </button>
                 <button class="account-button">
                     <i class="fas fa-sign-out-alt">     Sign out</i>
@@ -41,20 +41,42 @@
 
         </div>
         <div class="right-side-details">
-            <!--<div class="account-nav-bar">
-                <ul class="nav-bar-components">
-                    <li role="presentation">
-                        <a href="#">History</a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#">Statistics</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="content">
+            <h1>Statistics</h1>
+            <li>
+                <h3>Dropbox</h3>
+                <span class="bar">
+                    <span class="dropbox-space">
+                    </span>
+                </span>
+            </li>
 
-            </div>-->
+            <li>
+                <h3>Google Drive</h3>
+                <span class="bar">
+                    <span class="google-drive-space">
+                    </span>
+                </span>
+            </li>
+
+            <li>
+                <h3>Microsoft OneDrive</h3>
+                <span class="bar">
+                    <span class="microsoft-onedrive-space">
+                    </span>
+                </span>
+            </li>
+
+            <li>
+                <h3>Box</h3>
+                <span class="bar">
+                    <span class="box-space">
+                    </span>
+                </span>
+            </li>
+            <button class="add-drive-button"><i class="fab fa-google-drive"></i>Add Drive</button>
         </div>
+
+
     </div>
 
 </body>
