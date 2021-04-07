@@ -16,7 +16,7 @@ body {
 body {
   font-family: 'Nexa Text Demo Light', Helvetica, sans-serif;
   font-size: 2em;
-  margin-top: 42px;
+  padding-top: 42px;
   text-transform: uppercase;
   text-align: center;
   color: purple;
