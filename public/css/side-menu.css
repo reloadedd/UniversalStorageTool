@@ -1,0 +1,10 @@
+.side-menu{
+    position: fixed;
+    grid-column-start: 1;
+    height: 100%;
+    width: 200px;
+}
+
+.main-view{
+    grid-column-start: 2;
+}

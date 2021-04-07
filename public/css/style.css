@@ -16,6 +16,7 @@ body {
 body {
   font-family: 'Nexa Text Demo Light', Helvetica, sans-serif;
   font-size: 2em;
+  margin-top: 42px;
   text-transform: uppercase;
   text-align: center;
   color: purple;
@@ -35,13 +36,6 @@ header {
   transition: all 400ms;
 }
 
-footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
 .logo {
   display: flex;
   align-items: center;
