@@ -1,0 +1,67 @@
+@import "menu-button.css";
+
+.nav-bar {
+    margin: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+.nav-link {
+    margin: 0 10px;
+    height: 42px;
+    border: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    transition: 400ms;
+}
+
+.nav-link a{
+
+    text-decoration: none;
+    color: white;
+}
+
+.nav-link a:hover{
+    font-weight: 800;
+    transition: 400ms;
+}
+
+@media screen and (max-width: 678px) {
+    .nav-link{
+        margin: 0;
+    }
+    .nav-link#menu-button{
+        margin: 0 10px;
+    }
+    .nav-link a{
+        display: none;
+    }
+
+    .change.nav-bar{
+        width: 150px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: revert;
+        flex-direction: column;
+    }
+    .change.nav-link{
+        margin: 0;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        background-color: darkmagenta;
+        opacity: 80%;
+    }
+    .change.nav-link#menu-button{
+        margin: 0;
+        opacity: 100%;
+    }
+    .change.nav-link a{
+        display: flex;
+    }
+
+    .change{
+        transition: 400ms;
+    }
+}
