@@ -15,7 +15,8 @@ dispatcher.onGet('/file', (req, res) => {
 
   /* Log the request to the stdout */
   console.log('[ LOG ]:'.info, req.headers['host'], '(', browser.toString(), ')', '->', req.url);
-    ejs.renderFile('app/models/file.ejs', {id : url.parse(req.url, true).id, number: url.parse(req.url, true).id})
+  let id = url.parse(req.url, true).query.id;
+    ejs.renderFile('app/models/file.ejs', {id : id, number: id})
         .then(data => {
         res.writeHead(200, {'Content-Type': 'text/plain'});
         res.end(data);
