@@ -1,65 +1,93 @@
 body{
-    background: #333;
+    margin: 0;
+    padding: 0;
+    background-image: url('../img/background.jpg');
+    background-size: cover;
 }
 .account-details-container {
-
-    width: 80%;
     display: flex;
-    padding-left: 10%;
-    padding-right: 10%;
-    padding-top: 5%;
+    flex-wrap: wrap;
+
 }
 
 .left-side-details {
-    background: #666;
     min-width: 320px;
     width: 30%;
-    text-align: left;
+    margin: 10% auto;
 
-}
-
-.avatar-container {
-    padding-top: 5%;
+    background: rgba(0,0,0,0.9);
     text-align: center;
+    border-radius: 5%;
 }
 
-#avatar-img {
+.left-side-details > div{
+    position: relative;
+    top: -75px;
+}
+#statistics-img {
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
+    position: relative;
+    top:-75px;
 }
 
-.list-account-info {
-    text-align: left;
-
-}
-
-.user-info-span {
-    padding-left: 25%;
-}
-
-.list-account-options {
-    padding-top: 5%;
-    padding-left: 17.5%;
-}
-
-.account-button {
-
-    width: 75%;
+.list-account-info{
+    margin-top: 0;
+    color: white;
     font-size: 24px;
     text-align: left;
-    margin-bottom: 10px;
+    margin-left: 7.5%;
+}
 
+.account-button{
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #800080;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+    width: 75%;
+    font-size: 24px;
+}
+
+.account-button:hover{
+    background: #800080;
 }
 
 
 .right-side-details {
+    min-width: 320px;
+    min-height: inherit;
     width: 50%;
-    list-style-type: none;
-    margin: 60px auto;
+    margin: 10% auto;
     color: white;
+    background: rgba(0,0,0,0.9);
+    text-align: center;
+    border-radius: 5%;
+}
+#avatar-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: relative;
+    top:-75px;
 }
 
-.right-side-details li{
-    margin: 20px 0;
+.right-side-details > ul{
+    margin-right: 5% ;
+    position: relative;
+    top: -75px;
+    text-align: left;
+}
+.right-side-details > button{
+    position: relative;
+    top: -75px;
 }
 
 .bar{
@@ -134,9 +162,27 @@ body{
 }
 
 .add-drive-button{
-    margin-top: 5%;
-    margin-left: 45%;
+    background: none;
+    display: block;
+    margin: 35px auto;
+    text-align: center;
+    border: 2px solid #800080;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
     font-size: 24px;
+    width: 50%;
+}
+.add-drive-button:hover{
+    background: #800080;
+
+}
+
+ul{
+    list-style-type: none;
 }
 
 
