@@ -1,10 +1,19 @@
 .side-menu{
     position: fixed;
     grid-column-start: 1;
-    height: 100%;
+    height: inherit;
     width: 250px;
 }
 
 .main-view{
     grid-column-start: 2;
+}
+
+#space-left {
+    position: absolute;
+    bottom: 57px;
+}
+
+#space-left * {
+    margin: 0;
 }
