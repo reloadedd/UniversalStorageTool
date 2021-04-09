@@ -5,7 +5,7 @@ document.getElementById("menu-button").innerHTML = `
             <div class="bar3"></div>
           </div>
 
-`
+`;
 
 function menuButtonChange(x){
     x.classList.toggle("change");

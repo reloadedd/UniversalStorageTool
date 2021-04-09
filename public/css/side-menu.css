@@ -1,8 +1,16 @@
-.side-menu{
+@import "menu-button.css";
+
+.side-menu {
     position: fixed;
     grid-column-start: 1;
     height: inherit;
     width: 250px;
+}
+
+.side-menu#side-menu-button {
+    margin: 0;
+    padding: 0;
+    display: none;
 }
 
 .side-menu button {
@@ -16,7 +24,7 @@
     border-radius: 15%;
 }
 
-.main-view{
+.main-view {
     grid-column-start: 2;
 }
 
@@ -27,4 +35,46 @@
 
 #space-left * {
     margin: 0;
+}
+
+@media screen and (max-width: 678px) {
+    body {
+        grid-template-columns: 42px auto;
+    }
+    .side-menu {
+        background-color: purple;
+        width: 42px;
+    }
+    .side-menu>* {
+        width: 0;
+        display: none;
+    }
+    .side-menu button {
+        width: 0;
+        display: none;
+    }
+    #side-menu-button {
+        background-color: purple;
+        display: block;
+    }
+
+    #side-menu-button {
+        height: 42px;
+        width: 42px;
+        display: block;
+    }
+
+    .change.side-menu {
+        width: 250px;
+        transition: none;
+    }
+
+    .change.side-menu>* {
+        width: 250px;
+        display: block;
+        transition: none;
+    }
+    .change #space-left {
+        color: white;
+    }
 }
