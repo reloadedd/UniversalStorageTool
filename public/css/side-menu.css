@@ -5,6 +5,17 @@
     width: 250px;
 }
 
+.side-menu button {
+    width: 75%;
+    height: 50px;
+    border-width: 2px;
+    border-color: purple;
+    background-color: white;
+    font-family: 'Nexa Text Demo Light', Helvetica, sans-serif;
+    color: purple;
+    border-radius: 15%;
+}
+
 .main-view{
     grid-column-start: 2;
 }
