@@ -4,7 +4,7 @@ body{
     background-image: url('../img/background.jpg');
     background-size: cover;
 }
-#avatar{
+.logo{
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -19,15 +19,9 @@ body{
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    background: rgba(0,0,0,0.9);
+    background-color: rgba(0,0,0,0.9);
     text-align: center;
     border-radius: 5%;
-}
-
-.user-entry-form h1{
-    color: white;
-    text-transform: uppercase;
-    font-weight: 500;
 }
 
 .user-entry-form input[type = "text"],.user-entry-form input[type = "password"]{
