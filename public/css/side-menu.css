@@ -5,6 +5,7 @@
     grid-column-start: 1;
     height: inherit;
     width: 250px;
+    background-color: rgba(0,0,0,0.7);
 }
 
 .side-menu#side-menu-button {
@@ -13,16 +14,16 @@
     display: none;
 }
 
-.side-menu button {
-    width: 75%;
-    height: 50px;
-    border-width: 2px;
-    border-color: purple;
-    background-color: white;
-    font-family: 'Nexa Text Demo Light', Helvetica, sans-serif;
-    color: purple;
-    border-radius: 15%;
-}
+/*.side-menu button {*/
+/*    width: 75%;*/
+/*    height: 50px;*/
+/*    border-width: 2px;*/
+/*    border-color: purple;*/
+/*    background-color: white;*/
+/*    font-family: 'Nexa Text Demo Light', Helvetica, sans-serif;*/
+/*    color: purple;*/
+/*    border-radius: 15%;*/
+/*}*/
 
 .main-view {
     grid-column-start: 2;
@@ -67,6 +68,7 @@
     .change.side-menu {
         width: 250px;
         transition: none;
+        background-color: rgba(0,0,0,0.7);
     }
 
     .change.side-menu>* {

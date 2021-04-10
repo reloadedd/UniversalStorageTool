@@ -11,6 +11,8 @@ body {
 .main-view {
     display: flex;
     flex-wrap: wrap;
+    background-color: rgba(0,0,0,0.7);
+    color: white;
 }
 
 .file {
