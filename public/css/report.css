@@ -17,6 +17,7 @@ ol{
     margin-left: 5%;
     font-size:24px;
     color: purple;
+    list-style-type: none;
 }
 dt{
     font-size: 18px;
