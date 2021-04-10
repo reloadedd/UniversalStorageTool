@@ -1,22 +1,29 @@
 const http = require('http');
 const fs = require('fs');
+const ejs = require('ejs');
+const url = require('url');
+const HttpDispatcher = require('httpdispatcher');
 const ua_parser = require('ua-parser');
 const { PORT, display_banner } = require('./config/config.js');
 const BASE_VIEW_DIRECTORY = 'app/views'
 const INDEX = `${BASE_VIEW_DIRECTORY}/index.html`;
 const NOT_FOUND = `${BASE_VIEW_DIRECTORY}/not_found.html`;
+let dispatcher = new HttpDispatcher();
 
-MIMETypes = {
-  html: 'text/html',
-  css: 'text/css',
-  js: 'application/javascript',
-  xml: 'text/xml',
-  mp4: 'video/mp4',
-  png: 'image/png',
-  ico: 'image/x-icon'
-}
+dispatcher.onGet('/file', (req, res) => {
+  let browser = ua_parser.parse(req.headers['user-agent']);
 
-let server = http.createServer(function(request, response) {
+  /* Log the request to the stdout */
+  console.log('[ LOG ]:'.info, req.headers['host'], '(', browser.toString(), ')', '->', req.url);
+  let id = url.parse(req.url, true).query.id;
+    ejs.renderFile('app/models/file.ejs', {id : id, number: id})
+        .then(data => {
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end(data);
+    })
+})
+
+dispatcher.onGet(/\//, (request, response) => {
   let browser = ua_parser.parse(request.headers['user-agent']);
   let resource = request.url.slice(1) === '' ? '/' : request.url.slice(1);
   let extension = request.url.split('.')[1];
@@ -57,6 +64,21 @@ let server = http.createServer(function(request, response) {
       }
     });
   }
+
+})
+
+MIMETypes = {
+  html: 'text/html',
+  css: 'text/css',
+  js: 'application/javascript',
+  xml: 'text/xml',
+  mp4: 'video/mp4',
+  png: 'image/png',
+  ico: 'image/x-icon'
+}
+
+let server = http.createServer(function(request, response) {
+  dispatcher.dispatch(request, response);
 });
 
 /* Start listening for incoming connections */
