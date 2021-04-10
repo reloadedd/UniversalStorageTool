@@ -1,58 +1,179 @@
+body{
+    margin: 0;
+    background-image: url('../img/background.jpg');
+    background-size: cover;
+}
 .account-details-container {
-    width: 80%;
     display: flex;
-    padding-left: 10%;
-    padding-right: 10%;
-    padding-top: 5%;
+    flex-wrap: wrap;
+
 }
 
 .left-side-details {
-    background: #f2f2f2;
-    min-width: 250px;
+    min-width: 320px;
     width: 30%;
-    text-align: left;
-
-}
-
-.avatar-container {
-    padding-top: 5%;
+    margin: 10% auto;
+    background-color: black;
+    background-color: rgba(0,0,0,0.9);
     text-align: center;
+    border-radius: 5%;
 }
 
-#avatar-img {
+.left-side-details > div{
+
+}
+.statistics-img {
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
+    margin-top: -75px;
 }
 
-.list-account-info {
-    text-align: left;
-
-}
-
-span {
-    padding-left: 25%;
-}
-
-.list-account-options {
-    padding-top: 5%;
-    padding-left: 17.5%;
-}
-
-.account-button {
-
-    width: 75%;
+.list-account-info{
+    margin-top: 0;
+    color: white;
     font-size: 24px;
     text-align: left;
-    margin-bottom: 10px;
+    margin-left: 7.5%;
+}
 
+.account-button{
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #800080;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+    width: 75%;
+    font-size: 24px;
+}
+
+.account-button:hover{
+    background: #800080;
 }
 
 
 .right-side-details {
+    min-width: 320px;
+    min-height: inherit;
     width: 50%;
+    margin: 10% auto;
+    color: white;
+    background-color: black;
+    background-color: rgba(0,0,0,0.9);
+    text-align: center;
+    border-radius: 5%;
+}
+.avatar-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-top: -75px;
 }
 
-.nav-bar-components {
+.right-side-details > ul{
+    margin-right: 5% ;
+    text-align: left;
+}
+.right-side-details > button{
+}
+
+.bar{
+    background: #353b48;
+    display: block;
+    height: 2px;
+    border: 1px solid rgba(0,0,0,0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 0 10px #00ff00b3;
+}
+
+.bar span{
+    height: 2px;
+    float: left;
+    background: #00ff00;
+}
+.dropbox-space{
+    width: 25%;
+    animation: dropbox-anim 2s;
+}
+
+.google-drive-space{
+    width:100%;
+    animation: google-drive-anim 2s;
+}
+
+.microsoft-onedrive-space{
+    width: 75%;
+    animation: microsoft-onedrive-anim 2s;
+}
+
+.box-space{
+    width:50%;
+    animation: box-anim 2s;
+}
+
+@keyframes dropbox-anim {
+    0%{
+        width: 0;
+    }
+    100%{
+        width: 25%
+    }
+}
+
+@keyframes microsoft-onedrive-anim {
+    0%{
+        width: 0;
+    }
+    100%{
+        width: 75%
+    }
+}
+
+@keyframes google-drive-anim {
+    0%{
+        width: 0;
+    }
+    100%{
+        width: 100%
+    }
+}
+
+@keyframes box-anim {
+    0%{
+        width: 0;
+    }
+    100%{
+        width: 50%
+    }
+}
+
+.add-drive-button{
+    background: none;
+    display: block;
+    margin: 35px auto;
+    text-align: center;
+    border: 2px solid #800080;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+    font-size: 24px;
+    width: 50%;
+}
+.add-drive-button:hover{
+    background: #800080;
+
+}
+
+ul{
     list-style-type: none;
-    padding: 0;
-    margin: 0;
 }

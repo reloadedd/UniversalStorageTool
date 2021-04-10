@@ -15,10 +15,7 @@ body {
 
 body {
   font-family: 'Nexa Text Demo Light', Helvetica, sans-serif;
-  font-size: 2em;
   padding-top: 42px;
-  text-transform: uppercase;
-  text-align: center;
   color: purple;
   /* Default background gradient in case something goes wrong */
   /*background: linear-gradient(to right, red, yellow); */
