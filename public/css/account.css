@@ -1,6 +1,5 @@
 body{
     margin: 0;
-    padding: 0;
     background-image: url('../img/background.jpg');
     background-size: cover;
 }
@@ -21,15 +20,13 @@ body{
 }
 
 .left-side-details > div{
-    position: relative;
-    top: -75px;
+
 }
 .statistics-img {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    position: relative;
-    top:-75px;
+    margin-top: -75px;
 }
 
 .list-account-info{
@@ -76,19 +73,14 @@ body{
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    position: relative;
-    top:-75px;
+    margin-top: -75px;
 }
 
 .right-side-details > ul{
     margin-right: 5% ;
-    position: relative;
-    top: -75px;
     text-align: left;
 }
 .right-side-details > button{
-    position: relative;
-    top: -75px;
 }
 
 .bar{
