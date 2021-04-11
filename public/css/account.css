@@ -37,8 +37,6 @@ body{
     margin-left: 7.5%;
 }
 
-
-
 .right-side-details {
     min-width: 320px;
     min-height: inherit;
@@ -50,6 +48,7 @@ body{
     text-align: center;
     border-radius: 5%;
 }
+
 .avatar-img {
     width: 150px;
     height: 150px;
@@ -60,8 +59,6 @@ body{
 .right-side-details > ul{
     margin-right: 5% ;
     text-align: left;
-}
-.right-side-details > button{
 }
 
 .bar{
@@ -79,6 +76,7 @@ body{
     float: left;
     background: #00ff00;
 }
+
 .dropbox-space{
     width: 25%;
     animation: dropbox-anim 2s;
@@ -150,6 +148,7 @@ body{
     font-size: 24px;
     width: 50%;
 }
+
 .add-drive-button:hover{
     background: #800080;
 

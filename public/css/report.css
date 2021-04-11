@@ -5,24 +5,26 @@ body{
     font-size:20px;
 }
 
-
 a{
     text-decoration: none;
-
 }
+
 h1, h2, h3, h4{
     color: purple;
 }
+
 ol{
     margin-left: 5%;
     font-size:24px;
     color: purple;
     list-style-type: none;
 }
+
 dt{
     font-size: 18px;
     font-weight: bold;
 }
+
 dd{
     font-size: 18px;
     margin-bottom: 25px;
