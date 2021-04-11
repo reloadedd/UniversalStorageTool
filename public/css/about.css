@@ -50,8 +50,7 @@ h1 {
 .section-content {
   margin-left: 50px;
   width: 56%;
-  background-color: black;
-  opacity: 0.50;
+  background-color: darkgray;
   border-radius: 10px;
 }
 

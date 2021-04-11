@@ -59,3 +59,11 @@ header {
   height: 40px;
   width: auto;
 }
+
+.regular-link {
+  color: red;
+}
+
+.regular-link:hover {
+  color: mediumpurple;
+}
