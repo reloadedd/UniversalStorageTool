@@ -13,4 +13,7 @@ document.getElementById("nav-bar").innerHTML = `
         <li class="nav-link">
           <a href="credits">Credits</a>
         </li>
+        <li class="nav-link">
+          <a href="account">My account</a>
+        </li>
       </ul>`;

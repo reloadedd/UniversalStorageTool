@@ -37,27 +37,6 @@ body{
     margin-left: 7.5%;
 }
 
-.account-button{
-    background: none;
-    display: block;
-    margin: 20px auto;
-    text-align: center;
-    border: 2px solid #800080;
-    padding: 14px 40px;
-    outline: none;
-    color: white;
-    border-radius: 24px;
-    transition: 0.25s;
-    cursor: pointer;
-    width: 75%;
-    font-size: 24px;
-}
-
-.account-button:hover{
-    background: #800080;
-}
-
-
 .right-side-details {
     min-width: 320px;
     min-height: inherit;
@@ -69,6 +48,7 @@ body{
     text-align: center;
     border-radius: 5%;
 }
+
 .avatar-img {
     width: 150px;
     height: 150px;
@@ -79,8 +59,6 @@ body{
 .right-side-details > ul{
     margin-right: 5% ;
     text-align: left;
-}
-.right-side-details > button{
 }
 
 .bar{
@@ -98,6 +76,7 @@ body{
     float: left;
     background: #00ff00;
 }
+
 .dropbox-space{
     width: 25%;
     animation: dropbox-anim 2s;
@@ -169,6 +148,7 @@ body{
     font-size: 24px;
     width: 50%;
 }
+
 .add-drive-button:hover{
     background: #800080;
 
@@ -176,4 +156,8 @@ body{
 
 ul{
     list-style-type: none;
+}
+
+.percentage{
+    font-family: sans-serif;
 }
