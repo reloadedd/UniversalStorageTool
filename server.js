@@ -7,6 +7,7 @@ const ua_parser = require('ua-parser');
 const { PORT, display_banner } = require('./config/config.js');
 const BASE_VIEW_DIRECTORY = 'app/views'
 const INDEX = `${BASE_VIEW_DIRECTORY}/index.html`;
+const LOGIN = `${BASE_VIEW_DIRECTORY}/login.html`;
 const NOT_FOUND = `${BASE_VIEW_DIRECTORY}/not_found.html`;
 let dispatcher = new HttpDispatcher();
 
@@ -16,11 +17,11 @@ dispatcher.onGet('/file', (req, res) => {
   /* Log the request to the stdout */
   console.log('[ LOG ]:'.info, req.headers['host'], '(', browser.toString(), ')', '->', req.url);
   let id = url.parse(req.url, true).query.id;
-    ejs.renderFile('app/models/file.ejs', {id : id, number: id})
-        .then(data => {
+  ejs.renderFile('app/models/file.ejs', {id : id, number: id})
+      .then(data => {
         res.writeHead(200, {'Content-Type': 'text/plain'});
         res.end(data);
-    })
+      })
 })
 
 dispatcher.onGet(/\//, (request, response) => {
@@ -39,7 +40,9 @@ dispatcher.onGet(/\//, (request, response) => {
     });
   }
 
-  if (resource !== '/' && extension === undefined) {
+  if (resource === 'register') {
+    resource = LOGIN;
+  } else if (resource !== '/' && extension === undefined) {
     resource = `${BASE_VIEW_DIRECTORY}/${resource}.html`
   } else if (resource === '/' || resource === 'index.html') {
     resource = INDEX;
