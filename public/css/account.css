@@ -1,8 +1,9 @@
-body{
+body {
     margin: 0;
     background-image: url('../img/background.jpg');
     background-size: cover;
 }
+
 .account-details-container {
     display: flex;
     flex-wrap: wrap;
@@ -19,9 +20,10 @@ body{
     border-radius: 5%;
 }
 
-.left-side-details > div{
+.left-side-details > div {
 
 }
+
 .statistics-img {
     width: 150px;
     height: 150px;
@@ -29,7 +31,7 @@ body{
     margin-top: -75px;
 }
 
-.list-account-info{
+.list-account-info {
     margin-top: 0;
     color: white;
     font-size: 24px;
@@ -37,7 +39,7 @@ body{
     margin-left: 7.5%;
 }
 
-.account-button{
+.account-button {
     background: none;
     display: block;
     margin: 20px auto;
@@ -53,7 +55,7 @@ body{
     font-size: 24px;
 }
 
-.account-button:hover{
+.account-button:hover {
     background: #800080;
 }
 
@@ -69,6 +71,7 @@ body{
     text-align: center;
     border-radius: 5%;
 }
+
 .avatar-img {
     width: 150px;
     height: 150px;
@@ -76,14 +79,15 @@ body{
     margin-top: -75px;
 }
 
-.right-side-details > ul{
+.right-side-details > ul {
     margin-right: 5% ;
     text-align: left;
 }
-.right-side-details > button{
+
+.right-side-details > button {
 }
 
-.bar{
+.bar {
     background: #353b48;
     display: block;
     height: 2px;
@@ -93,27 +97,28 @@ body{
     box-shadow: 0 0 10px #00ff00b3;
 }
 
-.bar span{
+.bar span {
     height: 2px;
     float: left;
     background: #00ff00;
 }
-.dropbox-space{
+
+.dropbox-space {
     width: 25%;
     animation: dropbox-anim 2s;
 }
 
-.google-drive-space{
+.google-drive-space {
     width:100%;
     animation: google-drive-anim 2s;
 }
 
-.microsoft-onedrive-space{
+.microsoft-onedrive-space {
     width: 75%;
     animation: microsoft-onedrive-anim 2s;
 }
 
-.box-space{
+.box-space {
     width:50%;
     animation: box-anim 2s;
 }
@@ -154,7 +159,7 @@ body{
     }
 }
 
-.add-drive-button{
+.add-drive-button {
     background: none;
     display: block;
     margin: 35px auto;
@@ -169,11 +174,12 @@ body{
     font-size: 24px;
     width: 50%;
 }
-.add-drive-button:hover{
+
+.add-drive-button:hover {
     background: #800080;
 
 }
 
-ul{
+ul {
     list-style-type: none;
 }

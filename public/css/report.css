@@ -1,19 +1,22 @@
-body{
+body {
     padding-left: 20%;
     padding-right: 20%;
 }
-#report-text-zone{
+
+#report-text-zone {
     margin-top: 10%;
 }
 
-a{
+a {
     text-decoration: none;
 
 }
-h1,h2{
+
+h1,h2 {
     color: purple;
 }
-ol{
+
+ol {
     margin-left: 5%;
     font-size:24px;
     color: purple;
