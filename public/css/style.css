@@ -7,11 +7,11 @@ body {
 
 @font-face {
   font-family: 'Nexa Text Demo Light';
-  src: url('../fonts/NexaTextDemo-Light.eot') format('embedded-opentype');
-  src: url('../fonts/NexaTextDemo-Light.eot?#iefix') format('embedded-opentype'),
-  url('../fonts/NexaTextDemo-Light.woff2') format('woff2'),
-  url('../fonts/NexaTextDemo-Light.woff') format('woff'),
-  url('../fonts/NexaTextDemo-Light.ttf') format('truetype');
+  src:  url('../fonts/NexaTextDemo-Light.eot') format('embedded-opentype');
+  src:  url('../fonts/NexaTextDemo-Light.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/NexaTextDemo-Light.woff2') format('woff2'),
+        url('../fonts/NexaTextDemo-Light.woff') format('woff'),
+        url('../fonts/NexaTextDemo-Light.ttf') format('truetype');
 }
 
 body {
@@ -65,8 +65,4 @@ header {
 
 .regular-link:hover {
   color: mediumpurple;
-}
-
-hr {
-  color: black;
 }
