@@ -4,7 +4,8 @@ body{
     background-image: url('../img/background.jpg');
     background-size: cover;
 }
-.logo{
+
+.logo {
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -12,7 +13,8 @@ body{
     top: -50px;
     left: calc(50% - 50px);
 }
-.user-entry-form{
+
+.user-entry-form {
     width:300px;
     padding: 40px;
     position: absolute;
@@ -24,7 +26,7 @@ body{
     border-radius: 5%;
 }
 
-.user-entry-form input[type = "text"],.user-entry-form input[type = "password"]{
+.user-entry-form input[type = "text"],.user-entry-form input[type = "password"] {
     background: none;
     display: block;
     margin: 20px auto;
@@ -36,13 +38,14 @@ body{
     border-radius: 24px;
     transition: 0.25s;
 }
-.user-entry-form input[type = "text"]:focus,.user-entry-form input[type = "password"]:focus{
+
+.user-entry-form input[type = "text"]:focus,.user-entry-form input[type = "password"]:focus {
     width: 280px;
     border-color: green;
 }
 
 
-.user-entry-form input[type = "submit"]{
+.user-entry-form input[type = "submit"] {
     background: none;
     display: block;
     margin: 20px auto;
@@ -56,6 +59,26 @@ body{
     cursor: pointer;
 }
 
-.user-entry-form input[type = "submit"]:hover{
+.user-entry-form input[type = "submit"]:hover {
     background: #800080;
+}
+
+.footer {
+    position: fixed;
+    color: white;
+    text-align: center;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 5%;
+    text-transform: uppercase;
+    font-size: 1em;
+    background-color: black;
+    opacity: 0.6;
+}
+
+@media screen and (max-height: 545px) {
+    .footer {
+        height: 10%;
+    }
 }

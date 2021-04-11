@@ -1,0 +1,96 @@
+h1 {
+  font-size: 4em;
+  color: black;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+span.motto {
+  text-align: center;
+  border-right: .05em solid;
+  animation: caret 1s steps(1) infinite;
+}
+
+@keyframes caret {
+  50% {
+    border-color: transparent;
+  }
+}
+
+h1 {
+  color: purple;
+}
+
+.section a {
+  margin-left: 30px;
+  font-size: 3em;
+  color: purple;
+}
+
+.section a:hover {
+  color: red;
+  font-size: 3.2em;
+}
+
+.section p {
+  margin-left: 10px;
+  color: white;
+  font-size: 1.5em;
+}
+
+.section-title {
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.section-title * {
+  display: inline;
+}
+
+.section-content {
+  margin-left: 50px;
+  width: 56%;
+  background-color: black;
+  opacity: 0.50;
+  border-radius: 10px;
+}
+
+img {
+  width: 256px;
+  height: 256px;
+}
+
+.platform {
+  text-align: center;
+  display: inline-block;
+}
+
+@media screen and (max-width: 662px) {
+  img {
+    width: 128px;
+    height: 128px;
+  }
+
+  .section a {
+    margin-left: 0;
+    font-size: 1.7em;
+  }
+
+  .section a:hover {
+    font-size: 1.8em;
+  }
+
+  .section p {
+    font-size: 1.4em;
+  }
+
+  .section-content {
+    margin: 10px;
+    width: 67%;
+  }
+
+  .platform {
+    text-align: left;
+    display: block;
+  }
+}

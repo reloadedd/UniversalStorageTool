@@ -1,6 +1,6 @@
 document.getElementById("nav-bar").innerHTML = `
-      <a href="index.html">
-        <img src="public/img/logo.png" class="logo" >
+      <a href="index">
+        <img src="public/img/logo.png" class="logo" alt="UnST Logo">
       </a>
       <ul class="nav-bar">
         <li class="nav-link" id="menu-button"></li>
