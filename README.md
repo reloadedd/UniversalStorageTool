@@ -2,17 +2,17 @@
 
 ```
 
-                          8 8888      88 b.             8    d888888o. 8888888 8888888888 
-                          8 8888      88 888o.          8  .`8888:' `88.     8 8888       
-                          8 8888      88 Y88888o.       8  8.`8888.   Y8     8 8888       
-                          8 8888      88 .`Y888888o.    8  `8.`8888.         8 8888       
-                          8 8888      88 8o. `Y888888o. 8   `8.`8888.        8 8888       
-                          8 8888      88 8`Y8o. `Y88888o8    `8.`8888.       8 8888       
-                          8 8888      88 8   `Y8o. `Y8888     `8.`8888.      8 8888       
-                          ` 8888     ,8P 8      `Y8o. `Y8 8b   `8.`8888.     8 8888       
-                            8888   ,d8P  8         `Y8o.` `8b.  ;8.`8888     8 8888       
-                             `Y88888P'   8            `Yo  `Y8888P ,88P'     8 8888       
-                                      ㄩ几丨ᐯ乇尺丂卂ㄥ 丂ㄒㄖ尺卂Ꮆ乇 ㄒㄖㄖㄥ
+                      8 8888      88 b.             8    d888888o. 8888888 8888888888 
+                      8 8888      88 888o.          8  .`8888:' `88.     8 8888       
+                      8 8888      88 Y88888o.       8  8.`8888.   Y8     8 8888       
+                      8 8888      88 .`Y888888o.    8  `8.`8888.         8 8888       
+                      8 8888      88 8o. `Y888888o. 8   `8.`8888.        8 8888       
+                      8 8888      88 8`Y8o. `Y88888o8    `8.`8888.       8 8888       
+                      8 8888      88 8   `Y8o. `Y8888     `8.`8888.      8 8888       
+                      ` 8888     ,8P 8      `Y8o. `Y8 8b   `8.`8888.     8 8888       
+                        8888   ,d8P  8         `Y8o.` `8b.  ;8.`8888     8 8888       
+                         `Y88888P'   8            `Yo  `Y8888P ,88P'     8 8888       
+                                  ㄩ几丨ᐯ乇尺丂卂ㄥ 丂ㄒㄖ尺卂Ꮆ乇 ㄒㄖㄖㄥ
 
 ```
 
@@ -21,6 +21,6 @@
 > Un utilizator va putea să își facă cont într-o aplicație web ce utilizează serviciul web de mai sus și va putea să își introducă credențiale pentru diversele "drive"-uri. Aplicația îi va arăta cât spațiu mai are disponibil în fiecare dintre mediile de stocare în cloud și cât spațiu liber mai are în total (suma spațiilor din fiecare drive). La uploadarea unui fișier, se va face automat împărțirea sa în chunk-uri și memorarea (BD) a locației în care se află fiecare porțiune a fișierului pentru a putea fi reconstruit. 
 
 ## Maintainers
-- reloadedd ([@reloadedd](https://github.com/reloadedd))
+- Ionuț Roșca ([@reloadedd](https://github.com/reloadedd))
 - Tache Radu ([@TacheRadu](https://github.com/TacheRadu))
 - Iulian Peiu ([@iulianPeiu6](https://github.com/iulianPeiu6))
