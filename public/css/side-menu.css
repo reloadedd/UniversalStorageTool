@@ -5,7 +5,7 @@
     grid-column-start: 1;
     height: inherit;
     width: 250px;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.85);
 }
 
 .side-menu#side-menu-button {
@@ -19,7 +19,7 @@
 }
 
 #space-left {
-    width: 250px;
+    width: 225px;
     position: absolute;
     bottom: 57px;
     margin-left: 10px;
@@ -74,7 +74,7 @@
     }
 }
 
-.menu-side-bar{
+.menu-side-bar {
     background: #353b48;
     display: block;
     height: 12px;
@@ -83,7 +83,8 @@
     overflow: hidden;
     box-shadow: 0 0 10px #00ff00b3;
 }
-.total-used-space{
+
+.total-used-space {
     height: 12px;
     float: left;
     background: #00ff00;
