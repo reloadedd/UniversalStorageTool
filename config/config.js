@@ -25,10 +25,10 @@ function display_banner() {
       '\t` 8888     ,8P 8      `Y8o. `Y8 8b   `8.`8888.     8 8888       \n' +
       '\t  8888   ,d8P  8         `Y8o.` `8b.  ;8.`8888     8 8888       \n' +
       '\t   `Y88888P\'   8            `Yo  `Y8888P ,88P\'     8 8888       \n' +
-      '\t\tㄩ几丨ᐯ乇尺丂卂ㄥ 丂ㄒㄖ尺卂Ꮆ乇 ㄒㄖㄖㄥ\n'.info +
+      '\t\tㄩ几丨ᐯ乇尺丂卂ㄥ 丂ㄒㄖ尺卂Ꮆ乇 ㄒㄖㄖㄥ\n'.warn +
       '\tᴠᴇʀsɪᴏɴ:\t'.warn, VERSION, '\n' +
       '\tʟɪsᴛᴇɴɪɴɢ ᴘᴏʀᴛ:\t'.warn, PORT, '\n' +
-      '\tsᴛᴀᴛᴜs:\t\t'.warn, 'up and running'.bgMagenta, '\n');
+      '\tsᴛᴀᴛᴜs:\t\t'.warn, 'up and running'.underline, '\n');
 }
 
 /* Export the following objects from this module */
