@@ -9,7 +9,6 @@ let dispatcher = new Dispatcher();
 const filesRouter = require('./files');
 
 
-
 MIMETypes = {
     html: 'text/html',
     css: 'text/css',
