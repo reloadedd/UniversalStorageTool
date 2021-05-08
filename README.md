@@ -1,6 +1,6 @@
 # UnSt - Universal Storage Tool
 
-[![Build Status](http://reloadedd.me:8443/buildStatus/icon?job=UniversalStorageTool)](http://reloadedd.me:8080/job/UniversalStorageTool/)
+
 
 ```
 
@@ -17,6 +17,12 @@
                               ㄩ几丨ᐯ乇尺丂卂ㄥ 丂ㄒㄖ尺卂Ꮆ乇 ㄒㄖㄖㄥ
 
 ```
+
+[![Build Status](https://reloadedd.me:8443/buildStatus/icon?job=UniversalStorageTool)](https://reloadedd.me:8443/job/UniversalStorageTool/)
+![Languages](https://img.shields.io/github/languages/count/reloadedd/UniversalStorageTool)
+![Top Language](https://img.shields.io/github/languages/top/reloadedd/UniversalStorageTool)
+![Total Lines of code](https://img.shields.io/tokei/lines/github/reloadedd/UniversalStorageTool)
+![License](https://img.shields.io/github/license/reloadedd/UniversalStorageTool)
 
 ## Requirements (in Romanian)
 > Pe baza unui API REST ori GraphQL propriu, să se realizeze un instrument care abstractizează operațiile uzuale cu fișiere de mari dimensiuni, stocându-le – eventual, fragmentat și/sau redundant – via servicii disponibile “în nori” precum Box, Dropbox, Google Drive, Microsoft OneDrive și altele. Soluția implementată va recurge la minim 3. Se va oferi și posibilitatea compresiei resurselor textuale, folosind algoritmi consacrați precum bzip2, gzip sau zip. Evident, se va furniza suport și pentru recompunerea resurselor și preluarea sigură și eficientă a acestora. Autentificarea si autorizarea vor recurge la OAuth. Resurse suplimentare: Storage APIs and Mashups.
