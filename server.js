@@ -8,4 +8,4 @@ let server = http.createServer(function(request, response) {
 });
 
 /* Start listening for incoming connections */
-server.listen(PORT, 'localhost', () => { display_banner() });
+server.listen(PORT, '0.0.0.0', () => { display_banner() });
