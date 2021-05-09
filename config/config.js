@@ -1,8 +1,8 @@
 /* The port used by the application. CHANGE THIS IN PRODUCTION */
-const PORT = 3000;
+const PORT = 2999;
 
 /* The application's version which follows Semantic Versioning conventions */
-const VERSION = '0.2.0';
+const VERSION = '0.3.0';
 
 /* Environment variables needed for setting up the SSL Certificate on the Node.js server */
 const SSL_CERTIFICATE = 'CERTIFICATE_FILE_CRT_PATH'

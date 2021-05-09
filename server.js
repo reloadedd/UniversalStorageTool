@@ -5,7 +5,7 @@ const router = require('./routes/index');
 const { PORT, display_banner, SSL_CA_BUNDLE, SSL_CERTIFICATE, SSL_PRIVATE_KEY } = require('./config/config.js');
 
 let server;
-let httpsAvailable = false;
+let httpsAvailable;
 
 try {
     /*
