@@ -31,7 +31,7 @@
     margin: 0;
 }
 
-@media screen and (max-width: 678px) {
+@media screen and (max-width: 800px) {
     body {
         grid-template-columns: 42px auto;
     }
