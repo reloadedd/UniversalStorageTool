@@ -9,7 +9,6 @@ let dispatcher = new Dispatcher();
 const filesRouter = require('./files');
 
 
-
 MIMETypes = {
     html: 'text/html',
     css: 'text/css',
@@ -28,7 +27,7 @@ dispatcher.on('GET', /\//, (request, response) => {
     let extension = request.url.split('.')[1];
 
     /* Log the request to the stdout */
-    console.log('[ LOG ]:'.info, request.headers['host'], '(', browser.toString(), ')', '->', request.url);
+    console.log('[ LOG ]:'.bold, request.headers['host'], '(', browser.toString(), ')', '->', request.url);
 
     /* Send a MIME type if the resource is well known for us to hear about it, else send nothing */
     let mimetype = MIMETypes[extension === undefined ? 'html' : extension];
