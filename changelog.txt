@@ -1,5 +1,22 @@
-v0.1.0:
-    - First release
+v0.3.0:
+    -   Add support for HTTPS
+    -   Changed colors displayed when run inside a terminal
+
+v0.2.3:
+    -   The /about and /credits pages are done
+    -   The prototype for "My Account" page is mature
+    -   The Scholarly HTML report is finalized
+    -   Refactoring, and... more refactoring
+
+v0.2.2:
+    -   The 404 page is created for invalid routes
+    -   The work on the /about and /credits pages begins
+    -   A prototype for "My Account" page is released
+
+v0.2.1:
+    -   Work is begun on the Scholarly HTML report
+    -   Create login and register functionalities
+    -   The nav-bar navigation layout is implemented
 
 v0.2.0:
     -   First working version of the NodeJS app
@@ -7,18 +24,5 @@ v0.2.0:
     -   Display app banner when ran in the terminal
     -   Create the not found page
 
-v0.2.1:
-    -   Work is begun on the Scholarly HTML report
-    -   Create login and register functionalities
-    -   The nav-bar navigation layout is implemented
-
-v0.2.2:
-    -   The 404 page is created for invalid routes
-    -   The work on the /about and /credits pages begins
-    -   A prototype for "My Account" page is released
-
-v0.2.3:
-    -   The /about and /credits pages are done
-    -   The prototype for "My Account" page is mature
-    -   The Scholarly HTML report is finalized
-    -   Refactoring, and... more refactoring
+v0.1.0:
+    - First release
