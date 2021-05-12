@@ -21,7 +21,7 @@
     transform: rotate(45deg) translate(-9px, -7px);
 }
 
-@media screen and (max-width: 678px) {
+@media screen and (max-width: 800px) {
     .container{
         height: 100%;
         display: inline-block;

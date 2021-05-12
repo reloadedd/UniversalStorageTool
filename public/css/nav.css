@@ -30,7 +30,7 @@
     transition: 400ms;
 }
 
-@media screen and (max-width: 678px) {
+@media screen and (max-width: 800px) {
     .nav-link {
         margin: 0;
     }
