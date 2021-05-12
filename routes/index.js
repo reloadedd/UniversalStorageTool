@@ -1,4 +1,4 @@
-const ua_parser = require('ua-parser');
+const useragent = require('useragent');
 const fs = require('fs');
 const BASE_VIEW_DIRECTORY = 'app/views'
 const INDEX = `${BASE_VIEW_DIRECTORY}/index.html`;
@@ -22,7 +22,7 @@ MIMETypes = {
 dispatcher.use('/', filesRouter);
 
 dispatcher.on('GET', /\//, (request, response) => {
-    let browser = ua_parser.parse(request.headers['user-agent']);
+    let browser = useragent.parse(request.headers['user-agent']);
     let resource = request.url.slice(1) === '' ? '/' : request.url.slice(1);
     let extension = request.url.split('.')[1];
 

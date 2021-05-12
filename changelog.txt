@@ -1,6 +1,10 @@
+v0.3.1:
+    -   Fix CVE-2017-16086 vulnerability by replacing `ua-parser` with `useragent`
+
 v0.3.0:
     -   Add support for HTTPS
     -   Changed colors displayed when run inside a terminal
+    -   Create Dockerfile
 
 v0.2.3:
     -   The /about and /credits pages are done
