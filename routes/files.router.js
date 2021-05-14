@@ -1,7 +1,7 @@
 const useragent = require('useragent');
 const url = require('url');
 const Dispatcher = require('../util/dispatcher');
-const fileTemplate = require('../app/models/file');
+const fileTemplate = require('../app/models/file.model');
 let dispatcher = new Dispatcher();
 
 dispatcher.on('GET', 'file', (req, res) => {

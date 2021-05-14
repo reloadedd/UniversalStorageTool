@@ -6,7 +6,8 @@ const LOGIN = `${BASE_VIEW_DIRECTORY}/login.html`;
 const NOT_FOUND = `${BASE_VIEW_DIRECTORY}/not_found.html`;
 const Dispatcher = require('../util/dispatcher');
 let dispatcher = new Dispatcher();
-const filesRouter = require('./files');
+const filesRouter = require('./files.router');
+const userRouter = require('./user.router');
 
 
 MIMETypes = {
@@ -20,6 +21,7 @@ MIMETypes = {
 }
 
 dispatcher.use('/', filesRouter);
+dispatcher.use('/', userRouter);
 
 dispatcher.on('GET', /\//, (request, response) => {
     let browser = useragent.parse(request.headers['user-agent']);
