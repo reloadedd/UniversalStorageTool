@@ -1,8 +1,6 @@
-const db = require("../models");
-const User = db.users;
-const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
+    const User = req.db.users;
     let data = '';
     req.on('data', chunk => {
         data += chunk;
@@ -49,6 +47,10 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
 
 };
+
+exports.login = (req, res) => {
+
+}
 
 exports.findOne = (req, res) => {
 
