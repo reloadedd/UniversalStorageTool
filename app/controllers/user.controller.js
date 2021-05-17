@@ -20,14 +20,12 @@ exports.create = (req, res) => {
             return;
         }
 
-        // Create a Tutorial
         const user = {
             email: data.email,
             display_name: data.display_name? data.display_name : data.email,
             password: data.password
         };
 
-        // Save Tutorial in the database
         User.create(user)
             .then(data => {
                 res.writeHead(200, {
@@ -41,7 +39,7 @@ exports.create = (req, res) => {
                 });
                 res.end(JSON.stringify({
                     message:
-                        err.message || "Some error occurred while creating the Tutorial."
+                        err.errors[0].message || "Some error occurred while creating the Tutorial."
                 }));
             });
 
