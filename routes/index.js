@@ -5,6 +5,7 @@ const INDEX = `${BASE_VIEW_DIRECTORY}/index.html`;
 const LOGIN = `${BASE_VIEW_DIRECTORY}/login.html`;
 const NOT_FOUND = `${BASE_VIEW_DIRECTORY}/not_found.html`;
 const Dispatcher = require('../util/dispatcher');
+const { setToken, setData } = require('../util/setThings');
 let dispatcher = new Dispatcher();
 const filesRouter = require('./files.router');
 const userRouter = require('./user.router');
@@ -20,7 +21,18 @@ MIMETypes = {
     ico: 'image/x-icon'
 }
 
+dispatcher.on('GET', /\//, setToken);
+dispatcher.on('GET', /\//, setData);
+dispatcher.on('POST', /\//, setToken);
+dispatcher.on('POST', /\//, setData);
+dispatcher.on('PUT', /\//, setToken);
+dispatcher.on('PUT', /\//, setData);
+dispatcher.on('DELETE', /\//, setToken);
+dispatcher.on('DELETE', /\//, setData);
 dispatcher.use('/', filesRouter);
+dispatcher.on('POST', /\//, (req, res) => {
+   console.log("heya");
+});
 dispatcher.use('/', userRouter);
 
 dispatcher.on('GET', /\//, (request, response) => {
