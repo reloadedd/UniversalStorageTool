@@ -6,19 +6,20 @@
     <title>Welcome!</title>
     <link rel="stylesheet" href="public/css/style.css">
     <link rel="stylesheet" href="public/css/login.css">
+    <script type="text/javascript" src="public/js/login.js"></script>
   </head>
   <body>
-    <form class="user-entry-form" action="#" method="post">
+    <form class="user-entry-form" onsubmit="event.preventDefault()">
       <img src="public/img/logo.png" class="logo" alt="logo image">
       <label>
-        <input type="text" name="username" placeholder="Username" autofocus required minlength="6" maxlength="16">
+        <input type="text" id="userName" name="username" placeholder="Username" autofocus required minlength="6" maxlength="32">
       </label>
       <label>
-        <input type="password" name="password" placeholder="Password" pattern="[a-zA-Z]{8-32}" required minlength="8"
+        <input type="password" id="password" name="password" placeholder="Password" required minlength="8"
                maxlength="32">
       </label>
-      <input type="submit" name="login" value="Login">
-      <input type="submit" name="register" value="Register">
+      <input type="submit" name="login" value="Login" onclick="doLogin();">
+      <input type="submit" name="register" value="Register" onclick="doRegister();">
     </form>
 
     <div class="footer">

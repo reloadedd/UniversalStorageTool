@@ -23,7 +23,7 @@ exports.create = (req, res) => {
             res.writeHead(200, {
                 'Content-Type': 'application/json'
             });
-            res.end(jwt.sign(user, 'shh'));
+            res.end(JSON.stringify({jwt: jwt.sign({id: user.id, email: user.email}, 'shh', {expiresIn: '15m'})}));
         })
         .catch(err => {
             console.log(err);
@@ -61,7 +61,12 @@ exports.login = async (req, res) => {
     res.writeHead(200, {
         'Content-Type': 'application/json'
     });
-    res.end(JSON.stringify({jwt: jwt.sign(thisUser.dataValues, 'shh')}));
+    res.end(JSON.stringify({
+        jwt: jwt.sign({
+            id: thisUser.dataValues.id,
+            email: thisUser.dataValues.email
+            }, 'shh', {expiresIn: '15m'})
+    }));
 
 
 }
