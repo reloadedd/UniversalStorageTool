@@ -4,11 +4,19 @@ exports.setData = (req, res) => {
         data += chunk;
     });
     req.on('end', () => {
-        data = JSON.parse(data);
-        req.body = data;
+        try {
+            data = JSON.parse(data);
+            req.body = data;
+        } catch {
+            console.log("no data");
+        }
     });
 }
 
 exports.setToken = (req, res) => {
-    req.token = req.headers['authorization'].replace('Bearer ', '');
+    try {
+        req.token = req.headers['authorization'].replace('Bearer ', '');
+    } catch {
+        console.log("no token");
+    }
 }

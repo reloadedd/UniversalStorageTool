@@ -24,16 +24,14 @@ class Dispatcher {
     };
 
 
-    dispatch = (req, res) => {
+    dispatch = async (req, res) => {
         let baseUrl = 'http://' + req.headers.host + '/';
         let pathName = (new URL(req.url, baseUrl)).pathname;
         for (let [path, handler] of this.listeners[req.method.toUpperCase()]) {
             if (path instanceof RegExp && path.test(pathName) && !res.finished) {
-                console.log(path, handler);
-                handler(req, res);
+                await handler(req, res);
             } else if (path === pathName && !res.finished) {
-                console.log(path, handler);
-                handler(req, res);
+                await handler(req, res);
             }
         }
     };
