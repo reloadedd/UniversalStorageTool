@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 exports.create = (req, res) => {
     const User = req.db.users
-    if (!req.data.email || !req.data.password) {
+    if (!req.body || !req.body.email || !req.body.password) {
         res.writeHead(400, {
             'Content-Type': 'application/json'
         });
@@ -13,9 +13,9 @@ exports.create = (req, res) => {
     }
 
     const user = {
-        email: req.data.email,
-        display_name: req.data.display_name ? req.data.display_name : req.data.email,
-        password: req.data.password
+        email: req.body.email,
+        display_name: req.body.display_name ? req.body.display_name : req.body.email,
+        password: req.body.password
     };
 
     User.create(user)
@@ -37,12 +37,9 @@ exports.create = (req, res) => {
         });
 };
 
-exports.findAll = (req, res) => {
-}
-
 exports.login = async (req, res) => {
     const User = req.db.users;
-    if (!req.data.email || !req.data.password) {
+    if (!req.body || !req.body.email || !req.body.password) {
         res.writeHead(400, {
             'Content-Type': 'application/json'
         });
@@ -51,7 +48,7 @@ exports.login = async (req, res) => {
         }));
         return;
     }
-    let thisUser = await User.findOne({where: {email: req.data.email, password: req.data.password}})
+    let thisUser = await User.findOne({where: {email: req.body.email, password: req.body.password}})
     if (!thisUser) {
         res.writeHead(400, {
             'Content-Type': 'application/json'
@@ -64,27 +61,15 @@ exports.login = async (req, res) => {
     res.writeHead(200, {
         'Content-Type': 'application/json'
     });
-    res.end(jwt.sign(thisUser.dataValues, 'shh'));
+    res.end(JSON.stringify({jwt: jwt.sign(thisUser.dataValues, 'shh')}));
 
 
 }
-
-exports.findOne = (req, res) => {
-
-};
 
 exports.update = (req, res) => {
 
 };
 
 exports.delete = (req, res) => {
-
-};
-
-exports.deleteAll = (req, res) => {
-
-};
-
-exports.findAllPublished = (req, res) => {
 
 };

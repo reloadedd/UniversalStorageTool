@@ -5,6 +5,12 @@ const fileTemplate = require('../app/models/file.model');
 let dispatcher = new Dispatcher();
 
 dispatcher.on('GET', 'file', (req, res) => {
+    if(!req.token){
+        req.writeHead(403, {'Content-type': 'application/json'});
+        res.end(JSON.stringify({message: "Cannot get a file if not logged in"}));
+        return;
+    }
+
     let browser = useragent.parse(req.headers['user-agent']);
 
     /* Log the request to the stdout */

@@ -33,13 +33,47 @@ try {
 
     server = https.createServer(httpsOptions, function(request, response) {
         request.db = db;
-        router.dispatch(request, response);
+        let data = '';
+        request.on('data', chunk => {
+            data += chunk;
+        });
+        request.on('end', () => {
+            try {
+                request.token = request.headers['authorization'].replace('Bearer ', '');
+                data = JSON.parse(data);
+                request.body = data;
+            } catch {
+                console.log("no data");
+            }
+            finally {
+                router.dispatch(request, response);
+            }
+        });
     });
     httpsAvailable = true;
 } catch (e) {
     server = http.createServer(function(request, response) {
         request.db = db;
-        router.dispatch(request, response);
+        let data = '';
+        try{
+            request.token = request.headers['authorization'].replace('Bearer ', '');
+        } catch {
+            console.log("no token");
+        }
+        request.on('data', chunk => {
+            data += chunk;
+        });
+        request.on('end', () => {
+            try {
+                data = JSON.parse(data);
+                request.body = data;
+            } catch {
+                console.log("no data");
+            }
+            finally {
+                router.dispatch(request, response);
+            }
+        });
     });
     httpsAvailable = false;
 }
