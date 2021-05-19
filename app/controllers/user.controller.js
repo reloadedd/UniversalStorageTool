@@ -21,9 +21,12 @@ exports.create = (req, res) => {
     User.create(user)
         .then(async data => {
             res.writeHead(200, {
+                'Set-Cookie': 'jwt=' + jwt.sign({id: user.id, email: user.email}, 'shh', {expiresIn: '30d'}) + '; HttpOnly',
                 'Content-Type': 'application/json'
             });
-            res.end(JSON.stringify({jwt: jwt.sign({id: user.id, email: user.email}, 'shh', {expiresIn: '15m'})}));
+            res.end(JSON.stringify({
+                message: 'Set cookie'
+            }));
         })
         .catch(err => {
             console.log(err);
@@ -59,13 +62,11 @@ exports.login = async (req, res) => {
         return;
     }
     res.writeHead(200, {
+        'Set-Cookie': 'jwt=' + jwt.sign({id: thisUser.id, email: thisUser.email}, 'shh', {expiresIn: '30d'}) + '; HttpOnly',
         'Content-Type': 'application/json'
     });
     res.end(JSON.stringify({
-        jwt: jwt.sign({
-            id: thisUser.dataValues.id,
-            email: thisUser.dataValues.email
-            }, 'shh', {expiresIn: '15m'})
+        message: 'Set cookie'
     }));
 
 

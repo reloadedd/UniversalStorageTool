@@ -6,7 +6,7 @@ let dispatcher = new Dispatcher();
 
 dispatcher.on('GET', 'file', (req, res) => {
     if(!req.token){
-        req.writeHead(403, {'Content-type': 'application/json'});
+        res.writeHead(403, {'Content-type': 'application/json'});
         res.end(JSON.stringify({message: "Cannot get a file if not logged in"}));
         return;
     }

@@ -4,6 +4,15 @@ const userController = require('../app/controllers/user.controller');
 let dispatcher = new Dispatcher();
 
 dispatcher.on('POST', 'register', userController.create);
-dispatcher.on('POST', 'login', userController.login)
+dispatcher.on('POST', 'login', userController.login);
+dispatcher.on('POST', 'logout', (req, res) => {
+   res.writeHead(200, {
+       'Set-Cookie': 'jwt=; Expires=' + Date.now(),
+       'Content-type': 'application/json'
+   });
+   res.end(JSON.stringify({
+       message: 'logged out'
+   }));
+});
 
 module.exports = dispatcher;

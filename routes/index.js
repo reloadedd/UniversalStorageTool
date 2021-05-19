@@ -22,11 +22,22 @@ MIMETypes = {
 }
 
 dispatcher.use('/', filesRouter);
-dispatcher.on('POST', /\//, (req, res) => {
-   console.log("heya");
-});
 dispatcher.use('/', userRouter);
 dispatcher.use('/', accountsRouter);
+
+dispatcher.on('GET', '/', (req, res) => {
+    if (!req.token) {
+        res.writeHead(307, {Location: '/login'});
+        res.end();
+        return;
+    }
+
+    res.writeHead(200, {
+        'Content-Type': 'text/html'
+    });
+    let data = fs.readFileSync('app/views/index.html');
+    res.end(data);
+});
 
 dispatcher.on('GET', /\//, (request, response) => {
     let browser = useragent.parse(request.headers['user-agent']);

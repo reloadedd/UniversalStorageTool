@@ -34,12 +34,16 @@ try {
     server = https.createServer(httpsOptions, function(request, response) {
         request.db = db;
         let data = '';
+        try{
+            request.token = request.headers['cookie'].replace('jwt=', '');
+        } catch {
+            console.log("no token");
+        }
         request.on('data', chunk => {
             data += chunk;
         });
         request.on('end', () => {
             try {
-                request.token = request.headers['authorization'].replace('Bearer ', '');
                 data = JSON.parse(data);
                 request.body = data;
             } catch {
@@ -56,7 +60,7 @@ try {
         request.db = db;
         let data = '';
         try{
-            request.token = request.headers['authorization'].replace('Bearer ', '');
+            request.token = request.headers['cookie'].replace('jwt=', '');
         } catch {
             console.log("no token");
         }
