@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../../util/secret');
 
 exports.create = (req, res) => {
     const User = req.db.users
@@ -21,7 +22,7 @@ exports.create = (req, res) => {
     User.create(user)
         .then(async data => {
             res.writeHead(200, {
-                'Set-Cookie': 'jwt=' + jwt.sign({id: user.id, email: user.email}, 'shh', {expiresIn: '30d'}) + '; HttpOnly',
+                'Set-Cookie': 'jwt=' + jwt.sign({id: user.id, email: user.email}, JWT_SECRET, {expiresIn: '30d'}) + '; HttpOnly',
                 'Content-Type': 'application/json'
             });
             res.end(JSON.stringify({
@@ -62,7 +63,7 @@ exports.login = async (req, res) => {
         return;
     }
     res.writeHead(200, {
-        'Set-Cookie': 'jwt=' + jwt.sign({id: thisUser.id, email: thisUser.email}, 'shh', {expiresIn: '30d'}) + '; HttpOnly',
+        'Set-Cookie': 'jwt=' + jwt.sign({id: thisUser.id, email: thisUser.email}, JWT_SECRET, {expiresIn: '30d'}) + '; HttpOnly',
         'Content-Type': 'application/json'
     });
     res.end(JSON.stringify({

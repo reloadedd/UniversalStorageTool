@@ -2,6 +2,7 @@ const Dispatcher = require('../util/dispatcher');
 const userController = require('../app/controllers/user.controller');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const { JWT_SECRET } = require('../util/secret');
 
 let dispatcher = new Dispatcher();
 
@@ -13,7 +14,7 @@ dispatcher.on('GET', 'account', (req, res) => {
     }
 
     try {
-        let id = jwt.verify(req.token, 'shh');
+        jwt.verify(req.token, JWT_SECRET);
         res.writeHead(200, {
             'Content-Type': 'text/html'
         });

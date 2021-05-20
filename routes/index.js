@@ -9,6 +9,8 @@ let dispatcher = new Dispatcher();
 const filesRouter = require('./files.router');
 const userRouter = require('./user.router');
 const accountsRouter = require('./account.router');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../util/secret');
 
 
 MIMETypes = {
@@ -31,12 +33,17 @@ dispatcher.on('GET', '/', (req, res) => {
         res.end();
         return;
     }
-
-    res.writeHead(200, {
-        'Content-Type': 'text/html'
-    });
-    let data = fs.readFileSync('app/views/index.html');
-    res.end(data);
+    try {
+        jwt.verify(req.token, JWT_SECRET);
+        res.writeHead(200, {
+            'Content-Type': 'text/html'
+        });
+        let data = fs.readFileSync('app/views/index.html');
+        res.end(data);
+    } catch (ex) {
+        res.writeHead(307, {Location: '/login'});
+        res.end();
+    }
 });
 
 dispatcher.on('GET', /\//, (request, response) => {
