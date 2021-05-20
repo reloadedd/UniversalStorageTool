@@ -3,9 +3,9 @@ const userController = require('../app/controllers/user.controller');
 
 let dispatcher = new Dispatcher();
 
-dispatcher.on('POST', 'register', userController.register);
-dispatcher.on('POST', 'login', userController.login);
-dispatcher.on('POST', 'logout', (req, res) => {
+dispatcher.on('POST', '/register', userController.register);
+dispatcher.on('POST', '/login', userController.login);
+dispatcher.on('POST', '/logout', (req, res) => {
    res.writeHead(200, {
        'Set-Cookie': 'jwt=; Expires=' + Date.now(),
        'Content-type': 'application/json'
