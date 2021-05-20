@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../../util/secret');
+const bcrypt = require('bcrypt');
 
 exports.create = (req, res) => {
     const User = req.db.users
@@ -16,7 +17,7 @@ exports.create = (req, res) => {
     const user = {
         email: req.body.email,
         display_name: req.body.display_name ? req.body.display_name : req.body.email,
-        password: req.body.password
+        password: bcrypt.hashSync(req.body.password, 10)
     };
 
     User.create(user)
@@ -52,8 +53,8 @@ exports.login = async (req, res) => {
         }));
         return;
     }
-    let thisUser = await User.findOne({where: {email: req.body.email, password: req.body.password}})
-    if (!thisUser) {
+    let thisUser = await User.findOne({where: {email: req.body.email}})
+    if (!thisUser || !bcrypt.compareSync(req.body.password, thisUser.password)) {
         res.writeHead(400, {
             'Content-Type': 'application/json'
         });
