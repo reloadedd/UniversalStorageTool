@@ -5,9 +5,9 @@ const PORT = 2999;
 const VERSION = '0.3.1';
 
 /* Environment variables needed for setting up the SSL Certificate on the Node.js server */
-const SSL_CERTIFICATE = 'CERTIFICATE_FILE_CRT_PATH'
-const SSL_PRIVATE_KEY = 'CERTIFICATE_PRIVATE_KEY_PATH'
-const SSL_CA_BUNDLE   = 'CERTIFICATE_CA_BUNDLE_PATH'
+const SSL_CERTIFICATE = 'CERTIFICATE_FILE_CRT_PATH';
+const SSL_PRIVATE_KEY = 'CERTIFICATE_PRIVATE_KEY_PATH';
+const SSL_CA_BUNDLE   = 'CERTIFICATE_CA_BUNDLE_PATH';
 
 const colors = require('colors');
 colors.setTheme({
@@ -44,4 +44,4 @@ module.exports = {
   SSL_CA_BUNDLE:    SSL_CA_BUNDLE,
   SSL_CERTIFICATE:  SSL_CERTIFICATE,
   SSL_PRIVATE_KEY:  SSL_PRIVATE_KEY
-}
+};

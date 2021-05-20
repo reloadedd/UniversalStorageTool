@@ -1,13 +1,19 @@
 module.exports = {
-  parser: "@babel/eslint-parser",
-  parserOptions: {
-    sourceType: "module",
-    allowImportExportEverywhere: false,
-    ecmaFeatures: {
-      "jsx": true
+    parser: "@babel/eslint-parser",
+    env: {
+        "node": true,
+        "es6": true
     },
-    babelOptions: {
-      configFile: "path/to/config.js",
-    },
-  },
+    parserOptions: {
+        ecmaVersion: 2021,
+        requireConfigFile: false,
+        sourceType: "module",
+        allowImportExportEverywhere: false,
+        ecmaFeatures: {
+            "jsx": true
+        },
+        rules: {
+            "semi": 2
+        },
+    }
 }

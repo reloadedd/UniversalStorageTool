@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 exports.register = (req, res) => {
-    const User = req.db.users
+    const User = req.db.users;
     if (!req.body || !req.body.email || !req.body.password) {
         res.writeHead(400, {
             'Content-Type': 'application/json'
@@ -20,7 +20,7 @@ exports.register = (req, res) => {
     };
 
     User.create(user)
-        .then(async data => {
+        .then(async () => {
             res.writeHead(200, {
                 'Set-Cookie': 'jwt=' + jwt.sign({id: user.id, email: user.email}, req.JWT_SECRET, {expiresIn: '30d'}) + '; path=/; HttpOnly',
                 'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ exports.login = async (req, res) => {
         }));
         return;
     }
-    let thisUser = await User.findOne({where: {email: req.body.email}})
+    let thisUser = await User.findOne({where: {email: req.body.email}});
     if (!thisUser || !bcrypt.compareSync(req.body.password, thisUser.password)) {
         res.writeHead(400, {
             'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ exports.login = async (req, res) => {
     }));
 
 
-}
+};
 
 exports.update = (req, res) => {
 

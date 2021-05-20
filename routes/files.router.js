@@ -16,8 +16,8 @@ dispatcher.on('GET', 'file', (req, res) => {
     /* Log the request to the stdout */
     console.log('[ LOG ]:'.bold, req.headers['host'], '(', browser.toString(), ')', '->', req.url);
     let id = url.parse(req.url, true).query.id;
-    res.writeHead(200, {'Content-type': 'text/plain'})
+    res.writeHead(200, {'Content-type': 'text/plain'});
     res.end(fileTemplate(id, id));
-})
+});
 
 module.exports = dispatcher;
