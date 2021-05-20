@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../../util/secret');
 const bcrypt = require('bcrypt');
 
-exports.create = (req, res) => {
+exports.register = (req, res) => {
     const User = req.db.users
     if (!req.body || !req.body.email || !req.body.password) {
         res.writeHead(400, {

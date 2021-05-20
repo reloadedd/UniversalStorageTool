@@ -3,7 +3,7 @@ const userController = require('../app/controllers/user.controller');
 
 let dispatcher = new Dispatcher();
 
-dispatcher.on('POST', 'register', userController.create);
+dispatcher.on('POST', 'register', userController.register);
 dispatcher.on('POST', 'login', userController.login);
 dispatcher.on('POST', 'logout', (req, res) => {
    res.writeHead(200, {
