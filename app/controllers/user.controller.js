@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../../util/secret');
 const bcrypt = require('bcrypt');
 
-exports.create = (req, res) => {
+exports.register = (req, res) => {
     const User = req.db.users
     if (!req.body || !req.body.email || !req.body.password) {
         res.writeHead(400, {
@@ -23,7 +22,7 @@ exports.create = (req, res) => {
     User.create(user)
         .then(async data => {
             res.writeHead(200, {
-                'Set-Cookie': 'jwt=' + jwt.sign({id: user.id, email: user.email}, JWT_SECRET, {expiresIn: '30d'}) + '; HttpOnly',
+                'Set-Cookie': 'jwt=' + jwt.sign({id: user.id, email: user.email}, req.JWT_SECRET, {expiresIn: '30d'}) + '; path=/; HttpOnly',
                 'Content-Type': 'application/json'
             });
             res.end(JSON.stringify({
@@ -63,8 +62,9 @@ exports.login = async (req, res) => {
         }));
         return;
     }
+    console.log(req.JWT_SECRET);
     res.writeHead(200, {
-        'Set-Cookie': 'jwt=' + jwt.sign({id: thisUser.id, email: thisUser.email}, JWT_SECRET, {expiresIn: '30d'}) + '; HttpOnly',
+        'Set-Cookie': 'jwt=' + jwt.sign({id: thisUser.id, email: thisUser.email}, req.JWT_SECRET, {expiresIn: '30d'}) + '; path=/; HttpOnly',
         'Content-Type': 'application/json'
     });
     res.end(JSON.stringify({

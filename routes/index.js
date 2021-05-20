@@ -10,7 +10,6 @@ const filesRouter = require('./files.router');
 const userRouter = require('./user.router');
 const accountsRouter = require('./account.router');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../util/secret');
 
 
 MIMETypes = {
@@ -24,7 +23,7 @@ MIMETypes = {
 }
 
 dispatcher.use('/', filesRouter);
-dispatcher.use('/', userRouter);
+dispatcher.use('/users', userRouter);
 dispatcher.use('/', accountsRouter);
 
 dispatcher.on('GET', '/', (req, res) => {
@@ -34,7 +33,7 @@ dispatcher.on('GET', '/', (req, res) => {
         return;
     }
     try {
-        jwt.verify(req.token, JWT_SECRET);
+        jwt.verify(req.token, req.JWT_SECRET);
         res.writeHead(200, {
             'Content-Type': 'text/html'
         });

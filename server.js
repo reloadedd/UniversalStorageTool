@@ -3,6 +3,7 @@ const https = require('https')
 const fs = require('fs');
 const db = require('./app/models');
 const router = require('./routes');
+const setSecrets = require('./util/setsecrets');
 const { PORT, display_banner, SSL_CA_BUNDLE, SSL_CERTIFICATE, SSL_PRIVATE_KEY } = require('./config/config.js');
 
 let server;
@@ -58,6 +59,7 @@ try {
 } catch (e) {
     server = http.createServer(function(request, response) {
         request.db = db;
+        setSecrets(request);
         let data = '';
         try{
             request.token = request.headers['cookie'].replace('jwt=', '');

@@ -1,7 +1,7 @@
 async function doLogin() {
     let userName = document.getElementById("userName").value;
     let password = document.getElementById("password").value;
-    let result = await fetch('login', {
+    let result = await fetch('users/login', {
         method: "POST",
         body: JSON.stringify({
             email: userName,
@@ -21,7 +21,7 @@ async function doLogin() {
 async function doRegister() {
     let userName = document.getElementById("userName").value;
     let password = document.getElementById("password").value;
-    let result = await fetch('register', {
+    let result = await fetch('users/register', {
         method: "POST",
         body: JSON.stringify({
             email: userName,
@@ -40,7 +40,7 @@ async function doRegister() {
 }
 
 async function doLogout() {
-    let result = await fetch('logout', {
+    let result = await fetch('users/logout', {
         method: 'POST'
     });
     result = await result.json();
