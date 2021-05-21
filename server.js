@@ -1,10 +1,16 @@
-const http = require('http');
-const https = require('https');
-const fs = require('fs');
-const db = require('./app/models');
-const router = require('./routes');
-const setSecrets = require('./util/setsecrets');
-const { PORT, display_banner, SSL_CA_BUNDLE, SSL_CERTIFICATE, SSL_PRIVATE_KEY } = require('./config/config.js');
+const http = require("http");
+const https = require("https");
+const fs = require("fs");
+const db = require("./app/models");
+const router = require("./routes");
+const setSecrets = require("./util/setsecrets");
+const {
+    PORT,
+    displayBanner,
+    SSL_CA_BUNDLE,
+    SSL_CERTIFICATE,
+    SSL_PRIVATE_KEY,
+} = require("./config/config.js");
 
 let server;
 let httpsAvailable;
@@ -19,64 +25,70 @@ try {
      *  -- the ca-bundle.crt file which will be split into an array of multiple certificates
      *
      */
-    const certificate = fs.readFileSync(process.env[SSL_CERTIFICATE], {encoding: 'utf8'});
-    const privateKey = fs.readFileSync(process.env[SSL_PRIVATE_KEY], {encoding: 'utf8'});
-    const caBundle = fs.readFileSync(process.env[SSL_CA_BUNDLE], {encoding:'utf8'});
-    const ca = caBundle.split('-----END CERTIFICATE-----\n') .map(cert => cert +'-----END CERTIFICATE-----\r\n');
+    const certificate = fs.readFileSync(process.env[SSL_CERTIFICATE], {
+        encoding: "utf8",
+    });
+    const privateKey = fs.readFileSync(process.env[SSL_PRIVATE_KEY], {
+        encoding: "utf8",
+    });
+    const caBundle = fs.readFileSync(process.env[SSL_CA_BUNDLE], {
+        encoding: "utf8",
+    });
+    const ca = caBundle
+        .split("-----END CERTIFICATE-----\n")
+        .map((cert) => cert + "-----END CERTIFICATE-----\r\n");
     /* Remove the last item of the array which isn't a certificate (at least in our case) */
     ca.pop();
 
-    let httpsOptions = {
+    const httpsOptions = {
         cert: certificate,
         ca: ca,
-        key: privateKey
+        key: privateKey,
     };
 
-    server = https.createServer(httpsOptions, function(request, response) {
+    server = https.createServer(httpsOptions, function (request, response) {
         request.db = db;
-        let data = '';
-        try{
-            request.token = request.headers['cookie'].replace('jwt=', '');
+        let data = "";
+        try {
+            request.token = request.headers["cookie"].replace("jwt=", "");
         } catch {
             console.log("no token");
         }
-        request.on('data', chunk => {
+        request.on("data", (chunk) => {
             data += chunk;
         });
-        request.on('end', () => {
+        request.on("end", () => {
             try {
                 data = JSON.parse(data);
                 request.body = data;
             } catch {
                 console.log("no data");
-            }
-            finally {
+            } finally {
                 router.dispatch(request, response);
             }
         });
     });
     httpsAvailable = true;
 } catch (e) {
-    server = http.createServer(function(request, response) {
+    server = http.createServer(function (request, response) {
         request.db = db;
         setSecrets(request);
-        let data = '';
-        try{
-            request.token = request.headers['cookie'].replace('jwt=', '');
+        let data = "";
+        try {
+            request.token = request.headers["cookie"].replace("jwt=", "");
         } catch {
             console.log("no token");
         }
-        request.on('data', chunk => {
+        request.on("data", (chunk) => {
             data += chunk;
         });
-        request.on('end', () => {
+        request.on("end", () => {
             try {
                 data = JSON.parse(data);
                 request.body = data;
             } catch {
                 console.log("no data");
-            }
-            finally {
+            } finally {
                 router.dispatch(request, response);
             }
         });
@@ -85,4 +97,6 @@ try {
 }
 
 /* Start listening for incoming connections */
-server.listen(PORT, '0.0.0.0', () => { display_banner(httpsAvailable); });
+server.listen(PORT, "0.0.0.0", () => {
+    displayBanner(httpsAvailable);
+});

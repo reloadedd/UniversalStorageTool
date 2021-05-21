@@ -7,10 +7,13 @@ document.getElementById("menu-button").innerHTML = `
 
 `;
 
-function menuButtonChange(x){
+function menuButtonChange(x) {
     x.classList.toggle("change");
-    document.getElementsByClassName("nav-bar").item(0).classList.toggle("change");
-    let links = document.getElementsByClassName("nav-link");
+    document
+        .getElementsByClassName("nav-bar")
+        .item(0)
+        .classList.toggle("change");
+    const links = document.getElementsByClassName("nav-link");
     for (let i = 0; i < links.length; i++)
         links.item(i).classList.toggle("change");
 }

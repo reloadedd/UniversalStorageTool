@@ -1,19 +1,19 @@
 module.exports = {
     parser: "@babel/eslint-parser",
     env: {
-        "node": true,
-        "es6": true
+        browser: true,
+        es2021: true,
     },
+    extends: ["google", "prettier"],
+    plugins: ["prettier"],
     parserOptions: {
-        ecmaVersion: 2021,
-        requireConfigFile: false,
+        ecmaVersion: 12,
         sourceType: "module",
-        allowImportExportEverywhere: false,
-        ecmaFeatures: {
-            "jsx": true
-        },
-        rules: {
-            "semi": 2
-        },
-    }
-}
+        requireConfigFile: false,
+    },
+    rules: {
+        "prettier/prettier": "error",
+        "no-unused-vars": 0,
+        "require-jsdoc": 0,
+    },
+};

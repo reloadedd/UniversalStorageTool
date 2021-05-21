@@ -7,10 +7,13 @@ document.getElementById("side-menu-button").innerHTML = `
 
 `;
 
-function sideMenuButtonChange(x){
+function sideMenuButtonChange(x) {
     x.classList.toggle("change");
-    document.getElementsByClassName("side-menu").item(0).classList.toggle("change");
-    let items = document.getElementsByClassName("side-menu").item(0).children;
+    document
+        .getElementsByClassName("side-menu")
+        .item(0)
+        .classList.toggle("change");
+    const items = document.getElementsByClassName("side-menu").item(0).children;
     for (let i = 0; i < items.length; i++)
         items.item(i).classList.toggle("change");
 }

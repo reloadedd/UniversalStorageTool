@@ -9,8 +9,8 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
         max: dbConfig.pool.max,
         min: dbConfig.pool.min,
         acquire: dbConfig.pool.acquire,
-        idle: dbConfig.pool.idle
-    }
+        idle: dbConfig.pool.idle,
+    },
 });
 
 const db = {};
@@ -19,7 +19,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.users = require("./user.model")(sequelize, Sequelize);
-db.googleDrives = require('./googleDrive.model')(sequelize, Sequelize);
+db.googleDrives = require("./googleDrive.model")(sequelize, Sequelize);
 db.users.hasOne(db.googleDrives);
 db.users.sync();
 db.googleDrives.sync();
