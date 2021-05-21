@@ -1,6 +1,6 @@
 const useragent = require('useragent');
 const fs = require('fs');
-const BASE_VIEW_DIRECTORY = 'app/views'
+const BASE_VIEW_DIRECTORY = 'app/views';
 const INDEX = `${BASE_VIEW_DIRECTORY}/index.html`;
 const LOGIN = `${BASE_VIEW_DIRECTORY}/login.html`;
 const NOT_FOUND = `${BASE_VIEW_DIRECTORY}/not_found.html`;
@@ -20,7 +20,7 @@ MIMETypes = {
     mp4: 'video/mp4',
     png: 'image/png',
     ico: 'image/x-icon'
-}
+};
 
 dispatcher.use('/', filesRouter);
 dispatcher.use('/users', userRouter);
@@ -64,7 +64,7 @@ dispatcher.on('GET', /\//, (request, response) => {
     if (resource === 'register') {
         resource = LOGIN;
     } else if (resource !== '/' && extension === undefined) {
-        resource = `${BASE_VIEW_DIRECTORY}/${resource}.html`
+        resource = `${BASE_VIEW_DIRECTORY}/${resource}.html`;
     } else if (resource === '/' || resource === 'index.html') {
         resource = INDEX;
     }
@@ -89,6 +89,6 @@ dispatcher.on('GET', /\//, (request, response) => {
         });
     }
 
-})
+});
 
 module.exports = dispatcher;

@@ -9,6 +9,7 @@ dispatcher.on('POST', '/logout', (req, res) => {
    res.writeHead(200, {
        'Set-Cookie': 'jwt=; Expires=' + Date.now(),
        'Content-type': 'application/json'
+
    });
    res.end(JSON.stringify({
        message: 'logged out'

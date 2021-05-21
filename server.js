@@ -1,5 +1,5 @@
 const http = require('http');
-const https = require('https')
+const https = require('https');
 const fs = require('fs');
 const db = require('./app/models');
 const router = require('./routes');
@@ -30,7 +30,7 @@ try {
         cert: certificate,
         ca: ca,
         key: privateKey
-    }
+    };
 
     server = https.createServer(httpsOptions, function(request, response) {
         request.db = db;
@@ -85,4 +85,4 @@ try {
 }
 
 /* Start listening for incoming connections */
-server.listen(PORT, '0.0.0.0', () => { display_banner(httpsAvailable) });
+server.listen(PORT, '0.0.0.0', () => { display_banner(httpsAvailable); });
