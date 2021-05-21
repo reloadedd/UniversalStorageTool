@@ -9,6 +9,7 @@ let dispatcher = new Dispatcher();
 const filesRouter = require('./files.router');
 const userRouter = require('./user.router');
 const accountsRouter = require('./account.router');
+const googleDriveRouter = require('./google.drive.router');
 const jwt = require('jsonwebtoken');
 
 
@@ -24,6 +25,7 @@ MIMETypes = {
 
 dispatcher.use('/', filesRouter);
 dispatcher.use('/users', userRouter);
+dispatcher.use('/g-drive', googleDriveRouter);
 dispatcher.use('/', accountsRouter);
 
 dispatcher.on('GET', '/', (req, res) => {

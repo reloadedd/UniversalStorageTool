@@ -15,7 +15,7 @@ exports.register = (req, res) => {
 
     const user = {
         email: req.body.email,
-        display_name: req.body.display_name ? req.body.display_name : req.body.email,
+        displayName: req.body.displayName ? req.body.displayName : req.body.email,
         password: bcrypt.hashSync(req.body.password, 10)
     };
 
@@ -62,7 +62,6 @@ exports.login = async (req, res) => {
         }));
         return;
     }
-    console.log(req.JWT_SECRET);
     res.writeHead(200, {
         'Set-Cookie': 'jwt=' + jwt.sign({id: thisUser.id, email: thisUser.email}, req.JWT_SECRET, {expiresIn: '30d'}) + '; path=/; HttpOnly',
         'Content-Type': 'application/json'

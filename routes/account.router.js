@@ -1,28 +1,19 @@
 const Dispatcher = require('../util/dispatcher');
-const userController = require('../app/controllers/user.controller');
-const jwt = require('jsonwebtoken');
+const { goToLogin, gotCode } = require('../app/controllers/account.controller');
 const fs = require('fs');
 
 let dispatcher = new Dispatcher();
 
-dispatcher.on('GET', 'account', (req, res) => {
-    if (!req.token) {
-        res.writeHead(307, {Location: '/login'});
-        res.end();
+dispatcher.on('GET', 'account', async (req, res) => {
+    if (goToLogin(req, res))
         return;
-    }
 
-    try {
-        jwt.verify(req.token, req.JWT_SECRET);
-        res.writeHead(200, {
-            'Content-Type': 'text/html'
-        });
-        let data = fs.readFileSync('app/views/account.html');
-        res.end(data);
-    } catch (ex) {
-        res.writeHead(307, {Location: '/login'});
-        res.end();
-    }
+    await gotCode(req, res);
+    res.writeHead(200, {
+        'Content-Type': 'text/html'
+    });
+    let data = fs.readFileSync('app/views/account.html');
+    res.end(data);
 });
 
 module.exports = dispatcher;

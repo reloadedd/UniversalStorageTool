@@ -19,5 +19,9 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.users = require("./user.model")(sequelize, Sequelize);
+db.googleDrives = require('./googleDrive.model')(sequelize, Sequelize);
+db.users.hasOne(db.googleDrives);
+db.users.sync();
+db.googleDrives.sync();
 
 module.exports = db;

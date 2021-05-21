@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             unique: true
         },
-        display_name: {
+        displayName: {
             type: Sequelize.STRING
         },
         password: {
@@ -12,6 +12,5 @@ module.exports = (sequelize, Sequelize) => {
         }
     });
 
-    User.sync();
     return User;
 };
