@@ -10,7 +10,7 @@
     <script src="https://kit.fontawesome.com/b5716d189e.js" crossorigin="anonymous"></script>
     <script src="public/js/login.js"></script>
 </head>
-    <body>
+    <body onload="setGoogleDriveSpace()">
             <header id="nav-bar"></header>
 
             <div class="account-details-container">
@@ -61,8 +61,8 @@
                             </span>
                         </li>
 
-                        <li>
-                            <h3>Google Drive<span> (100 <span class="percentage">%</span> )</span></h3>
+                        <li id="google-drive">
+                            <h3>Google Drive<span id="gDrive-percentage"> (100 <span class="percentage">%</span> )</span></h3>
                             <span class="bar">
                                 <span class="google-drive-space">
                                 </span>
@@ -92,6 +92,6 @@
 
         <script src="public/js/nav-bar.js"></script>
         <script src="public/js/menu-button.js"></script>
-        <script src="public/js/add-drive.js"></script>
+        <script src="public/js/google-drive.js"></script>
     </body>
 </html>
