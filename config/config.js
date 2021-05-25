@@ -47,7 +47,7 @@ function displayBanner(httpsAvailable) {
 /* Export the following objects from this module */
 module.exports = {
     PORT: PORT,
-    displayBanner: display_banner,
+    displayBanner: displayBanner,
     SSL_CA_BUNDLE: SSL_CA_BUNDLE,
     SSL_CERTIFICATE: SSL_CERTIFICATE,
     SSL_PRIVATE_KEY: SSL_PRIVATE_KEY,

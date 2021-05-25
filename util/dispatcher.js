@@ -16,14 +16,13 @@ class Dispatcher {
     }
 
     use(url, finerDispatcher) {
-        for (
-            let method = 0;
-            method < finerDispatcher.listeners.length;
-            method++
-        ) {
-            for (const [path, handler] of finerDispatcher.listeners[method]) {
-                this.listeners[method].set(url + path, handler);
-            }
+        for (const method in finerDispatcher.listeners) {
+            if (finerDispatcher.listeners.hasOwnProperty(method))
+                for (const [path, handler] of finerDispatcher.listeners[
+                    method
+                ]) {
+                    this.listeners[method].set(url + path, handler);
+                }
         }
     }
 
