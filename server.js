@@ -50,7 +50,15 @@ try {
         request.db = db;
         let data = "";
         try {
-            request.token = request.headers["cookie"].replace("jwt=", "");
+            const cookies = request.headers["cookie"]
+                .split(";")
+                .map((cookie) => cookie.trim());
+            request.jwtToken = cookies
+                .find((cookie) => cookie.startsWith("jwt="))
+                .replace("jwt=", "");
+            request.gDriveToken = cookies
+                .find((cookie) => cookie.startsWith("gDriveToken="))
+                .replace("gDriveToken=", "");
         } catch {
             console.log("no token");
         }
@@ -75,7 +83,15 @@ try {
         setSecrets(request);
         let data = "";
         try {
-            request.token = request.headers["cookie"].replace("jwt=", "");
+            const cookies = request.headers["cookie"]
+                .split(";")
+                .map((cookie) => cookie.trim());
+            request.jwtToken = cookies
+                .find((cookie) => cookie.startsWith("jwt="))
+                .replace("jwt=", "");
+            request.gDriveToken = cookies
+                .find((cookie) => cookie.startsWith("gDriveToken="))
+                .replace("gDriveToken=", "");
         } catch {
             console.log("no token");
         }

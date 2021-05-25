@@ -2,13 +2,13 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 const fetch = require("node-fetch");
 exports.goToLogin = (req, res) => {
-    if (!req.token) {
+    if (!req.jwtToken) {
         res.writeHead(307, { Location: "/login" });
         res.end();
         return true;
     }
     try {
-        jwt.verify(req.token, req.JWT_SECRET);
+        jwt.verify(req.jwtToken, req.JWT_SECRET);
         return false;
     } catch (ex) {
         res.writeHead(307, { Location: "/login" });
@@ -19,7 +19,7 @@ exports.goToLogin = (req, res) => {
 
 exports.gotCode = async (req, res) => {
     const code = url.parse(req.url, true).query.code;
-    if (!code) return;
+    if (!code) return false;
 
     const data = await (
         await fetch("https://oauth2.googleapis.com/token", {
@@ -45,8 +45,15 @@ exports.gotCode = async (req, res) => {
             method: "POST",
             body: JSON.stringify({
                 refreshToken: data.refresh_token,
-                jwtToken: req.token,
+                jwtToken: req.jwtToken,
             }),
         },
     );
+    console.log(data);
+
+    res.writeHead(200, {
+        "Set-Cookie": "gDriveToken=" + data.access_token + "; path=/; httpOnly",
+        "Content-Type": "text/html",
+    });
+    return true;
 };

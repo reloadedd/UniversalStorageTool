@@ -8,7 +8,7 @@ dispatcher.on("POST", "/login", userController.login);
 dispatcher.on("POST", "/logout", (req, res) => {
     res.writeHead(200, {
         "Set-Cookie": "jwt=; path=/; httpOnly; Expires=-1",
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
     });
     res.end(
         JSON.stringify({

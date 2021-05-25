@@ -28,13 +28,13 @@ dispatcher.use("/g-drive", googleDriveRouter);
 dispatcher.use("/", accountsRouter);
 
 dispatcher.on("GET", "/", (req, res) => {
-    if (!req.token) {
+    if (!req.jwtToken) {
         res.writeHead(307, { Location: "/login" });
         res.end();
         return;
     }
     try {
-        jwt.verify(req.token, req.JWT_SECRET);
+        jwt.verify(req.jwtToken, req.JWT_SECRET);
         res.writeHead(200, {
             "Content-Type": "text/html",
         });

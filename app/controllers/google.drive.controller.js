@@ -1,7 +1,15 @@
 const jwt = require("jsonwebtoken");
+const fetch = require("node-fetch");
 exports.onAuth = (req, res) => {
     try {
-        jwt.verify(req.token, req.JWT_SECRET);
+        if (req.gDriveToken) {
+            res.writeHead(307, {
+                Location: "/account",
+            });
+            res.end();
+            return;
+        }
+        jwt.verify(req.jwtToken, req.JWT_SECRET);
 
         res.writeHead(307, {
             Location:
@@ -48,4 +56,38 @@ exports.onAdd = async (req, res) => {
             }),
         );
     }
+};
+
+exports.refreshToken = async (req, res) => {
+    if (!req.body.refreshToken) {
+        res.writeHead(400, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "bro I need the refresh token to do anything",
+            }),
+        );
+        return;
+    }
+
+    const data = await (
+        await fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+            body: JSON.stringify({
+                client_id: process.env.GDRIVE_CLIENT_ID,
+                client_secret: process.env.GDRIVE_CLIENT_SECRET,
+                grant_type: "refresh_token",
+                refresh_token: req.body.refreshToken,
+            }),
+        })
+    ).json();
+    res.writeHead(200, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            accessToken: data.access_token,
+        }),
+    );
 };

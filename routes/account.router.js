@@ -5,12 +5,12 @@ const fs = require("fs");
 const dispatcher = new Dispatcher();
 
 dispatcher.on("GET", "account", async (req, res) => {
-    if (goToLogin(req, res)) return;
+    if (await goToLogin(req, res)) return;
 
-    await gotCode(req, res);
-    res.writeHead(200, {
-        "Content-Type": "text/html",
-    });
+    if (!(await gotCode(req, res)))
+        res.writeHead(200, {
+            "Content-Type": "text/html",
+        });
     const data = fs.readFileSync("app/views/account.html");
     res.end(data);
 });

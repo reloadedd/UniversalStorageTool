@@ -5,7 +5,7 @@ const fileTemplate = require("../app/models/file.model");
 const dispatcher = new Dispatcher();
 
 dispatcher.on("GET", "file", (req, res) => {
-    if (!req.token) {
+    if (!req.jwtToken) {
         res.writeHead(403, { "Content-type": "application/json" });
         res.end(
             JSON.stringify({ message: "Cannot get a file if not logged in" }),

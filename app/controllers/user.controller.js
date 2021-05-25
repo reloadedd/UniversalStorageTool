@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const fetch = require("node-fetch");
 
 exports.register = (req, res) => {
     const User = req.db.users;
@@ -87,9 +88,9 @@ exports.login = async (req, res) => {
         );
         return;
     }
-    res.writeHead(200, {
-        "Set-Cookie":
-            "jwt=" +
+    const cookies = [];
+    cookies.push(
+        "jwt=" +
             jwt.sign(
                 { id: thisUser.id, email: thisUser.email },
                 req.JWT_SECRET,
@@ -98,6 +99,31 @@ exports.login = async (req, res) => {
                 },
             ) +
             "; path=/; HttpOnly",
+    );
+    const drive = await thisUser.getGoogleDrive();
+    if (drive) {
+        cookies.push(
+            "gDriveToken=" +
+                (
+                    await (
+                        await fetch(
+                            process.env.IS_UP
+                                ? "http://reloadedd.me:2999/g-drive/refresh-token"
+                                : "http://localhost:2999/g-drive/refresh-token",
+                            {
+                                method: "POST",
+                                body: JSON.stringify({
+                                    refreshToken: drive.refreshToken,
+                                }),
+                            },
+                        )
+                    ).json()
+                ).accessToken +
+                "; path=/; HttpOnly",
+        );
+    }
+    res.writeHead(200, {
+        "Set-Cookie": cookies,
         "Content-Type": "application/json",
     });
     res.end(
