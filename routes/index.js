@@ -36,7 +36,7 @@ dispatcher.on("GET", "/", (req, res) => {
         return;
     }
     try {
-        jwt.verify(req.jwtToken, req.JWT_SECRET);
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         res.writeHead(200, {
             "Content-Type": "text/html",
         });

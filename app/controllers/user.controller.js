@@ -31,7 +31,7 @@ exports.register = (req, res) => {
                     "jwt=" +
                     jwt.sign(
                         { id: user.id, email: user.email },
-                        req.JWT_SECRET,
+                        req.UNST_JWT_SECRET,
                         {
                             expiresIn: "30d",
                         },
@@ -93,7 +93,7 @@ exports.login = async (req, res) => {
         "jwt=" +
             jwt.sign(
                 { id: thisUser.id, email: thisUser.email },
-                req.JWT_SECRET,
+                req.UNST_JWT_SECRET,
                 {
                     expiresIn: "30d",
                 },

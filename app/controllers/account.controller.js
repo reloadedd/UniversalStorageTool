@@ -8,7 +8,7 @@ exports.goToLogin = (req, res) => {
         return true;
     }
     try {
-        jwt.verify(req.jwtToken, req.JWT_SECRET);
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         return false;
     } catch (ex) {
         res.writeHead(307, { Location: "/login" });
@@ -26,10 +26,10 @@ exports.gotCode = async (req, res) => {
             method: "POST",
             body: JSON.stringify({
                 code: code,
-                client_id: process.env.GDRIVE_CLIENT_ID,
-                client_secret: process.env.GDRIVE_CLIENT_SECRET,
-                redirect_uri: process.env.IS_UP
-                    ? "http://reloadedd.me:2999/account"
+                client_id: process.env.UNST_GDRIVE_CLIENT_ID,
+                client_secret: process.env.UNST_GDRIVE_CLIENT_SECRET,
+                redirect_uri: process.env.UNST_IS_SERVER_UP
+                    ? "https://reloadedd.me:3000/account"
                     : "http://localhost:2999/account",
                 scope: "https://www.googleapis.com/auth/drive",
                 grant_type: "authorization_code",
@@ -38,8 +38,8 @@ exports.gotCode = async (req, res) => {
     ).json();
 
     fetch(
-        process.env.IS_UP
-            ? "http://reloadedd.me:2999/g-drive/add"
+        process.env.UNST_IS_SERVER_UP
+            ? "https://reloadedd.me:3000/g-drive/add"
             : "http://localhost:2999/g-drive/add",
         {
             method: "POST",
