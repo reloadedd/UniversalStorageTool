@@ -30,6 +30,14 @@ exports.onAdd = async (req, res) => {
             refreshToken: req.body.refreshToken,
         });
         user.setGoogleDrive(drive);
+        res.writeHead(200, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "Drive account added.",
+            }),
+        );
     } catch {
         res.writeHead(400, {
             "Content-Type": "application/json",
@@ -42,29 +50,6 @@ exports.onAdd = async (req, res) => {
     }
 };
 
-exports.refreshToken = async (req, res) => {
-    const data = await (
-        await fetch("https://oauth2.googleapis.com/token", {
-            method: "POST",
-            body: JSON.stringify({
-                client_id: process.env.GDRIVE_CLIENT_ID,
-                client_secret: process.env.GDRIVE_CLIENT_SECRET,
-                grant_type: "refresh_token",
-                refresh_token: req.body.refreshToken,
-            }),
-        })
-    ).json();
-    res.writeHead(200, {
-        "Content-Type": "application/json",
-    });
-    res.end(
-        JSON.stringify({
-            accessToken: data.access_token,
-            expiresIn: data.expires_in,
-        }),
-    );
-};
-
 exports.getSpace = async (req, res) => {
     const data = await (
         await fetch("https://www.googleapis.com/drive/v2/about", {
@@ -74,9 +59,16 @@ exports.getSpace = async (req, res) => {
             },
         })
     ).json();
-    res.writeHead(200, {
-        "Content-Type": "application/json",
-    });
+    if (req.cookies) {
+        res.writeHead(200, {
+            "Content-Type": "application/json",
+            "Set-Cookie": req.cookies,
+        });
+    } else {
+        res.writeHead(200, {
+            "Content-Type": "application/json",
+        });
+    }
     res.end(
         JSON.stringify({
             totalSpace: data.quotaBytesTotal,

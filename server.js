@@ -48,19 +48,24 @@ try {
 
     server = https.createServer(httpsOptions, function (request, response) {
         request.db = db;
+        setSecrets(request);
         let data = "";
+        const cookies = request.headers["cookie"]
+            .split(";")
+            .map((cookie) => cookie.trim());
         try {
-            const cookies = request.headers["cookie"]
-                .split(";")
-                .map((cookie) => cookie.trim());
             request.jwtToken = cookies
                 .find((cookie) => cookie.startsWith("jwt="))
                 .replace("jwt=", "");
+        } catch {
+            console.log("no jwt token");
+        }
+        try {
             request.gDriveToken = cookies
                 .find((cookie) => cookie.startsWith("gDriveToken="))
                 .replace("gDriveToken=", "");
         } catch {
-            console.log("no token");
+            console.log("no google drive token");
         }
         request.on("data", (chunk) => {
             data += chunk;
@@ -82,18 +87,27 @@ try {
         request.db = db;
         setSecrets(request);
         let data = "";
+        let cookies;
         try {
-            const cookies = request.headers["cookie"]
+            cookies = request.headers["cookie"]
                 .split(";")
                 .map((cookie) => cookie.trim());
+        } catch {
+            console.log("oops.. no cookies at all");
+        }
+        try {
             request.jwtToken = cookies
                 .find((cookie) => cookie.startsWith("jwt="))
                 .replace("jwt=", "");
+        } catch {
+            console.log("no jwt token");
+        }
+        try {
             request.gDriveToken = cookies
                 .find((cookie) => cookie.startsWith("gDriveToken="))
                 .replace("gDriveToken=", "");
         } catch {
-            console.log("no token");
+            console.log("no google drive token");
         }
         request.on("data", (chunk) => {
             data += chunk;

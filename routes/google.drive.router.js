@@ -2,7 +2,6 @@ const Dispatcher = require("../util/dispatcher");
 const {
     onAuth,
     onAdd,
-    refreshToken,
     getSpace,
 } = require("../app/controllers/google.drive.controller");
 const jwt = require("jsonwebtoken");
@@ -31,22 +30,6 @@ dispatcher.on("GET", "/auth", (req, res) => {
 
 dispatcher.on("POST", "/add", async (req, res) => {
     await onAdd(req, res);
-});
-
-dispatcher.on("POST", "/refresh-token", (req, res) => {
-    if (!req.body.refreshToken) {
-        res.writeHead(400, {
-            "Content-Type": "application/json",
-        });
-        res.end(
-            JSON.stringify({
-                message: "bro I need the refresh token to do anything",
-            }),
-        );
-        return;
-    }
-
-    refreshToken(req, res);
 });
 
 dispatcher.on("GET", "/space", async (req, res) => {
