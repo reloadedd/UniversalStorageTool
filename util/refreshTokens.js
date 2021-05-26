@@ -9,6 +9,7 @@ exports.refreshGoogleDriveToken = async (req, res) => {
         const userEmail = jwt.verify(req.jwtToken, req.JWT_SECRET).email;
         const thisUser = await User.findOne({ where: { email: userEmail } });
         const drive = await thisUser.getGoogleDrive();
+        if (!drive) return;
         const data = await (
             await fetch("https://oauth2.googleapis.com/token", {
                 method: "POST",
