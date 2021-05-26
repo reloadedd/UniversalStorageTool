@@ -1,8 +1,8 @@
 module.exports = {
-    HOST: process.env.UNST_DATABASE_HOST || "localhost",
-    USER: process.env.UNST_DATABASE_USER || "root",
-    PASSWORD: process.env.UNST_DATABASE_PASSWORD || "",
-    DB: process.env.UNST_DATABASE_NAME || "myCoolDatabase",
+    HOST: process.env.UNST_DATABASE_HOST,
+    USER: process.env.UNST_DATABASE_USER,
+    PASSWORD: process.env.UNST_DATABASE_PASSWORD,
+    DB: process.env.UNST_DATABASE_NAME,
     dialect: "mariadb",
     pool: {
         max: 5,
