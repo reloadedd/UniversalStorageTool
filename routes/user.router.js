@@ -7,8 +7,8 @@ dispatcher.on("POST", "/register", userController.register);
 dispatcher.on("POST", "/login", userController.login);
 dispatcher.on("POST", "/logout", (req, res) => {
     const cookies = [
-        "jwt=; path=/; httpOnly; Expires=-1",
-        "gDriveToken=; path=/; httpOnly; Expires=-1",
+        "jwt=; path=/; httpOnly; Max-Age=0",
+        "gDriveToken=; path=/; httpOnly; Max-Age=0",
     ];
     res.writeHead(200, {
         "Set-Cookie": cookies,

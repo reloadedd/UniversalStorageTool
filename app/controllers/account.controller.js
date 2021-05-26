@@ -52,7 +52,11 @@ exports.gotCode = async (req, res) => {
     console.log(data);
 
     res.writeHead(200, {
-        "Set-Cookie": "gDriveToken=" + data.access_token + "; path=/; httpOnly",
+        "Set-Cookie":
+            "gDriveToken=" +
+            data.access_token +
+            "; path=/; httpOnly; Max-Age=" +
+            data.expires_in,
         "Content-Type": "text/html",
     });
     return true;

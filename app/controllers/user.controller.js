@@ -102,24 +102,24 @@ exports.login = async (req, res) => {
     );
     const drive = await thisUser.getGoogleDrive();
     if (drive) {
+        const data = await (
+            await fetch(
+                process.env.IS_UP
+                    ? "http://reloadedd.me:2999/g-drive/refresh-token"
+                    : "http://localhost:2999/g-drive/refresh-token",
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+                        refreshToken: drive.refreshToken,
+                    }),
+                },
+            )
+        ).json();
         cookies.push(
             "gDriveToken=" +
-                (
-                    await (
-                        await fetch(
-                            process.env.IS_UP
-                                ? "http://reloadedd.me:2999/g-drive/refresh-token"
-                                : "http://localhost:2999/g-drive/refresh-token",
-                            {
-                                method: "POST",
-                                body: JSON.stringify({
-                                    refreshToken: drive.refreshToken,
-                                }),
-                            },
-                        )
-                    ).json()
-                ).accessToken +
-                "; path=/; HttpOnly",
+                data.accessToken +
+                "; path=/; HttpOnly; Max-Age=" +
+                data.expiresIn,
         );
     }
     res.writeHead(200, {

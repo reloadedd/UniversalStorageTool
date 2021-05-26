@@ -60,6 +60,7 @@ exports.refreshToken = async (req, res) => {
     res.end(
         JSON.stringify({
             accessToken: data.access_token,
+            expiresIn: data.expires_in,
         }),
     );
 };
