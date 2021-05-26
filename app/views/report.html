@@ -1,392 +1,492 @@
 <!-- Scholarly HTML Report describing project' details -->
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scholarly HTML Report</title>
-    <link rel="stylesheet" href="public/css/report.css">
-  </head>
-  <body>
-    <h1>Scholarly HTML Report</h1>
-    <div role="contentinfo">
-      <ol role="directory">
-        <li>
-          <a href="#abstract">1. Abstract</a>
-        </li>
-        <li>
-          <a href="#introduction">2. Introduction</a>
-          <ol role="directory">
-            <li>
-              <a href="#motivation">2.1. Motivation</a>
-            </li>
-            <li>
-              <a href="#purpose">2.2. Purpose</a>
-            </li>
-          </ol>
-        </li>
-        <li>
-          <a href="#structure">3. Structure</a>
-          <ol role="directory">
-            <li>
-              <a href="#functionalities">3.1 Functionalities</a>
-            </li>
-            <li>
-              <a href="#ui-components">3.2 UI Components</a>
-              <ol role="directory">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Scholarly HTML Report</title>
+        <link rel="stylesheet" href="public/css/report.css" />
+    </head>
+    <body>
+        <h1>Scholarly HTML Report</h1>
+        <div role="contentinfo">
+            <ol role="directory">
                 <li>
-                  <a href="#index-page">3.2.1 Index Page</a>
-                  <ol role="directory">
-                    <li>
-                      <a href="#nav-bar">3.2.1.1 Navigation Bar</a>
-                    </li>
-                    <li>
-                      <a href="#side-menu">3.2.1.2 Side Menu</a>
-                    </li>
-                    <li>
-                      <a href="#main-view">3.2.1.3 Main View</a>
-                    </li>
-                  </ol>
+                    <a href="#abstract">1. Abstract</a>
                 </li>
                 <li>
-                  <a href="#login-register-page">3.2.2 Login/Register Page</a>
+                    <a href="#introduction">2. Introduction</a>
+                    <ol role="directory">
+                        <li>
+                            <a href="#motivation">2.1. Motivation</a>
+                        </li>
+                        <li>
+                            <a href="#purpose">2.2. Purpose</a>
+                        </li>
+                    </ol>
                 </li>
                 <li>
-                  <a href="#account-page">3.2.3 Account Page</a>
+                    <a href="#structure">3. Structure</a>
+                    <ol role="directory">
+                        <li>
+                            <a href="#functionalities">3.1 Functionalities</a>
+                        </li>
+                        <li>
+                            <a href="#ui-components">3.2 UI Components</a>
+                            <ol role="directory">
+                                <li>
+                                    <a href="#index-page">3.2.1 Index Page</a>
+                                    <ol role="directory">
+                                        <li>
+                                            <a href="#nav-bar"
+                                                >3.2.1.1 Navigation Bar</a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a href="#side-menu"
+                                                >3.2.1.2 Side Menu</a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a href="#main-view"
+                                                >3.2.1.3 Main View</a
+                                            >
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>
+                                    <a href="#login-register-page"
+                                        >3.2.2 Login/Register Page</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="#account-page"
+                                        >3.2.3 Account Page</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="#about-page">3.2.4 About Page</a>
+                                    <ol role="directory">
+                                        <li>
+                                            <a href="#who-we-are"
+                                                >3.2.4.1 Who we are?</a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a href="#what-is-unst"
+                                                >3.2.4.2 What is UnST?</a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a href="#open-source-by-design"
+                                                >3.2.4.3 Open-source by
+                                                design</a
+                                            >
+                                        </li>
+                                        <li>
+                                            <a href="#supported-platforms"
+                                                >3.2.4.4 Supported platforms</a
+                                            >
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>
+                                    <a href="#credits-page"
+                                        >3.2.5. Credits Page</a
+                                    >
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
                 </li>
-                <li>
-                  <a href="#about-page">3.2.4 About Page</a>
-                  <ol role="directory">
-                    <li>
-                      <a href="#who-we-are">3.2.4.1 Who we are?</a>
-                    </li>
-                    <li>
-                      <a href="#what-is-unst">3.2.4.2 What is UnST?</a>
-                    </li>
-                    <li>
-                      <a href="#open-source-by-design">3.2.4.3 Open-source by design</a>
-                    </li>
-                    <li>
-                      <a href="#supported-platforms">3.2.4.4 Supported platforms</a>
-                    </li>
-                  </ol>
-                </li>
-                <li>
-                  <a href="#credits-page">3.2.5. Credits Page</a>
-                </li>
-              </ol>
-            </li>
-          </ol>
-        </li>
-        <li><a href="#conclusions">4. Conclusions</a></li>
-        <li><a href="#references">5. References</a></li>
-      </ol>
-      <dl>
-        <dt property="schema:author" typeof="sa:ContributorRole">Authors</dt>
-        <dd>
-          <span property="schema:author" typeof="schema:Person">
-              <span property="schema:familyName">Ro&#351;ca</span>
-              <span property="schema:givenName">Ionu&#355;, </span>
-          </span>
-          <span property="schema:author" typeof="schema:Person">
-              <span property="schema:familyName">Tache</span>
-              <span property="schema:givenName">Radu-Ioan, </span>
-          </span>
-          <span property="schema:author" typeof="schema:Person">
-              <span property="schema:familyName">Peiu</span>
-              <span property="schema:givenName">Iulian</span>
-          </span>
-        </dd>
+                <li><a href="#conclusions">4. Conclusions</a></li>
+                <li><a href="#references">5. References</a></li>
+            </ol>
+            <dl>
+                <dt property="schema:author" typeof="sa:ContributorRole">
+                    Authors
+                </dt>
+                <dd>
+                    <span property="schema:author" typeof="schema:Person">
+                        <span property="schema:familyName">Ro&#351;ca</span>
+                        <span property="schema:givenName">Ionu&#355;, </span>
+                    </span>
+                    <span property="schema:author" typeof="schema:Person">
+                        <span property="schema:familyName">Tache</span>
+                        <span property="schema:givenName">Radu-Ioan, </span>
+                    </span>
+                    <span property="schema:author" typeof="schema:Person">
+                        <span property="schema:familyName">Peiu</span>
+                        <span property="schema:givenName">Iulian</span>
+                    </span>
+                </dd>
 
-        <dt>Bugs and Feedback</dt>
-        <dd>
-          <a href="https://github.com/reloadedd/UniversalStorageTool">Let us know your impression!</a>
-        </dd>
-      </dl>
-    </div>
+                <dt>Bugs and Feedback</dt>
+                <dd>
+                    <a href="https://github.com/reloadedd/UniversalStorageTool"
+                        >Let us know your impression!</a
+                    >
+                </dd>
+            </dl>
+        </div>
 
-    <section id="abstract" role="doc-abstract">
-      <h2>1. Abstract</h2>
-      <p>
-        Universal Tool Storage is a web application that gives all its users the possibility to store complex files of a
-        large size through another cloud service provider such as: DropBox, Google Drive, OneDrive (others may be added
-        in time). This document describes how <i>Universal Tool Storage</i> works and should be used.
-      </p>
-    </section>
-
-    <section id="introduction" role="doc-introduction">
-      <h2>2. Introduction</h2>
-      <p>
-        The current digital age is marked by our reliance on the cloud. Multiple applications are used in a large
-        diversity that defines
-        the ides of cloud storage.
-      </p>
-      <p>
-        <i>Universal Storage Tool</i> is the application that helps users managing multiple cloud storage services from
-        a single place. The application allows all its users to upload, download and archive files. Even if a file is
-        lage and can not be uploaded due to its size, <i>Universal Storage Tool</i> will offer the possibility to
-        fragment this file in smaller pieces and upload them in different cloud storage such that they will fit. Of
-        course, if the user wants to download it, will be reconstructed to its initial form and delivered to him/her.
-      </p>
-      <section typeof="sa:MaterialAndMethods" id="motivation">
-        <h3>2.1. Motivation</h3>
-        <p>
-          A conducted study shows how "more than half of people use at least 3 different storage services". "Almost
-          all people believe that their data habits have changed due to personal Cloud Storage. A majority of them are
-          now using the cloud as their primary data storage. More than 50% of surveyed people use a free or paid
-          limited storage plan.
-        </p>
-      </section>
-      <section typeof="sa:MaterialAndMethods" id="purpose">
-        <h3>2.2. Purpose</h3>
-        <p>
-          Universal Storage Tool has, as a first purpose, to offer to its users a simple and clean platform for
-          managing multiple cloud services by linking them to an account. Thus, the users will not need to worry about
-          the details, just focus on what matter the most for them: their data.
-        </p>
-        <p>
-          The second purpose of this application is efficiency and time saving for our clients, a better and faster
-          way to storage files across multiple cloud storage services.
-        </p>
-      </section>
-    </section>
-
-    <section id="structure">
-      <h2>3. Structure</h2>
-      <p>
-        Universal Storage Tool is structured based on functionalities that are provided to its users. The
-        functionalities provided by the application include manipulating and computing different operations on files
-        that belong to a logged user. In the following section, all those functionalities will be presented.
-      </p>
-      <section id="functionalities">
-        <h3>3.1. Functionalities</h3>
-        <p>
-          Following a natural order in witch they were implemented, <i>Universal Storage Tool</i> offers:
-        </p>
-        <ul>
-          <li>
-            <em>User registration and authentication.</em>
-          </li>
-          <li>
-            <em>Linking a cloud service account</em> that does not exist in the current UnST account.
-          </li>
-          <li>
-            <em>Displaying via UI the user account details</em>: user based info and statistics regarding the amount of
-            used space on every cloud service
-            linked to the current account.
-          </li>
-          <li>
-            <em>Displaying via UI all the files</em> from all linked cloud storage services.
-          </li>
-          <li>
-            <em>Uploading files</em> in a classic manner (in a single linked cloud application) or by fragmenting it
-            and uploading it in multiple
-            linked cloud services in case is too large to fit in any linked cloud application.
-          </li>
-          <li>
-            <em>Downloading an existent file that was uploaded</em> in a classic manner if it was uploaded in the
-            same way, or by reconstructing
-            all its fragments from every linked cloud application and putting them together and after that
-            downloading it.
-          </li>
-          <li>
-            <em>Archiving files</em> using a preset software for this purpose.
-          </li>
-        </ul>
-      </section>
-      <section id="ui-components">
-        <h3>3.2. UI components</h3>
-        <p>
-          <i>Universal Storage Tool's</i> structure is comprised by a number of HTML pages, each having different visual
-          components, which we will explain in the current section.
-        </p>
-        <section id="index-page">
-          <h4>3.2.1. Index page</h4>
-          <p>
-            The index page is the main page the user will see. It will provide navigation functionalities and will
-            allow the user to see all the files associated with his account, choose to upload a new file and see how
-            much space he/she has left in total.
-          </p>
-          <section id="nav-bar">
-            <h5>3.2.1.1 Navigation Bar</h5>
+        <section id="abstract" role="doc-abstract">
+            <h2>1. Abstract</h2>
             <p>
-              The Navigation Bar is the UI element providing navigation functionality to the user. It includes an
-              image with the project's logo, which if clicked redirects to the Index page, and more links to the right,
-              to all the other HTML pages of the website.
+                Universal Tool Storage is a web application that gives all its
+                users the possibility to store complex files of a large size
+                through another cloud service provider such as: DropBox, Google
+                Drive, OneDrive (others may be added in time). This document
+                describes how <i>Universal Tool Storage</i> works and should be
+                used.
             </p>
-            <p>
-              The responsiveness is provided through the flexbox containers and media queries for small displays.
-              If the display is narrower than 678 pixels, the elements in the right will not be visible anymore.
-              In their place, a menu icon will appear, and by clicking it the links to the other pages will be
-              displayed in a drop menu fashion.
-            </p>
-            <p>
-              This element appears on all pages, for a more standardized navigation system, except for the Report
-              page, since that one must comply with the Scholarly HTML format.
-            </p>
-          </section>
-          <section id="side-menu">
-            <h5>3.2.1.2 Side Menu</h5>
-            <p>
-              The side menu is one of the two main elements of the body, making one of the two grid columns the
-              body is made of. It allows access all the time to the button for adding a new file and the statistics for
-              the available space in total.
-            </p>
-            <p>
-              When the display is narrower than 678 pixels, its width shrinks to 42 pixels, and instead of the
-              elements it contained, only a menu button will be visible. Upon clicking the button, the side menu will
-              revert to its original width, allowing the user to select one of the possible actions.
-            </p>
-          </section>
-          <section id="main-view">
-            <h5>3.2.1.3 Main View</h5>
-            <p>
-              The main view is the other grid element of the body. This is where files and folders will be
-              visible, allowing the user to download them or confirm that his uploads did succeed.
-            </p>
-            <p>
-              The elements inside this container will be loaded through JavaScript, through AJAX calls using the
-              fetch API, and will be displayed using a simple float left. This way, regardless of the display
-              width, all files will be visible, since it is scrollable.
-            </p>
-          </section>
-          <section id="login-register-page">
-            <h4>3.2.2. Login/Register Page</h4>
-            <p>
-              This page provides the functionality for user login and registration. Both the "Login" and "Register"
-              functionalities will be on the same page.
-              The presentation of the page consist of a form with two text box inputs: username and password and two
-              submit buttons: login and register. If a submit button was clicked, a validation of the input data,
-              username and password, will be executed firstly: username needs to have minimum 6 and maximum 16
-              alphabetic and numeric characters and password needs to have minimum 8 and maximum 32 alphabetic and
-              numeric characters.
-            </p>
-            <p>
-              Based on what button was clicked, the corresponding action will be done. In case of a "Login" button, the
-              user will request to login as a user with username and password inserted in the input fields of the login
-              form, respectively a user registration will be requested if the pressed button is "Register".
-            </p>
-            <p>
-              A successful response from the server will redirect the user to the "Home" Page, otherwise the user
-              will be restricted to remain in the "Login/Register" page.
-            </p>
-          </section>
-          <section id="account-page">
-            <h4>3.2.3. Account Page</h4>
-            <p>
-              The "Account" page offers information regarding the current logged in user: username, the registration
-              date, his/her linked cloud applications and a status bar for each one showing the amount of space already
-              in use.
-            </p>
-            <p>
-              This page also allows users to edit or delete their account and also add a new link to another cloud
-              storage application.
-            </p>
-          </section>
-          <section id="about-page">
-            <h4>3.2.4. About Page</h4>
-            <p>
-              The "About" page will be divided into "sections", which will provide the user a comprehensive description
-              about us and our product.
-            </p>
-            <section id="who-we-are">
-              <h5>3.2.4.1 Who we are?</h5>
-              <p>
-                This section will introduce <i>Universal Storage Tool's</i> team to the user.
-              </p>
-            </section>
-            <section id="what-is-unst">
-              <h5>3.2.4.2 What is UnST?</h5>
-              <p>
-                This section will present to the user what this project is all about and what is our goal.
-              </p>
-            </section>
-            <section id="open-source-by-design">
-              <h5>3.2.4.3 Open-source by design</h5>
-              <p>
-                This section will inform the user regarding our product's license and what made us choose an open-source
-                license.
-              </p>
-            </section>
-            <section id="supported-platforms">
-              <h5>3.2.4.4 Supported platforms</h5>
-              <p>
-                This section will explain which cloud storage platforms we currently supported.
-              </p>
-            </section>
-          </section>
-          <section id="credits-page">
-            <h4>3.2.5. Credits Page</h4>
-            <p>
-              This page will give credits to the original authors of any type of resources that they provided and
-              was also used by us. At the time of writing, our logo image and the 404 not found image are mentioned
-              in the "Credits" page, as they were taken from various sources available on the Internet (the exact source
-              is available on that page) and we acknowledge this fact.
-            </p>
-          </section>
         </section>
-      </section>
-    </section>
 
-    <section id="conclusions" role="doc-conclusion">
-      <h2>4. Conclusions</h2>
-      <p>
-        <i>Universal Storage Tool</i> is currently a work in progress and is open to new ideas. We would like your
-        feedback on what we have done till now.
-      </p>
-      <p>
-        We believe in the potential of this application, its applicability in real life and what it can offer to all our
-        clients. It was build respecting general codding styles, design patterns and programming principles. So it will
-        be easy to maintain and update.
-      </p>
-    </section>
+        <section id="introduction" role="doc-introduction">
+            <h2>2. Introduction</h2>
+            <p>
+                The current digital age is marked by our reliance on the cloud.
+                Multiple applications are used in a large diversity that defines
+                the ides of cloud storage.
+            </p>
+            <p>
+                <i>Universal Storage Tool</i> is the application that helps
+                users managing multiple cloud storage services from a single
+                place. The application allows all its users to upload, download
+                and archive files. Even if a file is lage and can not be
+                uploaded due to its size, <i>Universal Storage Tool</i> will
+                offer the possibility to fragment this file in smaller pieces
+                and upload them in different cloud storage such that they will
+                fit. Of course, if the user wants to download it, will be
+                reconstructed to its initial form and delivered to him/her.
+            </p>
+            <section typeof="sa:MaterialAndMethods" id="motivation">
+                <h3>2.1. Motivation</h3>
+                <p>
+                    A conducted study shows how "more than half of people use at
+                    least 3 different storage services". "Almost all people
+                    believe that their data habits have changed due to personal
+                    Cloud Storage. A majority of them are now using the cloud as
+                    their primary data storage. More than 50% of surveyed people
+                    use a free or paid limited storage plan.
+                </p>
+            </section>
+            <section typeof="sa:MaterialAndMethods" id="purpose">
+                <h3>2.2. Purpose</h3>
+                <p>
+                    Universal Storage Tool has, as a first purpose, to offer to
+                    its users a simple and clean platform for managing multiple
+                    cloud services by linking them to an account. Thus, the
+                    users will not need to worry about the details, just focus
+                    on what matter the most for them: their data.
+                </p>
+                <p>
+                    The second purpose of this application is efficiency and
+                    time saving for our clients, a better and faster way to
+                    storage files across multiple cloud storage services.
+                </p>
+            </section>
+        </section>
 
-    <section id="references" role="doc-bibliography">
-      <h2>5. References</h2>
-      <dl>
-        <dt>Cloud Storage Trends</dt>
-        <dd>
-          <cite property="schema:name">
-            <a href="https://www.goodfirms.co/resources/personal-cloud-storage-trends">
-              The cloud storage trend report.
-            </a>
-          </cite>
-        </dd>
-        <dt>HTML</dt>
-        <dd>
-          <cite property="schema:name">
-            <a href="https://www.w3schools.com/html/default.asp">
-              One of the HTML tutorial used.
-            </a>
-          </cite>
-        </dd>
-        <dt>CSS</dt>
-        <dd>
-          <cite property="schema:name">
-            <a href="https://www.w3schools.com/css/default.asp">
-              One of the CSS tutorial used.
-            </a>
-          </cite>
-        </dd>
-        <dt>General Coding Style</dt>
-        <dd>
-          <cite property="schema:name">
-            <a href="https://github.com/felixge/node-style-guide#readme">
-              Node.js.
-            </a>
-          </cite>
-          <cite property="schema:name">
-            <a href="https://github.com/rwaldron/idiomatic.js">
-              JavaScript.
-            </a>
-          </cite>
-          <cite property="schema:name">
-            <a href="https://google.github.io/styleguide/htmlcssguide.html">
-              HTML & CSS.
-            </a>
-          </cite>
-        </dd>
-      </dl>
-    </section>
-  </body>
+        <section id="structure">
+            <h2>3. Structure</h2>
+            <p>
+                Universal Storage Tool is structured based on functionalities
+                that are provided to its users. The functionalities provided by
+                the application include manipulating and computing different
+                operations on files that belong to a logged user. In the
+                following section, all those functionalities will be presented.
+            </p>
+            <section id="functionalities">
+                <h3>3.1. Functionalities</h3>
+                <p>
+                    Following a natural order in witch they were implemented,
+                    <i>Universal Storage Tool</i> offers:
+                </p>
+                <ul>
+                    <li>
+                        <em>User registration and authentication.</em>
+                    </li>
+                    <li>
+                        <em>Linking a cloud service account</em> that does not
+                        exist in the current UnST account.
+                    </li>
+                    <li>
+                        <em>Displaying via UI the user account details</em>:
+                        user based info and statistics regarding the amount of
+                        used space on every cloud service linked to the current
+                        account.
+                    </li>
+                    <li>
+                        <em>Displaying via UI all the files</em> from all linked
+                        cloud storage services.
+                    </li>
+                    <li>
+                        <em>Uploading files</em> in a classic manner (in a
+                        single linked cloud application) or by fragmenting it
+                        and uploading it in multiple linked cloud services in
+                        case is too large to fit in any linked cloud
+                        application.
+                    </li>
+                    <li>
+                        <em>Downloading an existent file that was uploaded</em>
+                        in a classic manner if it was uploaded in the same way,
+                        or by reconstructing all its fragments from every linked
+                        cloud application and putting them together and after
+                        that downloading it.
+                    </li>
+                    <li>
+                        <em>Archiving files</em> using a preset software for
+                        this purpose.
+                    </li>
+                </ul>
+            </section>
+            <section id="ui-components">
+                <h3>3.2. UI components</h3>
+                <p>
+                    <i>Universal Storage Tool's</i> structure is comprised by a
+                    number of HTML pages, each having different visual
+                    components, which we will explain in the current section.
+                </p>
+                <section id="index-page">
+                    <h4>3.2.1. Index page</h4>
+                    <p>
+                        The index page is the main page the user will see. It
+                        will provide navigation functionalities and will allow
+                        the user to see all the files associated with his
+                        account, choose to upload a new file and see how much
+                        space he/she has left in total.
+                    </p>
+                    <section id="nav-bar">
+                        <h5>3.2.1.1 Navigation Bar</h5>
+                        <p>
+                            The Navigation Bar is the UI element providing
+                            navigation functionality to the user. It includes an
+                            image with the project's logo, which if clicked
+                            redirects to the Index page, and more links to the
+                            right, to all the other HTML pages of the website.
+                        </p>
+                        <p>
+                            The responsiveness is provided through the flexbox
+                            containers and media queries for small displays. If
+                            the display is narrower than 678 pixels, the
+                            elements in the right will not be visible anymore.
+                            In their place, a menu icon will appear, and by
+                            clicking it the links to the other pages will be
+                            displayed in a drop menu fashion.
+                        </p>
+                        <p>
+                            This element appears on all pages, for a more
+                            standardized navigation system, except for the
+                            Report page, since that one must comply with the
+                            Scholarly HTML format.
+                        </p>
+                    </section>
+                    <section id="side-menu">
+                        <h5>3.2.1.2 Side Menu</h5>
+                        <p>
+                            The side menu is one of the two main elements of the
+                            body, making one of the two grid columns the body is
+                            made of. It allows access all the time to the button
+                            for adding a new file and the statistics for the
+                            available space in total.
+                        </p>
+                        <p>
+                            When the display is narrower than 678 pixels, its
+                            width shrinks to 42 pixels, and instead of the
+                            elements it contained, only a menu button will be
+                            visible. Upon clicking the button, the side menu
+                            will revert to its original width, allowing the user
+                            to select one of the possible actions.
+                        </p>
+                    </section>
+                    <section id="main-view">
+                        <h5>3.2.1.3 Main View</h5>
+                        <p>
+                            The main view is the other grid element of the body.
+                            This is where files and folders will be visible,
+                            allowing the user to download them or confirm that
+                            his uploads did succeed.
+                        </p>
+                        <p>
+                            The elements inside this container will be loaded
+                            through JavaScript, through AJAX calls using the
+                            fetch API, and will be displayed using a simple
+                            float left. This way, regardless of the display
+                            width, all files will be visible, since it is
+                            scrollable.
+                        </p>
+                    </section>
+                    <section id="login-register-page">
+                        <h4>3.2.2. Login/Register Page</h4>
+                        <p>
+                            This page provides the functionality for user login
+                            and registration. Both the "Login" and "Register"
+                            functionalities will be on the same page. The
+                            presentation of the page consist of a form with two
+                            text box inputs: username and password and two
+                            submit buttons: login and register. If a submit
+                            button was clicked, a validation of the input data,
+                            username and password, will be executed firstly:
+                            username needs to have minimum 6 and maximum 16
+                            alphabetic and numeric characters and password needs
+                            to have minimum 8 and maximum 32 alphabetic and
+                            numeric characters.
+                        </p>
+                        <p>
+                            Based on what button was clicked, the corresponding
+                            action will be done. In case of a "Login" button,
+                            the user will request to login as a user with
+                            username and password inserted in the input fields
+                            of the login form, respectively a user registration
+                            will be requested if the pressed button is
+                            "Register".
+                        </p>
+                        <p>
+                            A successful response from the server will redirect
+                            the user to the "Home" Page, otherwise the user will
+                            be restricted to remain in the "Login/Register"
+                            page.
+                        </p>
+                    </section>
+                    <section id="account-page">
+                        <h4>3.2.3. Account Page</h4>
+                        <p>
+                            The "Account" page offers information regarding the
+                            current logged in user: username, the registration
+                            date, his/her linked cloud applications and a status
+                            bar for each one showing the amount of space already
+                            in use.
+                        </p>
+                        <p>
+                            This page also allows users to edit or delete their
+                            account and also add a new link to another cloud
+                            storage application.
+                        </p>
+                    </section>
+                    <section id="about-page">
+                        <h4>3.2.4. About Page</h4>
+                        <p>
+                            The "About" page will be divided into "sections",
+                            which will provide the user a comprehensive
+                            description about us and our product.
+                        </p>
+                        <section id="who-we-are">
+                            <h5>3.2.4.1 Who we are?</h5>
+                            <p>
+                                This section will introduce
+                                <i>Universal Storage Tool's</i> team to the
+                                user.
+                            </p>
+                        </section>
+                        <section id="what-is-unst">
+                            <h5>3.2.4.2 What is UnST?</h5>
+                            <p>
+                                This section will present to the user what this
+                                project is all about and what is our goal.
+                            </p>
+                        </section>
+                        <section id="open-source-by-design">
+                            <h5>3.2.4.3 Open-source by design</h5>
+                            <p>
+                                This section will inform the user regarding our
+                                product's license and what made us choose an
+                                open-source license.
+                            </p>
+                        </section>
+                        <section id="supported-platforms">
+                            <h5>3.2.4.4 Supported platforms</h5>
+                            <p>
+                                This section will explain which cloud storage
+                                platforms we currently supported.
+                            </p>
+                        </section>
+                    </section>
+                    <section id="credits-page">
+                        <h4>3.2.5. Credits Page</h4>
+                        <p>
+                            This page will give credits to the original authors
+                            of any type of resources that they provided and was
+                            also used by us. At the time of writing, our logo
+                            image and the 404 not found image are mentioned in
+                            the "Credits" page, as they were taken from various
+                            sources available on the Internet (the exact source
+                            is available on that page) and we acknowledge this
+                            fact.
+                        </p>
+                    </section>
+                </section>
+            </section>
+        </section>
+
+        <section id="conclusions" role="doc-conclusion">
+            <h2>4. Conclusions</h2>
+            <p>
+                <i>Universal Storage Tool</i> is currently a work in progress
+                and is open to new ideas. We would like your feedback on what we
+                have done till now.
+            </p>
+            <p>
+                We believe in the potential of this application, its
+                applicability in real life and what it can offer to all our
+                clients. It was build respecting general codding styles, design
+                patterns and programming principles. So it will be easy to
+                maintain and update.
+            </p>
+        </section>
+
+        <section id="references" role="doc-bibliography">
+            <h2>5. References</h2>
+            <dl>
+                <dt>Cloud Storage Trends</dt>
+                <dd>
+                    <cite property="schema:name">
+                        <a
+                            href="https://www.goodfirms.co/resources/personal-cloud-storage-trends"
+                        >
+                            The cloud storage trend report.
+                        </a>
+                    </cite>
+                </dd>
+                <dt>HTML</dt>
+                <dd>
+                    <cite property="schema:name">
+                        <a href="https://www.w3schools.com/html/default.asp">
+                            One of the HTML tutorial used.
+                        </a>
+                    </cite>
+                </dd>
+                <dt>CSS</dt>
+                <dd>
+                    <cite property="schema:name">
+                        <a href="https://www.w3schools.com/css/default.asp">
+                            One of the CSS tutorial used.
+                        </a>
+                    </cite>
+                </dd>
+                <dt>General Coding Style</dt>
+                <dd>
+                    <cite property="schema:name">
+                        <a
+                            href="https://github.com/felixge/node-style-guide#readme"
+                        >
+                            Node.js.
+                        </a>
+                    </cite>
+                    <cite property="schema:name">
+                        <a href="https://github.com/rwaldron/idiomatic.js">
+                            JavaScript.
+                        </a>
+                    </cite>
+                    <cite property="schema:name">
+                        <a
+                            href="https://google.github.io/styleguide/htmlcssguide.html"
+                        >
+                            HTML & CSS.
+                        </a>
+                    </cite>
+                </dd>
+            </dl>
+        </section>
+    </body>
 </html>

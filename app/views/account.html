@@ -1,95 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title># account</title>
-    <link rel="stylesheet" href="public/css/style.css">
-    <link rel="stylesheet" href="public/css/nav.css">
-    <link rel="stylesheet" href="public/css/account.css">
-    <script src="https://kit.fontawesome.com/b5716d189e.js" crossorigin="anonymous"></script>
-</head>
-    <body>
-            <header id="nav-bar"></header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title># account</title>
+        <link rel="stylesheet" href="public/css/style.css" />
+        <link rel="stylesheet" href="public/css/nav.css" />
+        <link rel="stylesheet" href="public/css/account.css" />
+        <script
+            src="https://kit.fontawesome.com/b5716d189e.js"
+            crossorigin="anonymous"
+        ></script>
+        <script src="public/js/login.js"></script>
+    </head>
+    <body onload="setGoogleDriveSpace()">
+        <header id="nav-bar"></header>
 
-            <div class="account-details-container">
-
-                <div class="left-side-details">
-                    <img class="avatar-img" src="public/img/avatar.png" title="Profile avatar" alt="">
-                    <div class="list-account-info">
-                        <ul>
-                            <li>
-                                <span class="user-info-span">
-                                    <i class="fas fa-user">   # </i>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="user-info-span">
-                                    <i class="fas fa-clock">   Registered on # </i>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="user-info-span">
-                                    <i class="fas fa-cloud-upload-alt">   # Gb uploaded </i>
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="list-account-options">
-                        <button class="unst-btn">
-                            <i class="fas fa-user-edit"> Edit account</i>
-                        </button>
-                        <button class="unst-btn">
-                            <i class="fas fa-user-slash"> Delete account</i>
-                        </button>
-                        <button class="unst-btn">
-                            <i class="fas fa-sign-out-alt"> Sign out</i>
-                        </button>
-
-                    </div>
-
-                </div>
-                <div class="right-side-details">
-                    <img class="statistics-img" src="public/img/statistics.png" title="Statistics icon" alt="">
+        <div class="account-details-container">
+            <div class="left-side-details">
+                <img
+                    class="avatar-img"
+                    src="public/img/avatar.png"
+                    title="Profile avatar"
+                    alt=""
+                />
+                <div class="list-account-info">
                     <ul>
                         <li>
-                            <h3>Dropbox<span> (25 <span class="percentage">%</span> )</span></h3>
-                            <span class="bar">
-                                <span class="dropbox-space">
-                                </span>
+                            <span class="user-info-span">
+                                <i class="fas fa-user"> # </i>
                             </span>
                         </li>
-
                         <li>
-                            <h3>Google Drive<span> (100 <span class="percentage">%</span> )</span></h3>
-                            <span class="bar">
-                                <span class="google-drive-space">
-                                </span>
+                            <span class="user-info-span">
+                                <i class="fas fa-clock"> Registered on # </i>
                             </span>
                         </li>
-
                         <li>
-                            <h3>Microsoft OneDrive<span> ( 75 <span class="percentage">%</span> )</span></h3>
-                            <span class="bar">
-                                <span class="microsoft-onedrive-space">
-                                </span>
-                            </span>
-                        </li>
-
-                        <li>
-                            <h3>Box<span> ( 50 <span class="percentage">%</span> )</span></h3>
-                            <span class="bar">
-                                <span class="box-space">
-                                </span>
+                            <span class="user-info-span">
+                                <i class="fas fa-cloud-upload-alt">
+                                    # Gb uploaded
+                                </i>
                             </span>
                         </li>
                     </ul>
-                    <button class="add-drive-button"><i class="fas fa-plus"></i>Add Drive</button>
                 </div>
-
+                <div class="list-account-options">
+                    <button class="unst-btn">
+                        <i class="fas fa-user-edit"> Edit account</i>
+                    </button>
+                    <button class="unst-btn">
+                        <i class="fas fa-user-slash"> Delete account</i>
+                    </button>
+                    <button class="unst-btn" onclick="doLogout()">
+                        <i class="fas fa-sign-out-alt"> Sign out</i>
+                    </button>
+                </div>
             </div>
+            <div class="right-side-details">
+                <img
+                    class="statistics-img"
+                    src="public/img/statistics.png"
+                    title="Statistics icon"
+                    alt=""
+                />
+                <ul>
+                    <li>
+                        <h3>
+                            Dropbox<span>
+                                (25 <span class="percentage">%</span> )</span
+                            >
+                        </h3>
+                        <span class="bar">
+                            <span class="dropbox-space"> </span>
+                        </span>
+                    </li>
+
+                    <li id="google-drive">
+                        <h3>
+                            Google Drive<span id="gDrive-percentage">
+                                (0 <span class="percentage">%</span> )</span
+                            >
+                        </h3>
+                        <span class="bar">
+                            <span class="google-drive-space"> </span>
+                        </span>
+                    </li>
+
+                    <li>
+                        <h3>
+                            Microsoft OneDrive<span>
+                                ( 75 <span class="percentage">%</span> )</span
+                            >
+                        </h3>
+                        <span class="bar">
+                            <span class="microsoft-onedrive-space"> </span>
+                        </span>
+                    </li>
+
+                    <li>
+                        <h3>
+                            Box<span>
+                                ( 50 <span class="percentage">%</span> )</span
+                            >
+                        </h3>
+                        <span class="bar">
+                            <span class="box-space"> </span>
+                        </span>
+                    </li>
+                </ul>
+                <button class="add-drive-button" onclick="addGoogleDrive()">
+                    <i class="fas fa-plus"></i>Add Drive
+                </button>
+            </div>
+        </div>
 
         <script src="public/js/nav-bar.js"></script>
         <script src="public/js/menu-button.js"></script>
+        <script src="public/js/google-drive.js"></script>
     </body>
 </html>

@@ -1,45 +1,53 @@
 class Dispatcher {
     listeners = {
-        'GET': new Map(),
-        'PUT': new Map(),
-        'POST': new Map(),
-        'HEAD': new Map(),
-        'TRACE': new Map(),
-        'PATCH': new Map(),
-        'DELETE': new Map(),
-        'CONNECT': new Map(),
-        'OPTIONS': new Map()
+        GET: [],
+        PUT: [],
+        POST: [],
+        HEAD: [],
+        TRACE: [],
+        PATCH: [],
+        DELETE: [],
+        CONNECT: [],
+        OPTIONS: [],
     };
 
-    on = (method, url, fun) => {
-        this.listeners[method.toUpperCase()].set(url, fun);
-    };
+    on(method, url, fun) {
+        this.listeners[method.toUpperCase()].push([url, fun]);
+    }
 
-    use = (url, finerDispatcher) => {
-        for(let method in finerDispatcher.listeners){
-            for(let [path, handler] of finerDispatcher.listeners[method]){
-                this.listeners[method].set(url + path, handler);
-            }
-        }
-    };
-
-
-    dispatch = (req, res) => {
-        let baseUrl = 'http://' + req.headers.host + '/';
-        let pathName = (new URL(req.url, baseUrl)).pathname;
-        if(this.listeners[req.method.toUpperCase()].get(pathName)) {
-            this.listeners[req.method.toUpperCase()].get(pathName)(req, res);
-        }
-        else{
-            for(let method in this.listeners){
-                for(let [path, handler] of this.listeners[method]){
-                    if(path instanceof RegExp && path.test(pathName)) {
-                        handler(req, res);
+    use(url, finerDispatcher) {
+        if (finerDispatcher.listeners) {
+            for (const method in finerDispatcher.listeners) {
+                if (finerDispatcher.listeners.hasOwnProperty(method))
+                    for (const [path, handler] of finerDispatcher.listeners[
+                        method
+                    ]) {
+                        this.listeners[method].push([url + path, handler]);
                     }
-                }
+            }
+            return;
+        }
+
+        for (const listenerMethod in this.listeners)
+            if (this.listeners.hasOwnProperty(listenerMethod)) {
+                this.listeners[listenerMethod].push([url, finerDispatcher]);
+            }
+    }
+
+    async dispatch(req, res) {
+        const baseUrl = "http://" + req.headers.host + "/";
+        const pathName = new URL(req.url, baseUrl).pathname;
+        for (const list of this.listeners[req.method.toUpperCase()]) {
+            if (
+                (list[0] instanceof RegExp &&
+                    list[0].test(pathName) &&
+                    !res.finished) ||
+                (list[0] === pathName && !res.finished)
+            ) {
+                await list[1](req, res);
             }
         }
-    };
+    }
 }
 
 module.exports = Dispatcher;
