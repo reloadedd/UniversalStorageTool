@@ -83,8 +83,8 @@ body{
 }
 
 .google-drive-space{
-    width:100%;
-    animation: google-drive-anim 2s;
+    width:0%;
+    transition-duration: 2s;
 }
 
 .microsoft-onedrive-space{
@@ -112,15 +112,6 @@ body{
     }
     100%{
         width: 75%
-    }
-}
-
-@keyframes google-drive-anim {
-    0%{
-        width: 0;
-    }
-    100%{
-        width: 100%
     }
 }
 
