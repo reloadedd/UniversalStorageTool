@@ -5,13 +5,13 @@ exports.onAuth = (req, res) => {
         Location:
             "https://accounts.google.com/o/oauth2/v2/auth" +
             "?redirect_uri=" +
-            (process.env.IS_UP
-                ? "http://reloadedd.me:2999/account"
+            (process.env.UNST_IS_SERVER_UP
+                ? "https://reloadedd.me:3000/account"
                 : "http://localhost:2999/account") +
             "&prompt=consent" +
             "&response_type=code" +
             "&client_id=" +
-            (process.env.GDRIVE_CLIENT_ID || "") +
+            (process.env.UNST_GDRIVE_CLIENT_ID || "") +
             "&scope=https://www.googleapis.com/auth/drive" +
             "&access_type=offline",
     });
@@ -20,7 +20,7 @@ exports.onAuth = (req, res) => {
 
 exports.onAdd = async (req, res) => {
     try {
-        const userEmail = jwt.verify(req.body.jwtToken, req.JWT_SECRET).email;
+        const userEmail = jwt.verify(req.body.jwtToken, req.UNST_JWT_SECRET).email;
         if (!req.body || !req.body.refreshToken) throw new Error();
 
         const user = await req.db.users.findOne({

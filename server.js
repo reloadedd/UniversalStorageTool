@@ -53,6 +53,7 @@ try {
         const cookies = request.headers["cookie"]
             .split(";")
             .map((cookie) => cookie.trim());
+
         try {
             request.jwtToken = cookies
                 .find((cookie) => cookie.startsWith("jwt="))

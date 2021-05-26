@@ -1,3 +1,3 @@
 module.exports = (req) => {
-    req.JWT_SECRET = process.env.JWT_SECRET || "shh";
+    req.UNST_JWT_SECRET = process.env.UNST_JWT_SECRET || "shh";
 };

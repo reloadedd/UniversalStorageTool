@@ -17,7 +17,7 @@ dispatcher.on("GET", "/auth", (req, res) => {
         return;
     }
     try {
-        jwt.verify(req.jwtToken, req.JWT_SECRET);
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
     } catch {
         res.writeHead(307, {
             Location: "/login",
@@ -41,7 +41,7 @@ dispatcher.on("GET", "/space", async (req, res) => {
         return;
     }
     try {
-        jwt.verify(req.jwtToken, req.JWT_SECRET);
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
     } catch {
         res.writeHead(307, {
             Location: "/login",
