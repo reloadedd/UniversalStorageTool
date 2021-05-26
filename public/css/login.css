@@ -1,7 +1,7 @@
-body{
+body {
     margin: 0;
     padding: 0;
-    background-image: url('../img/background.jpg');
+    background-image: url("../img/background.jpg");
     background-size: cover;
 }
 
@@ -15,18 +15,19 @@ body{
 }
 
 .user-entry-form {
-    width:300px;
+    width: 300px;
     padding: 40px;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
-    background-color: rgba(0,0,0,0.9);
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.9);
     text-align: center;
     border-radius: 5%;
 }
 
-.user-entry-form input[type = "text"],.user-entry-form input[type = "password"] {
+.user-entry-form input[type="text"],
+.user-entry-form input[type="password"] {
     background: none;
     display: block;
     margin: 20px auto;
@@ -39,13 +40,13 @@ body{
     transition: 0.25s;
 }
 
-.user-entry-form input[type = "text"]:focus,.user-entry-form input[type = "password"]:focus {
+.user-entry-form input[type="text"]:focus,
+.user-entry-form input[type="password"]:focus {
     width: 280px;
     border-color: green;
 }
 
-
-.user-entry-form input[type = "submit"] {
+.user-entry-form input[type="submit"] {
     background: none;
     display: block;
     margin: 20px auto;
@@ -59,7 +60,7 @@ body{
     cursor: pointer;
 }
 
-.user-entry-form input[type = "submit"]:hover {
+.user-entry-form input[type="submit"]:hover {
     background: #800080;
 }
 
