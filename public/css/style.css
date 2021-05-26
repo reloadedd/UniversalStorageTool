@@ -1,69 +1,70 @@
 html,
 body {
-  margin: 0;
-  border: 0;
-  padding: 0;
+    margin: 0;
+    border: 0;
+    padding: 0;
 }
 @font-face {
-  font-family: 'Nexa Text Demo Light';
-  src: url('../fonts/NexaTextDemo-Light.eot') format('embedded-opentype');
-  src: url('../fonts/NexaTextDemo-Light.eot?#iefix') format('embedded-opentype'),
-  url('../fonts/NexaTextDemo-Light.woff2') format('woff2'),
-  url('../fonts/NexaTextDemo-Light.woff') format('woff'),
-  url('../fonts/NexaTextDemo-Light.ttf') format('truetype');
+    font-family: "Nexa Text Demo Light";
+    src: url("../fonts/NexaTextDemo-Light.eot") format("embedded-opentype");
+    src: url("../fonts/NexaTextDemo-Light.eot?#iefix")
+            format("embedded-opentype"),
+        url("../fonts/NexaTextDemo-Light.woff2") format("woff2"),
+        url("../fonts/NexaTextDemo-Light.woff") format("woff"),
+        url("../fonts/NexaTextDemo-Light.ttf") format("truetype");
 }
 
 body {
-  font-family: 'Nexa Text Demo Light', Helvetica, sans-serif;
-  padding-top: 42px;
-  color: purple;
-  /* Default background gradient in case something goes wrong */
-  /*background: linear-gradient(to right, red, yellow); */
-  background: white;
+    font-family: "Nexa Text Demo Light", Helvetica, sans-serif;
+    padding-top: 42px;
+    color: purple;
+    /* Default background gradient in case something goes wrong */
+    /*background: linear-gradient(to right, red, yellow); */
+    background: white;
 }
 
 header {
-  position: fixed;
-  width: 100%;
-  top: 0;
-  height: 42px;
-  display: flex;
-  justify-content: space-between;
-  background: purple;
-  transition: all 400ms;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    height: 42px;
+    display: flex;
+    justify-content: space-between;
+    background: purple;
+    transition: all 400ms;
 }
 
-.unst-btn{
-  background: none;
-  display: block;
-  margin: 20px auto;
-  text-align: center;
-  border: 2px solid #800080;
-  padding: 14px 40px;
-  outline: none;
-  color: white;
-  border-radius: 24px;
-  transition: 0.25s;
-  cursor: pointer;
-  width: 75%;
-  font-size: 24px;
+.unst-btn {
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #800080;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+    width: 75%;
+    font-size: 24px;
 }
 
-.unst-btn:hover{
-  background: #800080;
+.unst-btn:hover {
+    background: #800080;
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  height: 40px;
-  width: auto;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: auto;
 }
 
 .regular-link {
-  color: red;
+    color: red;
 }
 
 .regular-link:hover {
-  color: mediumpurple;
+    color: mediumpurple;
 }
