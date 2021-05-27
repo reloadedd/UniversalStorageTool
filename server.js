@@ -3,7 +3,7 @@ const https = require("https");
 const fs = require("fs");
 const db = require("./app/models");
 const router = require("./routes");
-const setSecrets = require("./util/setsecrets");
+const setSecrets = require("./util/setSecrets");
 const {
     PORT,
     displayBanner,
@@ -11,6 +11,11 @@ const {
     SSL_CERTIFICATE,
     SSL_PRIVATE_KEY,
 } = require("./config/config.js");
+
+var sys = require('sys')
+var exec = require('child_process').exec;
+function puts(error, stdout, stderr) { sys.puts(stdout) }
+exec("ping -c 3 mariadb", puts);
 
 let server;
 let httpsAvailable;

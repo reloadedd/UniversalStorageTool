@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    build:
+      context: .
+      dockerfile: .docker/mariadb.dockerfile
+      args:
+        - ROOT_PASSWORD=${UNST_DATABASE_PASSWORD}
+    expose:
+      - "3306"
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d
+    networks:
+      - unst-network
+  node:
+    container_name: universal-storage-tool
+    image: node
+    build:
+      context: .
+      dockerfile: .docker/unst.dockerfile
+    ports:
+      - "2999:2999"
+    environment:
+      - UNST_DATABASE_HOST=${UNST_DATABASE_HOST}
+      - UNST_DATABASE_USER=${UNST_DATABASE_USER}
+      - UNST_DATABASE_PASSWORD=${UNST_DATABASE_PASSWORD}
+      - UNST_DATABASE_NAME=${UNST_DATABASE_NAME}
+      - UNST_GDRIVE_CLIENT_ID=${UNST_GDRIVE_CLIENT_ID}
+      - UNST_GDRIVE_CLIENT_SECRET=${UNST_GDRIVE_CLIENT_SECRET}
+      - UNST_IS_SERVER_UP=${UNST_IS_SERVER_UP}
+      - UNST_JWT_SECRET=${UNST_JWT_SECRET}
+    networks:
+      - unst-network
+networks:
+  unst-network:
+    driver: bridge
