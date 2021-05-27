@@ -27,8 +27,8 @@ MIMETypes = {
 dispatcher.use("/users", userRouter);
 dispatcher.use(/\//, refreshGoogleDriveToken);
 dispatcher.use("/g-drive", googleDriveRouter);
-dispatcher.use("/", accountsRouter);
-dispatcher.use("/", filesRouter);
+dispatcher.use("", accountsRouter);
+dispatcher.use("", filesRouter);
 
 dispatcher.on("GET", "/", (req, res) => {
     if (!req.jwtToken) {

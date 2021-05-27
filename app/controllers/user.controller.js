@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const fetch = require("node-fetch");
 const { StatusCodes } = require("http-status-codes");
 
 exports.register = (req, res) => {
@@ -19,9 +18,7 @@ exports.register = (req, res) => {
 
     const user = {
         email: req.body.email,
-        displayName: req.body.displayName
-            ? req.body.displayName
-            : req.body.email,
+        displayName: req.body.displayName || req.body.email,
         password: bcrypt.hashSync(req.body.password, 10),
     };
 

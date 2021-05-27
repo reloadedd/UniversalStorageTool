@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
         <title>Universal Storage Tool</title>
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="public/css/style.css" />
@@ -14,8 +15,16 @@
         <header id="nav-bar"></header>
         <div class="side-menu">
             <div id="side-menu-button"></div>
-            <button class="unst-btn">New</button>
-            <button class="unst-btn">Files</button>
+            <input
+                type="file"
+                id="fileElem"
+                multiple
+                style="display: none"
+                onchange="displayFiles()"
+            />
+            <button class="unst-btn" onclick="uploadFile()">
+                Upload Files
+            </button>
             <div id="space-left">
                 <h6>Total available space</h6>
                 <span class="menu-side-bar">
@@ -29,5 +38,6 @@
         <script src="public/js/menu-button.js"></script>
         <script src="public/js/side-menu-button.js"></script>
         <script src="public/js/demo-files.js"></script>
+        <script src="public/js/mainPage.js"></script>
     </body>
 </html>

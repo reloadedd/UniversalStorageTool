@@ -35,7 +35,7 @@ class Dispatcher {
     }
 
     async dispatch(req, res) {
-        const baseUrl = "http://" + req.headers.host + "/";
+        const baseUrl = "https://" + req.headers.host + "/";
         const pathName = new URL(req.url, baseUrl).pathname;
         for (const list of this.listeners[req.method.toUpperCase()]) {
             if (

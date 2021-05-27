@@ -3,11 +3,6 @@ const jwt = require("jsonwebtoken");
 const fetch = require("node-fetch");
 const { StatusCodes } = require("http-status-codes");
 exports.goToLogin = (req, res) => {
-    if (!req.jwtToken) {
-        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
-        res.end();
-        return true;
-    }
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         return false;

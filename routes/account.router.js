@@ -5,7 +5,7 @@ const { StatusCodes } = require("http-status-codes");
 
 const dispatcher = new Dispatcher();
 
-dispatcher.on("GET", "account", async (req, res) => {
+dispatcher.on("GET", "/account", async (req, res) => {
     if (await goToLogin(req, res)) return;
 
     if (!(await gotCode(req, res))) {

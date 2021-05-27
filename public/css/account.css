@@ -81,7 +81,7 @@ body {
 }
 
 .google-drive-space {
-    width: 0%;
+    width: 0;
     transition-duration: 2s;
 }
 
