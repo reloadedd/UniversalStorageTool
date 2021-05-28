@@ -1,8 +1,14 @@
+let totalSize;
+let uploadedSize;
 uploadFiles = async () => {
     const files = document.getElementById("fileElem").files;
+    totalSize = 0;
+    uploadedSize = 0;
+    for (const file of files) totalSize += file.size;
+    document.getElementById("uploading").style.visibility = "visible";
     for (const file of files) {
-        console.log("uploading file" + file.name);
-        console.log("");
+        document.getElementById("upload_text").innerText =
+            "Uploading file " + file.name;
         const createFileResult = await fetch("files", {
             method: "POST",
         });
@@ -25,15 +31,14 @@ uploadFiles = async () => {
             alert("couldn't upload a particular chunk for some reason.. sorry");
             return;
         }
-        alert("Congrats!! Upload complete");
     }
+    document.getElementById("uploading").style.visibility = "hidden";
 };
 
 uploadFileAt = async (file, name) => {
     let start = 0;
     const step = 5242880; // 5 * 1024 * 1024 bytes (5Mb)
     const total = file.size;
-    console.log(total);
     while (start < total) {
         const blob = file.slice(start, start + step);
         let tries = 0;
@@ -62,6 +67,9 @@ uploadFileAt = async (file, name) => {
         if (tries === 4 || result.status === 400 || result.status === 500)
             return false;
         start = parseInt(result.headers.get("Range").replace("bytes=0-", ""));
+        uploadedSize += blob.size;
+        document.getElementById("upload_progress").style.width =
+            Math.round((uploadedSize / totalSize) * 100) + "%";
     }
     return true;
 };
