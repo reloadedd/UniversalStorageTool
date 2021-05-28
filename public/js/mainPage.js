@@ -25,8 +25,7 @@ uploadFiles = async () => {
             alert("couldn't upload a particular chunk for some reason.. sorry");
             return;
         }
-        console.log("upload worked");
-        console.log("");
+        alert("Congrats!! Upload complete");
     }
 };
 
@@ -34,6 +33,7 @@ uploadFileAt = async (file, name) => {
     let start = 0;
     const step = 5242880; // 5 * 1024 * 1024 bytes (5Mb)
     const total = file.size;
+    console.log(total);
     while (start < total) {
         const blob = file.slice(start, start + step);
         let tries = 0;
@@ -44,7 +44,12 @@ uploadFileAt = async (file, name) => {
                 headers: {
                     "Content-Length": blob.size,
                     "Content-Range":
-                        start + "-" + (start + blob.size) + "/" + total,
+                        "bytes " +
+                        start +
+                        "-" +
+                        (start + blob.size) +
+                        "/" +
+                        total,
                     Location: name,
                 },
                 body: blob,
@@ -56,8 +61,7 @@ uploadFileAt = async (file, name) => {
         );
         if (tries === 4 || result.status === 400 || result.status === 500)
             return false;
-        start = parseInt(result.headers.get("Location"));
-        console.log("chunk");
+        start = parseInt(result.headers.get("Range").replace("bytes=0-", ""));
     }
     return true;
 };

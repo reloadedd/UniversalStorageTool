@@ -41,9 +41,6 @@ dispatcher.on("POST", "/files", (req, res) => {
 dispatcher.on("PUT", "/files", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        console.log(req.data.length);
-        console.log(req.headers["content-length"]);
-        console.log(req.headers["content-range"]);
         if (
             !req.headers["content-length"] ||
             !req.headers["content-range"] ||

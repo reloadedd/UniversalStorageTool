@@ -64,7 +64,9 @@ exports.uploadToFile = (req, res) => {
     const fileConfig = JSON.parse(
         fs.readFileSync("./tmp/" + fid + ".config.json").toString("utf-8"),
     );
-    let [range, total] = req.headers["content-range"].split("/");
+    let [range, total] = req.headers["content-range"]
+        .replace("bytes ", "")
+        .split("/");
     total = parseInt(total);
     const [start, end] = range.split("-").map((i) => parseInt(i));
     if (!fileConfig.totalSize) fileConfig.totalSize = total;
@@ -73,7 +75,7 @@ exports.uploadToFile = (req, res) => {
         parseInt(req.headers["content-length"]) !== end - start
     ) {
         res.writeHead(StatusCodes.BAD_REQUEST, {
-            Location: fileConfig.written,
+            Range: "bytes=0-" + fileConfig.written,
             "Content-Type": "text/plain",
         });
         res.end();
@@ -89,7 +91,7 @@ exports.uploadToFile = (req, res) => {
         );
         if (end == total) {
             res.writeHead(StatusCodes.OK, {
-                Location: fileConfig.written,
+                Range: "bytes=0-" + fileConfig.written,
                 "Content-Type": "application/json",
             });
             res.end(
@@ -100,8 +102,8 @@ exports.uploadToFile = (req, res) => {
             return;
         }
 
-        res.writeHead(StatusCodes.CONTINUE, {
-            Location: fileConfig.written,
+        res.writeHead(StatusCodes.PARTIAL_CONTENT, {
+            Range: "bytes=0-" + fileConfig.written,
             "Content-Type": "application/json",
         });
         res.end(
