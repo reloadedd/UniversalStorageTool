@@ -12,11 +12,6 @@ const {
     SSL_PRIVATE_KEY,
 } = require("./config/config.js");
 
-var sys = require('sys')
-var exec = require('child_process').exec;
-function puts(error, stdout, stderr) { sys.puts(stdout) }
-exec("ping -c 3 mariadb", puts);
-
 let server;
 let httpsAvailable;
 

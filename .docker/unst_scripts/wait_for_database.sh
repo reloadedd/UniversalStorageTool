@@ -25,5 +25,7 @@ function waitForDatabase() {
   done
 }
 
+sleep ${WAITING_TIME}
+
 # Run it!
 waitForDatabase

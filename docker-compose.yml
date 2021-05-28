@@ -11,7 +11,8 @@ services:
     expose:
       - "3306"
     volumes:
-      - ./data:/docker-entrypoint-initdb.d
+      - ./mysql_data:/var/lib/mysql
+      - ./mysql_config:/etc/mysql/conf.d
     networks:
       - unst-network
   node:
