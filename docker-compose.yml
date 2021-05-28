@@ -2,7 +2,8 @@ version: '3.9'
 services:
   init:
     image: alpine
-    entrypoint: /bin/sh -c "chown -v 999:999 /var/lib/mysql && chmod -v 700 /var/lib/mysql && chown -v 999:999 /etc/mysql/conf.d && chmod -v 700 /etc/mysql/conf.d"
+    entrypoint: /bin/sh -c "chown -v 997:997 /var/lib/mysql && chmod -v 700 /var/lib/mysql &&
+      chown -v 997:997 /etc/mysql/conf.d && chmod -v 700 /etc/mysql/conf.d"
     container_name: init
     restart: "no"
     volumes:
