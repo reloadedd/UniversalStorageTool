@@ -7,6 +7,6 @@ LABEL version="0.3.1"
 ARG ROOT_PASSWORD
 ENV MARIADB_ROOT_PASSWORD ${ROOT_PASSWORD}
 
-COPY ./.docker/mariadb_scripts /mariadb_scripts
-RUN chmod +rx /mariadb_scripts/*.sh
+COPY ./.docker/mariadb_scripts/create_database.sql /docker-entrypoint-initdb.d/
+
 EXPOSE 3306

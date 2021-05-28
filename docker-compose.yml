@@ -1,7 +1,15 @@
 version: '3.9'
 services:
-  mariadb:
-    container_name: mariadb
+  init:
+    image: alpine
+    entrypoint: /bin/sh -c "chown -v 1000:1000 /var/lib/mysql && chmod -v 770 /var/lib/mysql && chown -v 1000:1000 /etc/mysql/conf.d && chmod -v 770 /etc/mysql/conf.d"
+    container_name: init
+    restart: "no"
+    volumes:
+      - /var/opt/unst/mysql_data:/var/lib/mysql
+      - /var/opt/unst/mysql_config:/etc/mysql/conf.d
+  unst-database:
+    container_name: unst-mariadb
     image: mariadb
     build:
       context: .
@@ -11,11 +19,11 @@ services:
     expose:
       - "3306"
     volumes:
-      - ./mysql_data:/var/lib/mysql
-      - ./mysql_config:/etc/mysql/conf.d
+      - /var/opt/unst/mysql_data:/var/lib/mysql
+      - /var/opt/unst/mysql_config:/etc/mysql/conf.d
     networks:
       - unst-network
-  node:
+  unst-web:
     container_name: universal-storage-tool
     image: node
     build:

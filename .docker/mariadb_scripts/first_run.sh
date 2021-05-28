@@ -6,10 +6,10 @@
 # Description:  This script will prepare the container for the first run (if it is the case)
 # ------------
 
-VOLUME_NAME='unst-database-volume'
+SQL_SCRIPT_NAME='create_database.sql'
 
-if [ "$(docker volume ls --filter name=${VOLUME_NAME} -q | wc -l)" -eq 1 ]; then
-  echo "[ INFO ]: The volume exists."
-else
-  echo "[ ERROR ]: The volume doesn't exist."
-fi
+cat <<EOF > $SQL_SCRIPT_NAME
+CREATE USER '${UNST_DATABASE_USER}'@'%' IDENTIFIED BY '${UNST_DATABASE_PASSWORD}';
+CREATE DATABASE ${UNST_DATABASE_NAME};
+GRANT ALL ON ${UNST_DATABASE_NAME}.* TO '${UNST_DATABASE_USER}'@'%';
+EOF
