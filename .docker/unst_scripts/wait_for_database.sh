@@ -8,6 +8,7 @@
 
 MAX_RETRIES=5
 WAITING_TIME=3
+INITIAL_WAITING_TIME=10
 DATABASE_SERVER_HOSTNAME='unst-mariadb'
 
 function waitForDatabase() {
@@ -26,7 +27,9 @@ function waitForDatabase() {
   done
 }
 
-sleep ${WAITING_TIME}
+# First time after booting up it will take a bit longer (especially if that is the time when the volumes
+# are created)
+sleep ${INITIAL_WAITING_TIME}
 
 # Run it!
 waitForDatabase
