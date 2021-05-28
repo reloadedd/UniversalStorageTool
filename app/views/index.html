@@ -20,9 +20,12 @@
                 id="fileElem"
                 multiple
                 style="display: none"
-                onchange="displayFiles()"
+                onchange="uploadFiles()"
             />
-            <button class="unst-btn" onclick="uploadFile()">
+            <button
+                class="unst-btn"
+                onclick="document.getElementById('fileElem').click()"
+            >
                 Upload Files
             </button>
             <div id="space-left">

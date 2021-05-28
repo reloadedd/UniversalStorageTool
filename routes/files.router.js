@@ -43,11 +43,12 @@ dispatcher.on("PUT", "/files", (req, res) => {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         console.log(req.data.length);
         console.log(req.headers["content-length"]);
+        console.log(req.headers["content-range"]);
         if (
             !req.headers["content-length"] ||
             !req.headers["content-range"] ||
-            !url.parse(req.url, true).query.fid ||
-            !fs.existsSync("./tmp/" + url.parse(req.url, true).query.fid) ||
+            !req.headers["location"] ||
+            !fs.existsSync("./tmp/" + req.headers["location"]) ||
             !req.data ||
             req.data.length !== parseInt(req.headers["content-length"])
         )

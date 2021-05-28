@@ -60,7 +60,7 @@ exports.createFile = (req, res) => {
 };
 
 exports.uploadToFile = (req, res) => {
-    const fid = url.parse(req.url, true).query.fid;
+    const fid = req.headers["location"];
     const fileConfig = JSON.parse(
         fs.readFileSync("./tmp/" + fid + ".config.json").toString("utf-8"),
     );
@@ -73,6 +73,7 @@ exports.uploadToFile = (req, res) => {
         parseInt(req.headers["content-length"]) !== end - start
     ) {
         res.writeHead(StatusCodes.BAD_REQUEST, {
+            Location: fileConfig.written,
             "Content-Type": "text/plain",
         });
         res.end();
@@ -88,6 +89,7 @@ exports.uploadToFile = (req, res) => {
         );
         if (end == total) {
             res.writeHead(StatusCodes.OK, {
+                Location: fileConfig.written,
                 "Content-Type": "application/json",
             });
             res.end(
@@ -99,6 +101,7 @@ exports.uploadToFile = (req, res) => {
         }
 
         res.writeHead(StatusCodes.CONTINUE, {
+            Location: fileConfig.written,
             "Content-Type": "application/json",
         });
         res.end(
