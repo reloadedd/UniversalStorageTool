@@ -11,45 +11,45 @@ pipeline {
     }
 
     stages {
-	    stage('Checkout from Github') {
-			steps {
-				checkout([
-					$class: 'GitSCM',
-					branches: [
-						[name: '*/master']
-					],
-					doGenerateSubmoduleConfigurations: false,
-					extensions: [],
-					submoduleCfg: [],
-					userRemoteConfigs: [
-						[
-							url: "${GITHUB_REPOSITORY_URL}"
-						]
-					]
-				])
-			}
-	    }
+        stage('Checkout from Github') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [
+                        [name: '*/master']
+                    ],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [
+                        [
+                            url: "${GITHUB_REPOSITORY_URL}"
+                        ]
+                    ]
+                ])
+            }
+        }
 
-		stage('Dockerize application') {
+        stage('Dockerize application') {
             when {
                 branch 'master'
             }
 
-			steps {
-				sh "docker image build -t ${IMAGE_NAME} ."
-			}
-		}
+            steps {
+                sh "docker image build -t ${IMAGE_NAME} ."
+            }
+        }
 
-		stage('Deploy') {
+        stage('Deploy') {
             when {
                 branch 'master'
             }
 
-			steps {
-				sh "docker-compose build"
+            steps {
+                sh "docker-compose build"
                 sh "docker-compose up"
-			}
-		}
+            }
+        }
     }
 
     post {
