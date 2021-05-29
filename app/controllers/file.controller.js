@@ -123,3 +123,13 @@ exports.uploadToFile = (req, res) => {
         );
     }
 };
+
+exports.testBigFileGet = async (req, res) => {
+    const stat = fs.statSync("tmp/cantStop.mp3");
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "audio/mpeg; filename=cantStop",
+        "Content-Length": stat.size,
+    });
+    const readStream = fs.createReadStream("tmp/cantStop.mp3");
+    readStream.pipe(res);
+};
