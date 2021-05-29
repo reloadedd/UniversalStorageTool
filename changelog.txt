@@ -1,3 +1,8 @@
+v0.3.2:
+    -   Modified the dispatcher a bit. We only want the request to propagate from middlewares,
+    since there can be requests that take longer to process, and we don't want overlapping responses.
+    Therefore, we end the dispatching process if we encounter a route that is not a middleware.
+    If you want to use a middleware, use dispatcher.use, not dispatcher.on.
 v0.3.1:
     -   Fix CVE-2017-16086 vulnerability by replacing `ua-parser` with `useragent`
 

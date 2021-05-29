@@ -12,7 +12,7 @@ class Dispatcher {
     };
 
     on(method, url, fun) {
-        this.listeners[method.toUpperCase()].push([url, fun]);
+        this.listeners[method.toUpperCase()].push([url, fun, false]);
     }
 
     use(url, finerDispatcher) {
@@ -22,7 +22,11 @@ class Dispatcher {
                     for (const [path, handler] of finerDispatcher.listeners[
                         method
                     ]) {
-                        this.listeners[method].push([url + path, handler]);
+                        this.listeners[method].push([
+                            url + path,
+                            handler,
+                            false,
+                        ]);
                     }
             }
             return;
@@ -30,7 +34,11 @@ class Dispatcher {
 
         for (const listenerMethod in this.listeners)
             if (this.listeners.hasOwnProperty(listenerMethod)) {
-                this.listeners[listenerMethod].push([url, finerDispatcher]);
+                this.listeners[listenerMethod].push([
+                    url,
+                    finerDispatcher,
+                    true,
+                ]);
             }
     }
 
@@ -45,6 +53,7 @@ class Dispatcher {
                 (list[0] === pathName && !res.finished)
             ) {
                 await list[1](req, res);
+                if (!list[2]) return;
             }
         }
     }
