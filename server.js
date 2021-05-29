@@ -3,7 +3,7 @@ const https = require("https");
 const fs = require("fs");
 const db = require("./app/models");
 const router = require("./routes");
-const setSecrets = require("./util/setsecrets");
+const setSecrets = require("./util/setSecrets");
 const {
     PORT,
     displayBanner,

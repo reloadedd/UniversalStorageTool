@@ -1,0 +1,53 @@
+version: '3.9'
+services:
+  init:
+    image: alpine
+    entrypoint: /bin/sh -c "chown -v 997:997 /var/lib/mysql && chmod -v 700 /var/lib/mysql &&
+      chown -v 997:997 /etc/mysql/conf.d && chmod -v 700 /etc/mysql/conf.d"
+    container_name: init
+    restart: "no"
+    volumes:
+      - /var/opt/unst/mysql_data:/var/lib/mysql
+      - /var/opt/unst/mysql_data:/etc/mysql/conf.d
+  unst-database:
+    container_name: unst-mariadb
+    image: mariadb
+    build:
+      context: .
+      dockerfile: .docker/mariadb.dockerfile
+      args:
+        - ROOT_PASSWORD=${UNST_DATABASE_ROOT_PASSWORD}
+        - DATABASE_USER=${UNST_DATABASE_USER}
+        - DATABASE_PASSWORD=${UNST_DATABASE_PASSWORD}
+        - DATABASE_NAME=${UNST_DATABASE_NAME}
+    environment:
+      MYSQL_USER: mysql
+    expose:
+      - "3306"
+    volumes:
+      - /var/opt/unst/mysql_data:/var/lib/mysql
+      - /var/opt/unst/mysql_config:/etc/mysql/conf.d
+    networks:
+      - unst-network
+  unst-web:
+    container_name: universal-storage-tool
+    image: node
+    build:
+      context: .
+      dockerfile: .docker/unst.dockerfile
+    ports:
+      - "2999:2999"
+    environment:
+      - UNST_DATABASE_HOST=${UNST_DATABASE_HOST}
+      - UNST_DATABASE_USER=${UNST_DATABASE_USER}
+      - UNST_DATABASE_PASSWORD=${UNST_DATABASE_PASSWORD}
+      - UNST_DATABASE_NAME=${UNST_DATABASE_NAME}
+      - UNST_GDRIVE_CLIENT_ID=${UNST_GDRIVE_CLIENT_ID}
+      - UNST_GDRIVE_CLIENT_SECRET=${UNST_GDRIVE_CLIENT_SECRET}
+      - UNST_IS_SERVER_UP=${UNST_IS_SERVER_UP}
+      - UNST_JWT_SECRET=${UNST_JWT_SECRET}
+    networks:
+      - unst-network
+networks:
+  unst-network:
+    driver: bridge
