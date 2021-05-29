@@ -40,6 +40,12 @@ pipeline {
             }
         }
 
+        stage('SonarQube Source Code Analysis') {
+            steps {
+                sh "sonar-scanner"
+            }
+        }
+
         stage('Deploy') {
             when {
                 branch 'master'
