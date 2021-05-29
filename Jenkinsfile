@@ -10,6 +10,11 @@ pipeline {
         JENKINS_PROJECT_NAME    = 'UniversalStorageToolMultibranch'
     }
 
+    options {
+        // This will skip creating a new stage for checking out the Jenkinsfile from the repository
+        skipDefaultCheckout(true)
+    }
+
     stages {
         stage('Checkout from Github') {
             steps {
