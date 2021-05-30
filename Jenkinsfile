@@ -79,7 +79,7 @@ pipeline {
             }
 
             steps {
-                sh "docker-compose up --detach"
+                sh "docker-compose --env-file /etc/unst/.env --detach up"
             }
         }
     }
