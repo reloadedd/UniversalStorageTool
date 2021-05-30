@@ -73,7 +73,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy application') {
             when {
                 branch 'master'
             }
