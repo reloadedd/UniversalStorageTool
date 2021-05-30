@@ -61,7 +61,7 @@ pipeline {
             }
 
             steps {
-                sh "docker-compose build"
+                sh "docker-compose --env-file /etc/unst/.env build"
             }
         }
 
