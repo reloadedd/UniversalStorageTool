@@ -19,11 +19,10 @@ pipeline {
     stages {
         stage('Checkout from Github') {
             steps {
-                sh 'env'
                 checkout([
                     $class: 'GitSCM',
                     branches: [
-                        [name: "*/${branch-env.BRANCH_NAME}"]
+                        [name: "*/${CHANGE_BRANCH}"]
                     ],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
