@@ -1,3 +1,13 @@
+v0.4.0:
+    -   Add database container running MariaDB, unreachable from the Internet (it's not even accessible from the server
+        itself because it's configured in such a way that it's on a container network)
+    -   Replace the one big `Dockerfile` with `docker-compose.yml` responsible with spinning up two containers
+    -   On the first run the database will be created, together with a new database user
+    -   Create Jenkins multibranch pipeline that builds differently on master/PR branches
+
+v0.3.2:
+    -   Fix CVE-2021-23362 vulnerability by upgrading `hosted-git-info` to a version >=2.8.9
+
 v0.3.1:
     -   Fix CVE-2017-16086 vulnerability by replacing `ua-parser` with `useragent`
 
@@ -29,4 +39,4 @@ v0.2.0:
     -   Create the not found page
 
 v0.1.0:
-    - First release
+    -   First release
