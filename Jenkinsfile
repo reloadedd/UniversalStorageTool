@@ -69,28 +69,12 @@ pipeline {
     post {
         success {
             script {
-                sh """#!/bin/bash
-
-                curl "https://api.GitHub.com/repos/${GITHUB_USERNAME}/${GITHUB_REPOSITORY_NAME}/statuses/\$(git rev-parse HEAD)?access_token=\${GITHUB_ACCESS_TOKEN}" \
-                -H "Content-Type: application/json" \
-                -X POST \
-                -d "{\\"state\\": \\"success\\", \\"context\\": \\"continuous-integration/jenkins\\", \\"description\\": \\"Jenkins\\", \\"target_url\\": \\"${JENKINS_URL}/job/${JENKINS_PROJECT_NAME}/$BUILD_NUMBER/console\\"}"
-                """
-                
                 slackSend color: "good", message: "#${env.BUILD_NUMBER}: Build-ul '${env.JOB_NAME}' e gata cumetre."
             }
         }
 
         failure {
             script {
-                sh """#!/bin/bash
-                
-                curl "https://api.GitHub.com/repos/${GITHUB_USERNAME}/${GITHUB_REPOSITORY_NAME}/statuses/\$(git rev-parse HEAD)?access_token=\${GITHUB_ACCESS_TOKEN}" \
-                -H "Content-Type: application/json" \
-                -X POST \
-                -d "{\\"state\\": \\"failure\\", \\"context\\": \\"continuous-integration/jenkins\\", \\"description\\": \\"Jenkins\\", \\"target_url\\": \\"${JENKINS_URL}/job/${JENKINS_PROJECT_NAME}/$BUILD_NUMBER/console\\"}"
-                """
-
                 slackSend color: "danger", message: "#${env.BUILD_NUMBER}: Da' ce ai facut cu '${env.JOB_NAME}', bobiță?"
             }
         }
