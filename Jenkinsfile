@@ -42,7 +42,7 @@ pipeline {
             }
 
             steps {
-                sh "docker image build -t ${IMAGE_NAME} ."
+                sh "docker-compose build"
             }
         }
 
@@ -60,7 +60,6 @@ pipeline {
             }
 
             steps {
-                sh "docker-compose build"
                 sh "docker-compose up --detach"
             }
         }
