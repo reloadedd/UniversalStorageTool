@@ -22,7 +22,7 @@ pipeline {
                 checkout([
                     $class: 'GitSCM',
                     branches: [
-                        [name: "*/${env.BRANCH_NAME}"]
+                        [name: "*/${env.GIT_BRANCH}"]
                     ],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
