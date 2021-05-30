@@ -8,6 +8,7 @@ pipeline {
         GITHUB_REPOSITORY_NAME  = 'UniversalStorageTool'
         JENKINS_URL             = 'https://www.reloadedd.me:8443'
         JENKINS_PROJECT_NAME    = 'UniversalStorageToolMultibranch'
+        UNST_SONARQUBE          = credentials('3f457c4a-0fd8-4777-a061-6712958fb98d')
     }
 
     options {
@@ -47,10 +48,8 @@ pipeline {
 
         stage('SonarQube Source Code Analysis') {
             steps {
-                sh 'env'
-                sh 'env | grep UNST'
-                sh 'sed -i "s/{{UNST_SONARQUBE_USERNAME}}/$UNST_SONARQUBE_USERNAME/" sonar-project.properties'
-                sh 'sed -i "s/{{UNST_SONARQUBE_PASSWORD}}/$UNST_SONARQUBE_PASSWORD/" sonar-project.properties'
+                sh "sed -i 's/{{UNST_SONARQUBE_USERNAME}}/$UNST_SONARQUBE_USR/' sonar-project.properties"
+                sh "sed -i 's/{{UNST_SONARQUBE_PASSWORD}}/$UNST_SONARQUBE_PSW/' sonar-project.properties"
                 sh 'sonar-scanner'
             }
         }
