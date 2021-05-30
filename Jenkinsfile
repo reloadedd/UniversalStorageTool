@@ -19,20 +19,39 @@ pipeline {
     stages {
         stage('Checkout from Github') {
             steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [
-                        [name: "*/${CHANGE_BRANCH}"]
-                    ],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [
-                        [
-                            url: "${GITHUB_REPOSITORY_URL}"
-                        ]
-                    ]
-                ])
+                script {
+                    if (env.BRANCH_NAME) {
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [
+                                [name: "*/${env.BRANCH_NAME}"]
+                            ],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions: [],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [
+                                [
+                                    url: "${GITHUB_REPOSITORY_URL}"
+                                ]
+                            ]
+                        ])    
+                    } else {
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [
+                                [name: "*/${CHANGE_BRANCH}"]
+                            ],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions: [],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [
+                                [
+                                    url: "${GITHUB_REPOSITORY_URL}"
+                                ]
+                            ]
+                        ])
+                    }
+                }
             }
         }
 
