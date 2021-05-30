@@ -20,11 +20,11 @@ pipeline {
         stage('Checkout from Github') {
             steps {
                 script {
-                    if (env.BRANCH_NAME) {
+                    if (env.CHANGE_BRANCH) {
                         checkout([
                             $class: 'GitSCM',
                             branches: [
-                                [name: "*/${env.BRANCH_NAME}"]
+                                [name: "*/${env.CHANGE_BRANCH}"]
                             ],
                             doGenerateSubmoduleConfigurations: false,
                             extensions: [],
@@ -39,7 +39,7 @@ pipeline {
                         checkout([
                             $class: 'GitSCM',
                             branches: [
-                                [name: "*/${CHANGE_BRANCH}"]
+                                [name: "*/${env.BRANCH_NAME}"]
                             ],
                             doGenerateSubmoduleConfigurations: false,
                             extensions: [],
