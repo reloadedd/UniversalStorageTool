@@ -19,6 +19,7 @@ pipeline {
     stages {
         stage('Checkout from Github') {
             steps {
+                sh 'env'
                 checkout([
                     $class: 'GitSCM',
                     branches: [
