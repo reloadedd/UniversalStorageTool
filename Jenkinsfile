@@ -47,12 +47,12 @@ pipeline {
 
         stage('SonarQube Source Code Analysis') {
             steps {
-                sh """/bin/bash
+                sh '''/bin/bash
                 
-                sed -i "s/{{UNST_SONARQUBE_USERNAME}}/\$UNST_SONARQUBE_USERNAME/" sonar-project.properties
-                sed -i "s/{{UNST_SONARQUBE_PASSWORD}}/\$UNST_SONARQUBE_PASSWORD/" sonar-project.properties
+                sed -i "s/{{UNST_SONARQUBE_USERNAME}}/$UNST_SONARQUBE_USERNAME/" sonar-project.properties
+                sed -i "s/{{UNST_SONARQUBE_PASSWORD}}/$UNST_SONARQUBE_PASSWORD/" sonar-project.properties
                 sonar-scanner
-                """
+                '''
             }
         }
 
