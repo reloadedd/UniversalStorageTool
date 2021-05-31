@@ -47,10 +47,8 @@ class Dispatcher {
         const pathName = new URL(req.url, baseUrl).pathname;
         for (const list of this.listeners[req.method.toUpperCase()]) {
             if (
-                (list[0] instanceof RegExp &&
-                    list[0].test(pathName) &&
-                    !res.finished) ||
-                (list[0] === pathName && !res.finished)
+                (list[0] instanceof RegExp && list[0].test(pathName)) ||
+                list[0] === pathName
             ) {
                 await list[1](req, res);
                 if (!list[2]) return;
