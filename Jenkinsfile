@@ -61,7 +61,7 @@ pipeline {
             }
 
             steps {
-                sh "docker-compose build"
+                sh "docker-compose --env-file /etc/unst/.env build"
             }
         }
 
@@ -73,13 +73,13 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy application') {
             when {
                 branch 'master'
             }
 
             steps {
-                sh "docker-compose up --detach"
+                sh "docker-compose --env-file /etc/unst/.env up --detach"
             }
         }
     }
