@@ -1,8 +1,19 @@
+v0.4.0:
+    -   Add database container running MariaDB, unreachable from the Internet (it's not even accessible from the server
+        itself because it's configured in such a way that it's on a container network)
+    -   Replace the one big `Dockerfile` with `docker-compose.yml` responsible with spinning up two containers
+    -   On the first run the database will be created, together with a new database user
+    -   Create Jenkins multibranch pipeline that builds differently on master/PR branches
+
+v0.3.3:
+    -   Fix CVE-2021-23362 vulnerability by upgrading `hosted-git-info` to a version >=2.8.9
+
 v0.3.2:
     -   Modified the dispatcher a bit. We only want the request to propagate from middlewares,
     since there can be requests that take longer to process, and we don't want overlapping responses.
     Therefore, we end the dispatching process if we encounter a route that is not a middleware.
     If you want to use a middleware, use dispatcher.use, not dispatcher.on.
+
 v0.3.1:
     -   Fix CVE-2017-16086 vulnerability by replacing `ua-parser` with `useragent`
 
