@@ -46,9 +46,6 @@ services:
       - UNST_GDRIVE_CLIENT_SECRET=${UNST_GDRIVE_CLIENT_SECRET}
       - UNST_IS_SERVER_UP=${UNST_IS_SERVER_UP}
       - UNST_JWT_SECRET=${UNST_JWT_SECRET}
-      - CERTIFICATE_FILE_CRT_PATH=/etc/ssl/reloadedd_me.crt
-      - CERTIFICATE_PRIVATE_KEY_PATH=/etc/ssl/reloadedd_me.key
-      - CERTIFICATE_CA_BUNDLE_PATH=/etc/ssl/reloadedd_me.ca-bundle
     networks:
       - unst-network
     depends_on:
