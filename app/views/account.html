@@ -109,14 +109,26 @@
                         </span>
                     </li>
                 </ul>
-                <button class="add-drive-button" onclick="addGoogleDrive()">
-                    <i class="fas fa-plus"></i>Add Drive
+                <button class="add-drive-button" onclick="setDriversListVisibility()">
+                    Add Drive   <i class="fas fa-caret-down"></i>
                 </button>
+                <div id="drivers-list">
+                    <div class="drive-item-btn" onclick="addGoogleDrive()">
+                        GoogleDrive
+                    </div>
+                    <div class="drive-item-btn">
+                        OneDrive
+                    </div>
+                    <div class="drive-item-btn">
+                        DropBox
+                    </div>
+                </div>
             </div>
         </div>
 
         <script src="public/js/nav-bar.js"></script>
         <script src="public/js/menu-button.js"></script>
         <script src="public/js/google-drive.js"></script>
+        <script src="public/js/drivers-displaying.js"></script>
     </body>
 </html>
