@@ -38,9 +38,16 @@ dispatcher.on("GET", "/", (req, res) => {
     }
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        res.writeHead(StatusCodes.OK, {
-            "Content-Type": "text/html",
-        });
+        if (req.cookies) {
+            res.writeHead(StatusCodes.OK, {
+                "Set-Cookie": req.cookies,
+                "Content-Type": "text/html",
+            });
+        } else {
+            res.writeHead(StatusCodes.OK, {
+                "Content-Type": "text/html",
+            });
+        }
         const data = fs.readFileSync("app/views/index.html");
         res.end(data);
     } catch (ex) {
@@ -68,9 +75,16 @@ dispatcher.on("GET", /\//, (request, response) => {
     /* Send a MIME type if the resource is well known for us to hear about it, else send nothing */
     const mimetype = MIMETypes[extension === undefined ? "html" : extension];
     if (mimetype) {
-        response.writeHead(StatusCodes.OK, {
-            "Content-Type": mimetype,
-        });
+        if (request.cookies) {
+            response.writeHead(StatusCodes.OK, {
+                "Set-Cookie": request.cookies,
+                "Content-Type": mimetype,
+            });
+        } else {
+            response.writeHead(StatusCodes.OK, {
+                "Content-Type": mimetype,
+            });
+        }
     }
 
     if (resource === "register") {
