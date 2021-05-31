@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  init:
+  unst-init:
     image: alpine
     entrypoint: /bin/sh -c "chown -v 997:997 /var/lib/mysql && chmod -v 700 /var/lib/mysql &&
       chown -v 997:997 /etc/mysql/conf.d && chmod -v 700 /etc/mysql/conf.d"
@@ -29,6 +29,8 @@ services:
       - /var/opt/unst/mysql_config:/etc/mysql/conf.d
     networks:
       - unst-network
+    depends_on:
+      - unst-init
   unst-web:
     container_name: universal-storage-tool
     image: node
@@ -48,6 +50,8 @@ services:
       - UNST_JWT_SECRET=${UNST_JWT_SECRET}
     networks:
       - unst-network
+    depends_on:
+      - unst-database
 networks:
   unst-network:
     driver: bridge
