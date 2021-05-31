@@ -79,7 +79,8 @@ pipeline {
             }
 
             steps {
-                sh "docker-compose --env-file /etc/unst/.env up --detach"
+                sh "docker-compose --env-file /etc/unst/.env down"
+                sh "docker-compose --env-file /etc/unst/.env up --detach --no-deps"
             }
         }
     }
