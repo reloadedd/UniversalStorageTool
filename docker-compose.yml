@@ -29,8 +29,6 @@ services:
       - /var/opt/unst/mysql_config:/etc/mysql/conf.d
     networks:
       - unst-network
-    depends_on:
-      - unst-init
   unst-web:
     container_name: universal-storage-tool
     image: node
