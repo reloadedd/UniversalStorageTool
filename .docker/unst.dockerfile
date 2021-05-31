@@ -13,9 +13,6 @@ COPY ./package*.json ./
 COPY ./.docker/unst_scripts ./unst_scripts
 RUN chmod +rx unst_scripts/*.sh
 
-# Copy the certificate files for enabling HTTPS
-COPY /etc/ssl/reloadedd.me/* /etc/ssl/
-
 RUN npm ci
 
 # Copy the contents of the whole repostory to the current directory (WORKDIR from above) of the container
