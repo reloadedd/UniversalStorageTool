@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const fetch = require("node-fetch");
+const { StatusCodes } = require("http-status-codes");
 
 exports.register = (req, res) => {
     const User = req.db.users;
     if (!req.body || !req.body.email || !req.body.password) {
-        res.writeHead(400, {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
             "Content-Type": "application/json",
         });
         res.end(
@@ -18,15 +18,13 @@ exports.register = (req, res) => {
 
     const user = {
         email: req.body.email,
-        displayName: req.body.displayName
-            ? req.body.displayName
-            : req.body.email,
+        displayName: req.body.displayName || req.body.email,
         password: bcrypt.hashSync(req.body.password, 10),
     };
 
     User.create(user)
         .then(async () => {
-            res.writeHead(200, {
+            res.writeHead(StatusCodes.OK, {
                 "Set-Cookie":
                     "jwt=" +
                     jwt.sign(
@@ -47,7 +45,7 @@ exports.register = (req, res) => {
         })
         .catch((err) => {
             console.log(err);
-            res.writeHead(500, {
+            res.writeHead(StatusCodes.INTERNAL_SERVER_ERROR, {
                 "Content-Type": "application/json",
             });
             res.end(
@@ -63,7 +61,7 @@ exports.register = (req, res) => {
 exports.login = async (req, res) => {
     const User = req.db.users;
     if (!req.body || !req.body.email || !req.body.password) {
-        res.writeHead(400, {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
             "Content-Type": "application/json",
         });
         res.end(
@@ -78,7 +76,7 @@ exports.login = async (req, res) => {
         !thisUser ||
         !bcrypt.compareSync(req.body.password, thisUser.password)
     ) {
-        res.writeHead(400, {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
             "Content-Type": "application/json",
         });
         res.end(
@@ -100,7 +98,7 @@ exports.login = async (req, res) => {
             ) +
             "; path=/; HttpOnly",
     );
-    res.writeHead(200, {
+    res.writeHead(StatusCodes.OK, {
         "Set-Cookie": cookies,
         "Content-Type": "application/json",
     });

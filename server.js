@@ -1,9 +1,7 @@
 const http = require("http");
 const https = require("https");
 const fs = require("fs");
-const db = require("./app/models");
-const router = require("./routes");
-const setSecrets = require("./util/setSecrets");
+const { setServerDataAndDispatch } = require("./util/server.setup");
 const {
     PORT,
     displayBanner,
@@ -47,82 +45,12 @@ try {
     };
 
     server = https.createServer(httpsOptions, function (request, response) {
-        request.db = db;
-        setSecrets(request);
-        let data = "";
-        const cookies = request.headers["cookie"]
-            .split(";")
-            .map((cookie) => cookie.trim());
-
-        try {
-            request.jwtToken = cookies
-                .find((cookie) => cookie.startsWith("jwt="))
-                .replace("jwt=", "");
-        } catch {
-            console.log("no jwt token");
-        }
-        try {
-            request.gDriveToken = cookies
-                .find((cookie) => cookie.startsWith("gDriveToken="))
-                .replace("gDriveToken=", "");
-        } catch {
-            console.log("no google drive token");
-        }
-        request.on("data", (chunk) => {
-            data += chunk;
-        });
-        request.on("end", () => {
-            try {
-                data = JSON.parse(data);
-                request.body = data;
-            } catch {
-                console.log("no data");
-            } finally {
-                router.dispatch(request, response);
-            }
-        });
+        setServerDataAndDispatch(request, response);
     });
     httpsAvailable = true;
 } catch (e) {
     server = http.createServer(function (request, response) {
-        request.db = db;
-        setSecrets(request);
-        let data = "";
-        let cookies;
-        try {
-            cookies = request.headers["cookie"]
-                .split(";")
-                .map((cookie) => cookie.trim());
-        } catch {
-            console.log("oops.. no cookies at all");
-        }
-        try {
-            request.jwtToken = cookies
-                .find((cookie) => cookie.startsWith("jwt="))
-                .replace("jwt=", "");
-        } catch {
-            console.log("no jwt token");
-        }
-        try {
-            request.gDriveToken = cookies
-                .find((cookie) => cookie.startsWith("gDriveToken="))
-                .replace("gDriveToken=", "");
-        } catch {
-            console.log("no google drive token");
-        }
-        request.on("data", (chunk) => {
-            data += chunk;
-        });
-        request.on("end", () => {
-            try {
-                data = JSON.parse(data);
-                request.body = data;
-            } catch {
-                console.log("no data");
-            } finally {
-                router.dispatch(request, response);
-            }
-        });
+        setServerDataAndDispatch(request, response);
     });
     httpsAvailable = false;
 }
@@ -131,3 +59,5 @@ try {
 server.listen(PORT, "0.0.0.0", () => {
     displayBanner(httpsAvailable);
 });
+
+if (!fs.existsSync("./tmp")) fs.mkdirSync("./tmp");

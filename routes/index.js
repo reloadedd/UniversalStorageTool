@@ -12,6 +12,7 @@ const accountsRouter = require("./account.router");
 const googleDriveRouter = require("./google.drive.router");
 const jwt = require("jsonwebtoken");
 const { refreshGoogleDriveToken } = require("../util/refreshTokens");
+const { StatusCodes } = require("http-status-codes");
 
 MIMETypes = {
     html: "text/html",
@@ -26,24 +27,24 @@ MIMETypes = {
 dispatcher.use("/users", userRouter);
 dispatcher.use(/\//, refreshGoogleDriveToken);
 dispatcher.use("/g-drive", googleDriveRouter);
-dispatcher.use("/", accountsRouter);
-dispatcher.use("/", filesRouter);
+dispatcher.use("", accountsRouter);
+dispatcher.use("", filesRouter);
 
 dispatcher.on("GET", "/", (req, res) => {
     if (!req.jwtToken) {
-        res.writeHead(307, { Location: "/login" });
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
         res.end();
         return;
     }
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        res.writeHead(200, {
+        res.writeHead(StatusCodes.OK, {
             "Content-Type": "text/html",
         });
         const data = fs.readFileSync("app/views/index.html");
         res.end(data);
     } catch (ex) {
-        res.writeHead(307, { Location: "/login" });
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
         res.end();
     }
 });
@@ -67,7 +68,7 @@ dispatcher.on("GET", /\//, (request, response) => {
     /* Send a MIME type if the resource is well known for us to hear about it, else send nothing */
     const mimetype = MIMETypes[extension === undefined ? "html" : extension];
     if (mimetype) {
-        response.writeHead(200, {
+        response.writeHead(StatusCodes.OK, {
             "Content-Type": mimetype,
         });
     }

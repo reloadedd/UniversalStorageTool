@@ -4,13 +4,14 @@ const {
     onAdd,
     getSpace,
 } = require("../app/controllers/google.drive.controller");
+const { StatusCodes } = require("http-status-codes");
 const jwt = require("jsonwebtoken");
 
 const dispatcher = new Dispatcher();
 
 dispatcher.on("GET", "/auth", (req, res) => {
     if (req.gDriveToken) {
-        res.writeHead(307, {
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
             Location: "/account",
         });
         res.end();
@@ -19,7 +20,7 @@ dispatcher.on("GET", "/auth", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
     } catch {
-        res.writeHead(307, {
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
             Location: "/login",
         });
         res.end();
@@ -34,7 +35,7 @@ dispatcher.on("POST", "/add", async (req, res) => {
 
 dispatcher.on("GET", "/space", async (req, res) => {
     if (!req.gDriveToken) {
-        res.writeHead(307, {
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
             Location: "/account",
         });
         res.end();
@@ -43,7 +44,7 @@ dispatcher.on("GET", "/space", async (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
     } catch {
-        res.writeHead(307, {
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
             Location: "/login",
         });
         res.end();

@@ -1,6 +1,6 @@
 const x = Math.floor(Math.random() * 100) + 5;
 for (let i = 1; i <= x; i++) {
-    fetch("file?id=" + i)
+    fetch("files?id=" + i)
         .then((result) => result.text())
         .then(
             (data) =>

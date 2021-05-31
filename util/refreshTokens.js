@@ -21,14 +21,16 @@ exports.refreshGoogleDriveToken = async (req, res) => {
                 }),
             })
         ).json();
-        if (!req.cookies) req.cookies = [];
-        req.cookies.push(
-            "gDriveToken=" +
-                data.access_token +
-                "; path=/; HttpOnly; Max-Age=" +
-                data.expires_in,
-        );
-        req.gDriveToken = data.access_token;
+        if (data.access_token && data.expires_in) {
+            if (!req.cookies) req.cookies = [];
+            req.cookies.push(
+                "gDriveToken=" +
+                    data.access_token +
+                    "; path=/; HttpOnly; Max-Age=" +
+                    data.expires_in,
+            );
+            req.gDriveToken = data.access_token;
+        }
     } catch (err) {
         console.log(err.message);
     }

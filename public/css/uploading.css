@@ -1,0 +1,46 @@
+#uploading {
+    position: fixed;
+    left: 0;
+    top: -21px;
+    visibility: hidden;
+    width: 100vw;
+    height: 150vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+#upload_container {
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    /* establish flex container */
+    flex-direction: column;
+    /* make main-axis vertical */
+    justify-content: flex-end;
+    /* align items vertically, in this case */
+    align-items: center;
+    /* align items horizontally, in this case */
+}
+
+#upload_text {
+    display: block;
+    text-align: center;
+}
+#upload_bar {
+    background: #353b48;
+    display: block;
+    position: center;
+    height: 50px;
+    width: 70%;
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 0 10px #00ff00b3;
+}
+
+#upload_progress {
+    height: 50px;
+    float: left;
+    background: #00ff00;
+    width: 0%;
+}

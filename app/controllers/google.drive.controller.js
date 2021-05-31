@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const fetch = require("node-fetch");
+const { StatusCodes } = require("http-status-codes");
 exports.onAuth = (req, res) => {
-    res.writeHead(307, {
+    res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
         Location:
             "https://accounts.google.com/o/oauth2/v2/auth" +
             "?redirect_uri=" +
@@ -20,7 +21,10 @@ exports.onAuth = (req, res) => {
 
 exports.onAdd = async (req, res) => {
     try {
-        const userEmail = jwt.verify(req.body.jwtToken, req.UNST_JWT_SECRET).email;
+        const userEmail = jwt.verify(
+            req.body.jwtToken,
+            req.UNST_JWT_SECRET,
+        ).email;
         if (!req.body || !req.body.refreshToken) throw new Error();
 
         const user = await req.db.users.findOne({
@@ -30,7 +34,7 @@ exports.onAdd = async (req, res) => {
             refreshToken: req.body.refreshToken,
         });
         user.setGoogleDrive(drive);
-        res.writeHead(200, {
+        res.writeHead(StatusCodes.OK, {
             "Content-Type": "application/json",
         });
         res.end(
@@ -39,7 +43,7 @@ exports.onAdd = async (req, res) => {
             }),
         );
     } catch {
-        res.writeHead(400, {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
             "Content-Type": "application/json",
         });
         res.end(
@@ -60,12 +64,12 @@ exports.getSpace = async (req, res) => {
         })
     ).json();
     if (req.cookies) {
-        res.writeHead(200, {
+        res.writeHead(StatusCodes.OK, {
             "Content-Type": "application/json",
             "Set-Cookie": req.cookies,
         });
     } else {
-        res.writeHead(200, {
+        res.writeHead(StatusCodes.OK, {
             "Content-Type": "application/json",
         });
     }

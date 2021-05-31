@@ -1,17 +1,13 @@
 const url = require("url");
 const jwt = require("jsonwebtoken");
 const fetch = require("node-fetch");
+const { StatusCodes } = require("http-status-codes");
 exports.goToLogin = (req, res) => {
-    if (!req.jwtToken) {
-        res.writeHead(307, { Location: "/login" });
-        res.end();
-        return true;
-    }
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         return false;
     } catch (ex) {
-        res.writeHead(307, { Location: "/login" });
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
         res.end();
         return true;
     }
@@ -51,7 +47,7 @@ exports.gotCode = async (req, res) => {
     );
     console.log(data);
 
-    res.writeHead(200, {
+    res.writeHead(StatusCodes.OK, {
         "Set-Cookie":
             "gDriveToken=" +
             data.access_token +
