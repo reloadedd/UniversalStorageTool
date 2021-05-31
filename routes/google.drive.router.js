@@ -5,6 +5,7 @@ const {
     getSpace,
 } = require("../app/controllers/google.drive.controller");
 const { StatusCodes } = require("http-status-codes");
+const filesRouter = require("./google.drive.files.router");
 const jwt = require("jsonwebtoken");
 
 const dispatcher = new Dispatcher();
@@ -52,5 +53,7 @@ dispatcher.on("GET", "/space", async (req, res) => {
     }
     await getSpace(req, res);
 });
+
+dispatcher.use("/files", filesRouter);
 
 module.exports = dispatcher;
