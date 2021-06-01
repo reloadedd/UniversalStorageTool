@@ -1,10 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
-    return sequelize.define("File", {
+    return sequelize.define("Directory", {
         name: {
             type: Sequelize.STRING,
-        },
-        size: {
-            type: Sequelize.BIGINT,
         },
     });
 };
