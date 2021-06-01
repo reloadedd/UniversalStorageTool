@@ -104,7 +104,7 @@ exports.uploadToFile = (req, res) => {
                     message: "File upload complete",
                 }),
             );
-            setFileToUser(fid, req.db);
+            setFileToUser(fid, req);
             return;
         }
 
