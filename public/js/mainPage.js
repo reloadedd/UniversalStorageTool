@@ -11,6 +11,11 @@ uploadFiles = async () => {
             "Uploading file " + file.name;
         const createFileResult = await fetch("files", {
             method: "POST",
+            body: JSON.stringify({
+                name: file.name,
+                size: file.size,
+                type: file.type,
+            }),
         });
         if (createFileResult.status === 403) {
             alert(
@@ -36,6 +41,7 @@ uploadFiles = async () => {
 };
 
 uploadFileAt = async (file, name) => {
+    console.log(file);
     let start = 0;
     const step = 5242880; // 5 * 1024 * 1024 bytes (5Mb)
     const total = file.size;

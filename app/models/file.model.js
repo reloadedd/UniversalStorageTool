@@ -6,5 +6,8 @@ module.exports = (sequelize, Sequelize) => {
         size: {
             type: Sequelize.BIGINT,
         },
+        mimeType: {
+            type: Sequelize.STRING,
+        },
     });
 };

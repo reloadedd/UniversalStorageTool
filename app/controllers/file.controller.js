@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
 const fileTemplate = require("../models/file.model");
+const { setFileToUser } = require("../../util/set.file");
 exports.onFileGet = (req, res) => {
     const browser = useragent.parse(req.headers["user-agent"]);
 
@@ -30,12 +31,16 @@ exports.createFile = (req, res) => {
             fileName = crypto.randomBytes(32).toString("hex");
         } while (fs.existsSync("./tmp/" + fileName));
         fs.appendFileSync("./tmp/" + fileName, "");
+        const configBody = {
+            user: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+            name: req.body.name,
+            totalSize: req.body.size,
+            mimeType: req.body.type,
+            written: 0,
+        };
         fs.writeFileSync(
             "./tmp/" + fileName + ".config.json",
-            JSON.stringify({
-                user: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
-                written: 0,
-            }),
+            JSON.stringify(configBody),
         );
         if (req.cookies) {
             res.writeHead(StatusCodes.CREATED, {
@@ -69,10 +74,10 @@ exports.uploadToFile = (req, res) => {
         .split("/");
     total = parseInt(total);
     const [start, end] = range.split("-").map((i) => parseInt(i));
-    if (!fileConfig.totalSize) fileConfig.totalSize = total;
     if (
         fileConfig.written !== start ||
-        parseInt(req.headers["content-length"]) !== end - start
+        parseInt(req.headers["content-length"]) !== end - start ||
+        fileConfig.totalSize !== total
     ) {
         res.writeHead(StatusCodes.BAD_REQUEST, {
             Range: "bytes=0-" + fileConfig.written,
@@ -99,6 +104,7 @@ exports.uploadToFile = (req, res) => {
                     message: "File upload complete",
                 }),
             );
+            setFileToUser(fid, req.db);
             return;
         }
 
