@@ -84,3 +84,14 @@ uploadFileAt = async (file, name) => {
     }
     return true;
 };
+
+getFiles = async () => {
+    const result = await fetch("/files");
+    if (result.status === 200) {
+        document.getElementsByClassName("main-view").item(0).innerHTML =
+            await result.text();
+        document
+            .getElementsByClassName("loading-icon")
+            .item(0).style.visibility = "hidden";
+    }
+};

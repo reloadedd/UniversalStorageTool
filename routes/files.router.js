@@ -14,10 +14,7 @@ const dispatcher = new Dispatcher();
 dispatcher.on("GET", "/files", async (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        if (!url.parse(req.url, true).query.id) {
-            testBigFileGet(req, res);
-            return;
-        }
+
         onFileGet(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {

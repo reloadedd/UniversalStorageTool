@@ -4,10 +4,31 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
-const fileTemplate = require("../models/file.model");
 const { setFileToUser } = require("../../util/set.file");
-exports.onFileGet = (req, res) => {
+const { templateDirectoriesAndFiles } = require("../../util/templates");
+exports.onFileGet = async (req, res) => {
     const browser = useragent.parse(req.headers["user-agent"]);
+
+    let files;
+    let folders;
+
+    if (!url.parse(req.url, true).query.did) {
+        const me = await req.db.users.findOne({
+            where: {
+                email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+            },
+        });
+        files = await me.getFiles();
+        folders = await me.getDirectories();
+    } else {
+        const dir = await req.db.directories.findOne({
+            where: {
+                id: url.parse(req.url, true).query.did,
+            },
+        });
+        files = await dir.getFiles();
+        folders = await dir.getDirectories();
+    }
 
     /* Log the request to the stdout */
     console.log(
@@ -19,9 +40,8 @@ exports.onFileGet = (req, res) => {
         "->",
         req.url,
     );
-    const id = url.parse(req.url, true).query.id;
     res.writeHead(StatusCodes.OK, { "Content-type": "text/plain" });
-    res.end(fileTemplate(id, id));
+    res.end(templateDirectoriesAndFiles(folders, files));
 };
 
 exports.createFile = (req, res) => {
