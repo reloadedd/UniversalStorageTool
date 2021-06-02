@@ -2,7 +2,9 @@ exports.templateDirectoriesAndFiles = (dirs, files) => {
     let res = "";
     for (const dir of dirs) {
         res += `
-        <figure style="width: min-content" id=${"dir_" + dir.id}>
+        <figure onmousedown="dirClickEventHandler(event, ${
+            dir.id
+        })" style="width: min-content" id=${"dir_" + dir.id}>
             <img src="public/img/folder.png" alt="Directory">
             <figcaption >${dir.name}</figcaption>
         </figure>

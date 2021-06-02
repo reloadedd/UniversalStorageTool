@@ -85,8 +85,15 @@ uploadFileAt = async (file, name) => {
     return true;
 };
 
-getFiles = async () => {
-    const result = await fetch("/files");
+getFiles = async (did = null) => {
+    if (did) {
+        location.href = "/index?did=" + did;
+        return;
+    }
+    const queryParam = new URLSearchParams(window.location.search).get("did");
+    let result;
+    if (queryParam) result = await fetch("/files?did=" + queryParam);
+    else result = await fetch("/files");
     if (result.status === 200) {
         document.getElementsByClassName("main-view").item(0).innerHTML =
             await result.text();
@@ -94,4 +101,28 @@ getFiles = async () => {
             .getElementsByClassName("loading-icon")
             .item(0).style.visibility = "hidden";
     }
+};
+
+dirClickEventHandler = (event, dirId) => {
+    if (event.button === 0) {
+        getFiles(dirId);
+    }
+    if (event.button === 2) {
+        alert("right clicked!!");
+    }
+};
+
+createDir = async () => {
+    const parentFolder = new URLSearchParams(window.location.search).get("did");
+
+    await fetch("/files/newDir", {
+        method: "POST",
+        body: JSON.stringify({
+            parentDir: parentFolder,
+            name: document.getElementById("new-folder-box").value,
+        }),
+    });
+
+    getFiles();
+    document.getElementById("new-folder-name").style.visibility = "hidden";
 };

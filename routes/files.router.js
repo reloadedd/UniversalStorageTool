@@ -5,7 +5,7 @@ const {
     onFileGet,
     createFile,
     uploadToFile,
-    testBigFileGet,
+    createDir,
 } = require("../app/controllers/file.controller");
 const jwt = require("jsonwebtoken");
 const url = require("url");
@@ -62,6 +62,22 @@ dispatcher.on("PUT", "/files", (req, res) => {
         });
         res.end(
             JSON.stringify({ message: "Make sure the data is set properly" }),
+        );
+    }
+});
+
+dispatcher.on("POST", "/files/newDir", (req, res) => {
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        createDir(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "log in maybe?",
+            }),
         );
     }
 });

@@ -159,3 +159,33 @@ exports.testBigFileGet = async (req, res) => {
     const readStream = fs.createReadStream("tmp/cantStop.mp3");
     readStream.pipe(res);
 };
+
+exports.createDir = async (req, res) => {
+    const newDirectory = await req.db.directories.create({
+        name: req.body.name,
+    });
+
+    if (req.body.parentDir) {
+        const parentDir = await req.db.directories.findOne({
+            where: {
+                id: req.body.parentDir,
+            },
+        });
+        parentDir.addDirectory(newDirectory);
+    } else {
+        const me = await req.db.users.findOne({
+            where: {
+                email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+            },
+        });
+        me.addDirectory(newDirectory);
+    }
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "directory created.",
+        }),
+    );
+};

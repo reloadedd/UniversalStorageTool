@@ -30,7 +30,7 @@ dispatcher.use("/g-drive", googleDriveRouter);
 dispatcher.use("", accountsRouter);
 dispatcher.use("", filesRouter);
 
-dispatcher.on("GET", "/", (req, res) => {
+dispatcher.on("GET", "/index", (req, res) => {
     if (!req.jwtToken) {
         res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
         res.end();
