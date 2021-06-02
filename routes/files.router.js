@@ -5,14 +5,19 @@ const {
     onFileGet,
     createFile,
     uploadToFile,
+    testBigFileGet,
 } = require("../app/controllers/file.controller");
 const jwt = require("jsonwebtoken");
 const url = require("url");
 const dispatcher = new Dispatcher();
 
-dispatcher.on("GET", "/files", (req, res) => {
+dispatcher.on("GET", "/files", async (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        if (!url.parse(req.url, true).query.id) {
+            testBigFileGet(req, res);
+            return;
+        }
         onFileGet(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {
