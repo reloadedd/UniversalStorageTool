@@ -19,12 +19,16 @@ uploadFiles = async () => {
         });
         if (createFileResult.status === 403) {
             alert("Cannot upload if no drive is linked to the account!");
+            document.getElementById("uploading").style.visibility = "hidden";
+            document.getElementById("upload_progress").style.width = 0;
             return;
         }
         if (createFileResult.status === 500) {
             alert(
                 "We're terribly sorry.. you can't upload files right now and it's on us",
             );
+            document.getElementById("uploading").style.visibility = "hidden";
+            document.getElementById("upload_progress").style.width = 0;
             return;
         }
         if (createFileResult.status !== 201) return;
@@ -32,10 +36,13 @@ uploadFiles = async () => {
         const succeeded = await uploadFileAt(file, fileId);
         if (!succeeded) {
             alert("couldn't upload a particular chunk for some reason.. sorry");
+            document.getElementById("uploading").style.visibility = "hidden";
+            document.getElementById("upload_progress").style.width = 0;
             return;
         }
     }
     document.getElementById("uploading").style.visibility = "hidden";
+    document.getElementById("upload_progress").style.width = 0;
 };
 
 uploadFileAt = async (file, name) => {
