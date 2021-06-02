@@ -10,6 +10,7 @@ const filesRouter = require("./files.router");
 const userRouter = require("./user.router");
 const accountsRouter = require("./account.router");
 const googleDriveRouter = require("./google.drive.router");
+const dropBoxRouter = require("./dropbox.router");
 const jwt = require("jsonwebtoken");
 const { refreshGoogleDriveToken } = require("../util/refreshTokens");
 const { StatusCodes } = require("http-status-codes");
@@ -27,6 +28,7 @@ MIMETypes = {
 dispatcher.use("/users", userRouter);
 dispatcher.use(/\//, refreshGoogleDriveToken);
 dispatcher.use("/g-drive", googleDriveRouter);
+dispatcher.use("/dropbox", dropBoxRouter);
 dispatcher.use("", accountsRouter);
 dispatcher.use("", filesRouter);
 
