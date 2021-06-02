@@ -7,13 +7,23 @@ exports.setFileToUser = async (fid, req) => {
     const User = req.db.users;
     const File = req.db.files;
     const Fragment = req.db.fragments;
-    const me = await User.findOne({ where: { email: configFile.user } });
+    const Directory = req.db.directories;
     const thisFile = await File.create({
         name: configFile.name,
         size: configFile.totalSize,
         mimeType: configFile.mimeType,
     });
-    me.addFile(thisFile);
+    if (!configFile.parentFolder) {
+        const me = await User.findOne({ where: { email: configFile.user } });
+        me.addFile(thisFile);
+    } else {
+        const parentDir = await Directory.findOne({
+            where: {
+                id: configFile.parentFolder,
+            },
+        });
+        parentDir.addFile(thisFile);
+    }
 
     const gDriveData = await (
         await fetch("https://www.googleapis.com/drive/v2/about", {

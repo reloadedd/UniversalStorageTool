@@ -53,6 +53,7 @@ exports.createFile = (req, res) => {
         fs.appendFileSync("./tmp/" + fileName, "");
         const configBody = {
             user: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+            parentFolder: req.body.parentFolder,
             name: req.body.name,
             totalSize: req.body.size,
             mimeType: req.body.type,

@@ -2,6 +2,7 @@ let totalSize;
 let uploadedSize;
 uploadFiles = async () => {
     const files = document.getElementById("fileElem").files;
+    const parentFolder = new URLSearchParams(window.location.search).get("did");
     totalSize = 0;
     uploadedSize = 0;
     for (const file of files) totalSize += file.size;
@@ -12,6 +13,7 @@ uploadFiles = async () => {
         const createFileResult = await fetch("files", {
             method: "POST",
             body: JSON.stringify({
+                parentFolder,
                 name: file.name,
                 size: file.size,
                 type: file.type,
