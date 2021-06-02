@@ -27,6 +27,7 @@ dispatcher.on("GET", "/files", (req, res) => {
 dispatcher.on("POST", "/files", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        if (!req.gDriveToken) throw new Error();
         createFile(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {

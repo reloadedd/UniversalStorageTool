@@ -18,9 +18,7 @@ uploadFiles = async () => {
             }),
         });
         if (createFileResult.status === 403) {
-            alert(
-                "Log in for uploading files first! (Not really sure how you got here even)",
-            );
+            alert("Cannot upload if no drive is linked to the account!");
             return;
         }
         if (createFileResult.status === 500) {
