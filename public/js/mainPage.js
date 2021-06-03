@@ -48,7 +48,6 @@ uploadFiles = async () => {
 };
 
 uploadFileAt = async (file, name) => {
-    console.log(file);
     let start = 0;
     const step = 5242880; // 5 * 1024 * 1024 bytes (5Mb)
     const total = file.size;
@@ -105,13 +104,16 @@ getFiles = async (did = null) => {
     }
 };
 
-dirClickEventHandler = (event, dirId) => {
-    if (event.button === 0) {
-        getFiles(dirId);
-    }
-    if (event.button === 2) {
-        alert("right clicked!!");
-    }
+dirClickEventHandler = (dirId) => {
+    getFiles(dirId);
+};
+fileClickEventHandler = (fileId) => {
+    const a = document.createElement("a");
+    a.href = "/files?id=" + fileId;
+    a.download = "";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 };
 
 createDir = async () => {

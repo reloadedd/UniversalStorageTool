@@ -2,10 +2,11 @@ const Dispatcher = require("../util/dispatcher");
 const { StatusCodes } = require("http-status-codes");
 const fs = require("fs");
 const {
-    onFileGet,
+    getFiles,
     createFile,
     uploadToFile,
     createDir,
+    getFile,
 } = require("../app/controllers/file.controller");
 const jwt = require("jsonwebtoken");
 const url = require("url");
@@ -15,7 +16,8 @@ dispatcher.on("GET", "/files", async (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
 
-        onFileGet(req, res);
+        if (!url.parse(req.url, true).query.id) getFiles(req, res);
+        else getFile(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {
             "Content-type": "application/json",
@@ -56,7 +58,6 @@ dispatcher.on("PUT", "/files", (req, res) => {
 
         uploadToFile(req, res);
     } catch {
-        console.log("thrown here");
         res.writeHead(StatusCodes.BAD_REQUEST, {
             "Content-type": "application/json",
         });

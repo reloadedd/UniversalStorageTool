@@ -4,9 +4,10 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
-const { setFileToUser } = require("../../util/set.file");
+const { setFileToUser, downloadFile } = require("../../util/files");
+const { hasFile } = require("../../util/compare");
 const { templateDirectoriesAndFiles } = require("../../util/templates");
-exports.onFileGet = async (req, res) => {
+exports.getFiles = async (req, res) => {
     const browser = useragent.parse(req.headers["user-agent"]);
 
     let files;
@@ -151,14 +152,43 @@ exports.uploadToFile = (req, res) => {
     }
 };
 
-exports.testBigFileGet = async (req, res) => {
-    const stat = fs.statSync("tmp/cantStop.mp3");
-    res.writeHead(StatusCodes.OK, {
-        "Content-Type": "audio/mpeg; filename=cantStop",
-        "Content-Length": stat.size,
+exports.getFile = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
     });
-    const readStream = fs.createReadStream("tmp/cantStop.mp3");
-    readStream.pipe(res);
+
+    const thisFile = await req.db.files.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+
+    if (!thisFile) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "no such file",
+            }),
+        );
+        return;
+    }
+
+    if (!(await hasFile(me, thisFile))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not your file bro",
+            }),
+        );
+    }
+
+    downloadFile(req, res, thisFile);
 };
 
 exports.createDir = async (req, res) => {

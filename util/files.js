@@ -1,5 +1,6 @@
 const fs = require("fs");
 const fetch = require("node-fetch");
+const { getFrag } = require("./frags");
 exports.setFileToUser = async (fid, req) => {
     const configFile = JSON.parse(
         await fs.readFileSync("./tmp/" + fid + ".config.json"),
@@ -50,7 +51,6 @@ exports.setFileToUser = async (fid, req) => {
                 method: "POST",
                 headers: {
                     Authorization: "Bearer " + req.gDriveToken,
-                    "Content-Length": stat.size,
                 },
                 body: fileStream,
             },
@@ -70,5 +70,36 @@ exports.setFileToUser = async (fid, req) => {
         thisFile.addFragment(newFileFragment);
     } else {
         console.log("We are yet to fragment things");
+    }
+};
+
+exports.downloadFile = async (req, res, file) => {
+    const fragments = await file.getFragments();
+    fragments.sort((a, b) =>
+        a.index > b.index ? 1 : b.index > a.index ? -1 : 0,
+    );
+    res.writeHead(200, {
+        "Content-Type": file.mimeType,
+        "Content-Length": file.size,
+        "Content-Disposition": "attachment; filename=" + file.name,
+    });
+    const fragRes = [];
+    for (let i = 0; i < fragments.length; i++) {
+        fragRes.push(await getFrag(req, fragments[i]));
+    }
+    if (fragRes.length > 1) {
+        fragRes[0].pipe(res, { end: false });
+        fragRes[0].on("end", () => {
+            if (fragRes.length > 2) {
+                fragRes[1].pipe(res, { end: false });
+                fragRes[1].on("end", () => {
+                    fragRes[2].pipe(res);
+                });
+            } else {
+                fragRes[1].pipe(res);
+            }
+        });
+    } else {
+        fragRes[0].pipe(res);
     }
 };
