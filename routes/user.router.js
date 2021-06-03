@@ -10,6 +10,7 @@ dispatcher.on("POST", "/logout", (req, res) => {
     const cookies = [
         "jwt=; path=/; httpOnly; Max-Age=0",
         "gDriveToken=; path=/; httpOnly; Max-Age=0",
+        "dropboxToken=; path=/; httpOnly; Max-Age=0",
     ];
     res.writeHead(StatusCodes.OK, {
         "Set-Cookie": cookies,

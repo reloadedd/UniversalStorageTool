@@ -13,7 +13,7 @@
         ></script>
         <script src="public/js/login.js"></script>
     </head>
-    <body onload="setGoogleDriveSpace()">
+    <body onload="setGoogleDriveSpace();setDropboxSpace()">
         <header id="nav-bar"></header>
 
         <div class="account-details-container">
@@ -65,10 +65,10 @@
                     alt=""
                 />
                 <ul>
-                    <li>
+                    <li id="dropbox">
                         <h3>
-                            Dropbox<span>
-                                (25 <span class="percentage">%</span> )</span
+                            Dropbox<span id="dropbox-percentage">
+                                (0 <span class="percentage">%</span> )</span
                             >
                         </h3>
                         <span class="bar">
