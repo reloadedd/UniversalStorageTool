@@ -1,3 +1,3 @@
-function addOnedrive() {
+function addOneDrive() {
   location.href = "onedrive/auth";
 }
