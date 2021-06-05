@@ -1,20 +1,42 @@
-/* Module imports */
+/* ======================
+ * --- Global Imports ---
+ * ======================
+ */
+const url = require("url");
+const fetch = require("node-fetch");
+const jwt = require("jsonwebtoken");
 const { StatusCodes } = require("http-status-codes");
 
-/* Custom constants */
-const AUTHORIZATION_URL = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize'
+
+/* =====================
+ * --- Local Imports ---
+ * =====================
+ */
+const { generateRandomHex } = require("./cryptography.controller")
+
+
+/* =================
+ * --- Constants ---
+ * =================
+ */
 const TOKEN_GRANTING_URL = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/token'
+const AUTHORIZATION_URL = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize'
 const MICROSOFT_GRAPH_URL = 'https://graph.microsoft.com'
 const SCOPE = 'Files.ReadWrite.All Files.ReadWrite.AppFolder Files.ReadWrite.Selected'
-const STATE = 'ONEDRIVE'
-const LOCAL_REDIRECT = 'http://localhost:2999/account'
+const STATE = `ONEDRIVE_${generateRandomHex()}`;
+const LOCAL_REDIRECT = 'http://localhost:2999/onedrive/get_token'
 const REMOTE_REDIRECT = 'https://reloadedd.me:3000/onedrive/auth'
 
-exports.onAuth = (req, res) => {
+
+/* =================
+ * --- Functions ---
+ * =================
+ */
+function onAuth(req, res) {
   res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
     Location:
         `${AUTHORIZATION_URL}?redirect_uri=` +
-        (process.env.UNST_IS_SERVER_UP ?  REMOTE_REDIRECT : LOCAL_REDIRECT) +
+        (process.env.UNST_IS_SERVER_UP ? REMOTE_REDIRECT : LOCAL_REDIRECT) +
         `&client_id=${process.env.UNST_ONEDRIVE_CLIENT_ID}` +
         `&client_secret=${process.env.UNST_ONEDRIVE_CLIENT_SECRET}` +
         `&scope=${SCOPE}` +
@@ -26,7 +48,7 @@ exports.onAuth = (req, res) => {
   res.end();
 }
 
-exports.onAdd = async (req, res) => {
+async function onAdd(req, res) {
   try {
     const userEmail = jwt.verify(
         req.body.jwtToken,
@@ -61,7 +83,7 @@ exports.onAdd = async (req, res) => {
   }
 };
 
-exports.getSpace = async (req, res) => {
+async function getSpace(req, res) {
   const data = await (
       await fetch("https://www.googleapis.com/drive/v2/about", {
         method: "GET",
@@ -87,3 +109,76 @@ exports.getSpace = async (req, res) => {
       }),
   );
 };
+
+function verifyUserAuthenticated(req, res) {
+  try {
+    jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+    return false;
+  } catch (ex) {
+    res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
+    res.end();
+    return true;
+  }
+}
+
+async function getTokenHavingCode(req, res) {
+  const code = url.parse(req.url, true).query.code;
+
+  if (!code) {
+    return false;
+  }
+
+  const data = await (
+      await fetch(TOKEN_GRANTING_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          code: code,
+          client_id: process.env.UNST_ONEDRIVE_CLIENT_ID,
+          client_secret: process.env.UNST_ONEDRIVE_CLIENT_SECRET,
+          redirect_uri: process.env.UNST_IS_SERVER_UP
+              ? "https://reloadedd.me:3000/account"
+              : "http://localhost:2999/account",
+          scope: SCOPE,
+          grant_type: "authorization_code",
+        }),
+      })
+  ).json();
+
+  await fetch(
+      process.env.UNST_IS_SERVER_UP
+          ? "https://reloadedd.me:3000/g-drive/add"
+          : "http://localhost:2999/g-drive/add",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          refreshToken: data.refresh_token,
+          jwtToken: req.jwtToken,
+        }),
+      },
+  );
+
+  res.writeHead(StatusCodes.OK, {
+    "Set-Cookie":
+        "OneDriveToken=" +
+        data.access_token +
+        "; path=/; httpOnly; Max-Age=" +
+        data.expires_in,
+    "Content-Type": "text/html",
+  });
+
+  return true;
+}
+
+
+/* ======================
+ * --- Module Exports ---
+ * ======================
+ */
+module.exports = {
+  onAuth,
+  onAdd,
+  getSpace,
+  verifyUserAuthenticated,
+  getTokenHavingCode,
+  STATE
+}
