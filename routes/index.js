@@ -35,6 +35,32 @@ dispatcher.use("/onedrive", onedriveRouter);
 dispatcher.use("", accountsRouter);
 dispatcher.use("", filesRouter);
 
+dispatcher.on("GET", "/index", (req, res) => {
+    if (!req.jwtToken) {
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
+        res.end();
+        return;
+    }
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        if (req.cookies) {
+            res.writeHead(StatusCodes.OK, {
+                "Set-Cookie": req.cookies,
+                "Content-Type": "text/html",
+            });
+        } else {
+            res.writeHead(StatusCodes.OK, {
+                "Content-Type": "text/html",
+            });
+        }
+        const data = fs.readFileSync("app/views/index.html");
+        res.end(data);
+    } catch (ex) {
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
+        res.end();
+    }
+});
+
 dispatcher.on("GET", /\//, (request, response) => {
     const browser = useragent.parse(request.headers["user-agent"]);
     let resource = request.url.slice(1) === "" ? "/" : request.url.slice(1);
