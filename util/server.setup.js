@@ -10,9 +10,11 @@ exports.setServerDataAndDispatch = (request, response) => {
     const chunks = [];
     let cookies;
     try {
-        cookies = request.headers["cookie"]
-            .split(";")
-            .map((cookie) => cookie.trim());
+        if (request.headers["cookie"]) {
+            cookies = request.headers["cookie"]
+                .split(";")
+                .map((cookie) => cookie.trim());
+        }
     } catch (err) {
         console.log(err.message);
     }

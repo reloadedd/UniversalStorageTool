@@ -25,8 +25,8 @@ const ONEDRIVE_AUTHORIZATION_URL = 'https://login.microsoftonline.com/consumers/
 const ONEDRIVE_MICROSOFT_GRAPH_URL = 'https://graph.microsoft.com/v1.0'
 const ONEDRIVE_SCOPE = 'Files.ReadWrite.All Files.ReadWrite.AppFolder Files.ReadWrite.Selected offline_access'
 const ONEDRIVE_STATE = `ONEDRIVE_${generateRandomHex()}`;
-const ONEDRIVE_LOCAL_REDIRECT = 'http://localhost:2999/onedrive/get_token'
-const ONEDRIVE_REMOTE_REDIRECT = 'https://reloadedd.me:3000/onedrive/auth'
+const ONEDRIVE_LOCAL_REDIRECT = 'http://localhost:2999'
+const ONEDRIVE_REMOTE_REDIRECT = 'https://reloadedd.me:3000'
 
 
 /* =================
@@ -37,7 +37,8 @@ function onOAuthAuthorization(req, res) {
   res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
     Location:
         `${ONEDRIVE_AUTHORIZATION_URL}?redirect_uri=` +
-        (process.env.UNST_IS_SERVER_UP ? ONEDRIVE_REMOTE_REDIRECT : ONEDRIVE_LOCAL_REDIRECT) +
+        (process.env.UNST_IS_SERVER_UP ?
+            `${ONEDRIVE_REMOTE_REDIRECT}/onedrive/get_token` : `${ONEDRIVE_LOCAL_REDIRECT}/onedrive/get_token`) +
         `&client_id=${process.env.UNST_ONEDRIVE_CLIENT_ID}` +
         "&response_type=code" +
         "&response_mode=query" +
@@ -154,7 +155,8 @@ async function getTokensHavingCode(req, res) {
       })).json();
 
   await fetch(
-      process.env.UNST_IS_SERVER_UP ? "https://reloadedd.me:3000/onedrive/add" : "http://localhost:2999/onedrive/add",
+      process.env.UNST_IS_SERVER_UP ?
+          `${ONEDRIVE_REMOTE_REDIRECT}/onedrive/add` : `${ONEDRIVE_LOCAL_REDIRECT}/onedrive/add`,
       {
         method: "POST",
         body: JSON.stringify({
