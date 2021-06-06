@@ -19,9 +19,7 @@ class Dispatcher {
         if (finerDispatcher.listeners) {
             for (const method in finerDispatcher.listeners) {
                 if (finerDispatcher.listeners.hasOwnProperty(method))
-                    for (const [path, handler] of finerDispatcher.listeners[
-                        method
-                    ]) {
+                    for (const [path, handler] of finerDispatcher.listeners[method]) {
                         this.listeners[method].push([
                             url + path,
                             handler,

@@ -1,5 +1,13 @@
-module.exports = (id, number) =>
-    `<figure class="file" id=${id}>
-        <img src="https://picsum.photos/200" alt="no picture unfortunately">
-        <figcaption>File number ${number}</figcaption>
-    </figure>`;
+module.exports = (sequelize, Sequelize) => {
+    return sequelize.define("File", {
+        name: {
+            type: Sequelize.STRING,
+        },
+        size: {
+            type: Sequelize.BIGINT,
+        },
+        mimeType: {
+            type: Sequelize.STRING,
+        },
+    });
+};

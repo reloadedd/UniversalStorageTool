@@ -10,8 +10,10 @@ const filesRouter = require("./files.router");
 const userRouter = require("./user.router");
 const accountsRouter = require("./account.router");
 const googleDriveRouter = require("./google.drive.router");
+const onedriveRouter = require("./onedrive.router");
 const jwt = require("jsonwebtoken");
-const { refreshGoogleDriveToken } = require("../util/refreshTokens");
+const { refreshGoogleDriveToken,
+        refreshOneDriveToken } = require("../util/refreshTokens");
 const { StatusCodes } = require("http-status-codes");
 
 MIMETypes = {
@@ -26,11 +28,13 @@ MIMETypes = {
 
 dispatcher.use("/users", userRouter);
 dispatcher.use(/\//, refreshGoogleDriveToken);
+dispatcher.use(/\//, refreshOneDriveToken);
 dispatcher.use("/g-drive", googleDriveRouter);
+dispatcher.use("/onedrive", onedriveRouter);
 dispatcher.use("", accountsRouter);
 dispatcher.use("", filesRouter);
 
-dispatcher.on("GET", "/", (req, res) => {
+dispatcher.on("GET", "/index", (req, res) => {
     if (!req.jwtToken) {
         res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
         res.end();
@@ -38,9 +42,16 @@ dispatcher.on("GET", "/", (req, res) => {
     }
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        res.writeHead(StatusCodes.OK, {
-            "Content-Type": "text/html",
-        });
+        if (req.cookies) {
+            res.writeHead(StatusCodes.OK, {
+                "Set-Cookie": req.cookies,
+                "Content-Type": "text/html",
+            });
+        } else {
+            res.writeHead(StatusCodes.OK, {
+                "Content-Type": "text/html",
+            });
+        }
         const data = fs.readFileSync("app/views/index.html");
         res.end(data);
     } catch (ex) {
@@ -65,20 +76,34 @@ dispatcher.on("GET", /\//, (request, response) => {
         request.url,
     );
 
-    /* Send a MIME type if the resource is well known for us to hear about it, else send nothing */
-    const mimetype = MIMETypes[extension === undefined ? "html" : extension];
-    if (mimetype) {
-        response.writeHead(StatusCodes.OK, {
-            "Content-Type": mimetype,
-        });
-    }
-
     if (resource === "register") {
         resource = LOGIN;
     } else if (resource !== "/" && extension === undefined) {
         resource = `${BASE_VIEW_DIRECTORY}/${resource}.html`;
     } else if (resource === "/" || resource === "index.html") {
         resource = INDEX;
+        if (!request.jwtToken) {
+            response.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
+                Location: "/login",
+            });
+            response.end();
+            return;
+        }
+    }
+
+    /* Send a MIME type if the resource is well known for us to hear about it, else send nothing */
+    const mimetype = MIMETypes[extension === undefined ? "html" : extension];
+    if (mimetype) {
+        if (request.cookies) {
+            response.writeHead(StatusCodes.OK, {
+                "Set-Cookie": request.cookies,
+                "Content-Type": mimetype,
+            });
+        } else {
+            response.writeHead(StatusCodes.OK, {
+                "Content-Type": mimetype,
+            });
+        }
     }
 
     if (fs.existsSync(resource)) {
