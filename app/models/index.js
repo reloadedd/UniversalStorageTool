@@ -21,8 +21,21 @@ db.sequelize = sequelize;
 db.users = require("./user.model")(sequelize, Sequelize);
 db.googleDrives = require("./googleDrive.model")(sequelize, Sequelize);
 db.onedrive = require("./onedrive.model")(sequelize, Sequelize);
+db.directories = require("./directory.model")(sequelize, Sequelize);
+db.files = require("./file.model")(sequelize, Sequelize);
+db.fragments = require("./fragment.model")(sequelize, Sequelize);
+
+db.users.hasMany(db.directories);
+db.users.hasMany(db.files);
+
 db.users.hasOne(db.googleDrives);
 db.users.hasOne(db.onedrive);
+
+db.directories.hasMany(db.files);
+db.directories.hasMany(db.directories);
+
+db.files.hasMany(db.fragments);
+
 db.sequelize.sync();
 
 module.exports = db;

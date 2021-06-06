@@ -35,32 +35,6 @@ dispatcher.use("/onedrive", onedriveRouter);
 dispatcher.use("", accountsRouter);
 dispatcher.use("", filesRouter);
 
-dispatcher.on("GET", "/", (req, res) => {
-    if (!req.jwtToken) {
-        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
-        res.end();
-        return;
-    }
-    try {
-        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        if (req.cookies) {
-            res.writeHead(StatusCodes.OK, {
-                "Set-Cookie": req.cookies,
-                "Content-Type": "text/html",
-            });
-        } else {
-            res.writeHead(StatusCodes.OK, {
-                "Content-Type": "text/html",
-            });
-        }
-        const data = fs.readFileSync("app/views/index.html");
-        res.end(data);
-    } catch (ex) {
-        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
-        res.end();
-    }
-});
-
 dispatcher.on("GET", /\//, (request, response) => {
     const browser = useragent.parse(request.headers["user-agent"]);
     let resource = request.url.slice(1) === "" ? "/" : request.url.slice(1);
@@ -77,6 +51,21 @@ dispatcher.on("GET", /\//, (request, response) => {
         request.url,
     );
 
+    if (resource === "register") {
+        resource = LOGIN;
+    } else if (resource !== "/" && extension === undefined) {
+        resource = `${BASE_VIEW_DIRECTORY}/${resource}.html`;
+    } else if (resource === "/" || resource === "index.html") {
+        resource = INDEX;
+        if (!request.jwtToken) {
+            response.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
+                Location: "/login",
+            });
+            response.end();
+            return;
+        }
+    }
+
     /* Send a MIME type if the resource is well known for us to hear about it, else send nothing */
     const mimetype = MIMETypes[extension === undefined ? "html" : extension];
     if (mimetype) {
@@ -90,14 +79,6 @@ dispatcher.on("GET", /\//, (request, response) => {
                 "Content-Type": mimetype,
             });
         }
-    }
-
-    if (resource === "register") {
-        resource = LOGIN;
-    } else if (resource !== "/" && extension === undefined) {
-        resource = `${BASE_VIEW_DIRECTORY}/${resource}.html`;
-    } else if (resource === "/" || resource === "index.html") {
-        resource = INDEX;
     }
 
     if (fs.existsSync(resource)) {
