@@ -13,7 +13,8 @@ const googleDriveRouter = require("./google.drive.router");
 // TODO: Do this
 const onedriveRouter = require("./onedrive.router");
 const jwt = require("jsonwebtoken");
-const { refreshGoogleDriveToken } = require("../util/refreshTokens");
+const { refreshGoogleDriveToken,
+        refreshOneDriveToken } = require("../util/refreshTokens");
 const { StatusCodes } = require("http-status-codes");
 
 MIMETypes = {
@@ -28,6 +29,7 @@ MIMETypes = {
 
 dispatcher.use("/users", userRouter);
 dispatcher.use(/\//, refreshGoogleDriveToken);
+dispatcher.use(/\//, refreshOneDriveToken);
 dispatcher.use("/g-drive", googleDriveRouter);
 dispatcher.use("/onedrive", onedriveRouter);
 dispatcher.use("", accountsRouter);

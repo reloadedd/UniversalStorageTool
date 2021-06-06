@@ -6,6 +6,7 @@ const url = require("url");
 const fetch = require("node-fetch");
 const jwt = require("jsonwebtoken");
 const { StatusCodes } = require("http-status-codes");
+const { URLSearchParams } = require("url");
 
 
 /* =====================
@@ -19,50 +20,53 @@ const { generateRandomHex } = require("./cryptography.controller")
  * --- Constants ---
  * =================
  */
-const TOKEN_GRANTING_URL = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/token'
-const AUTHORIZATION_URL = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize'
-const MICROSOFT_GRAPH_URL = 'https://graph.microsoft.com'
-const SCOPE = 'Files.ReadWrite.All Files.ReadWrite.AppFolder Files.ReadWrite.Selected'
-const STATE = `ONEDRIVE_${generateRandomHex()}`;
-const LOCAL_REDIRECT = 'http://localhost:2999/onedrive/get_token'
-const REMOTE_REDIRECT = 'https://reloadedd.me:3000/onedrive/auth'
+const ONEDRIVE_TOKEN_GRANTING_URL = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/token'
+const ONEDRIVE_AUTHORIZATION_URL = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize'
+const ONEDRIVE_MICROSOFT_GRAPH_URL = 'https://graph.microsoft.com/v1.0'
+const ONEDRIVE_SCOPE = 'Files.ReadWrite.All Files.ReadWrite.AppFolder Files.ReadWrite.Selected offline_access'
+const ONEDRIVE_STATE = `ONEDRIVE_${generateRandomHex()}`;
+const ONEDRIVE_LOCAL_REDIRECT = 'http://localhost:2999/onedrive/get_token'
+const ONEDRIVE_REMOTE_REDIRECT = 'https://reloadedd.me:3000/onedrive/auth'
 
 
 /* =================
  * --- Functions ---
  * =================
  */
-function onAuth(req, res) {
+function onOAuthAuthorization(req, res) {
   res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
     Location:
-        `${AUTHORIZATION_URL}?redirect_uri=` +
-        (process.env.UNST_IS_SERVER_UP ? REMOTE_REDIRECT : LOCAL_REDIRECT) +
+        `${ONEDRIVE_AUTHORIZATION_URL}?redirect_uri=` +
+        (process.env.UNST_IS_SERVER_UP ? ONEDRIVE_REMOTE_REDIRECT : ONEDRIVE_LOCAL_REDIRECT) +
         `&client_id=${process.env.UNST_ONEDRIVE_CLIENT_ID}` +
-        `&client_secret=${process.env.UNST_ONEDRIVE_CLIENT_SECRET}` +
-        `&scope=${SCOPE}` +
         "&response_type=code" +
         "&response_mode=query" +
-        "&grant_type=authorization_code" +
-        `&state=${STATE}`
+        `&scope=${ONEDRIVE_SCOPE}` +
+        `&state=${ONEDRIVE_STATE}`
   });
   res.end();
 }
 
-async function onAdd(req, res) {
+async function onDriveAddition(req, res) {
   try {
     const userEmail = jwt.verify(
         req.body.jwtToken,
         req.UNST_JWT_SECRET,
     ).email;
-    if (!req.body || !req.body.refreshToken) throw new Error();
+    if (!req.body || !req.body.refreshToken) {
+      throw new Error("Cannot add OneDrive because the request is invalid.");
+    }
 
     const user = await req.db.users.findOne({
       where: { email: userEmail },
     });
-    const drive = await req.db.googleDrives.create({
+
+    const drive = await req.db.onedrive.create({
       refreshToken: req.body.refreshToken,
     });
-    user.setGoogleDrive(drive);
+
+    user.setOneDrive(drive);
+
     res.writeHead(StatusCodes.OK, {
       "Content-Type": "application/json",
     });
@@ -71,7 +75,7 @@ async function onAdd(req, res) {
           message: "Drive account added.",
         }),
     );
-  } catch {
+  } catch (ex) {
     res.writeHead(StatusCodes.BAD_REQUEST, {
       "Content-Type": "application/json",
     });
@@ -81,17 +85,18 @@ async function onAdd(req, res) {
         }),
     );
   }
-};
+}
 
-async function getSpace(req, res) {
+async function getAvailableSpace(req, res) {
   const data = await (
-      await fetch("https://www.googleapis.com/drive/v2/about", {
+      await fetch(`${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/`, {
         method: "GET",
         headers: {
-          Authorization: "Bearer " + req.gDriveToken,
-        },
+          Authorization: "Bearer " + req.OneDriveToken
+        }
       })
   ).json();
+
   if (req.cookies) {
     res.writeHead(StatusCodes.OK, {
       "Content-Type": "application/json",
@@ -104,50 +109,52 @@ async function getSpace(req, res) {
   }
   res.end(
       JSON.stringify({
-        totalSpace: data.quotaBytesTotal,
-        usedSpace: data.quotaBytesUsedAggregate,
+        totalSpace: data.quota.total,
+        usedSpace: data.quota.used
       }),
   );
-};
+}
 
 function verifyUserAuthenticated(req, res) {
   try {
     jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-    return false;
+    return true;
   } catch (ex) {
     res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
     res.end();
-    return true;
+    return false;
   }
 }
 
-async function getTokenHavingCode(req, res) {
+function printObject(jsonObj) {
+  Array.from(Object.keys(jsonObj)).forEach(function(key) {
+    console.log(key + ":" + jsonObj[key]);
+  });
+}
+
+async function getTokensHavingCode(req, res) {
   const code = url.parse(req.url, true).query.code;
 
   if (!code) {
     return false;
   }
 
-  const data = await (
-      await fetch(TOKEN_GRANTING_URL, {
+  let params = new URLSearchParams();
+  params.append("client_id", process.env.UNST_ONEDRIVE_CLIENT_ID);
+  params.append("scope", ONEDRIVE_SCOPE);
+  params.append("code", code.toString());
+  params.append("redirect_uri", process.env.UNST_IS_SERVER_UP ? ONEDRIVE_REMOTE_REDIRECT : ONEDRIVE_LOCAL_REDIRECT);
+  params.append("grant_type", "authorization_code");
+  params.append("client_secret", process.env.UNST_ONEDRIVE_CLIENT_SECRET);
+
+  const data = await (await fetch(ONEDRIVE_TOKEN_GRANTING_URL,
+      {
         method: "POST",
-        body: JSON.stringify({
-          code: code,
-          client_id: process.env.UNST_ONEDRIVE_CLIENT_ID,
-          client_secret: process.env.UNST_ONEDRIVE_CLIENT_SECRET,
-          redirect_uri: process.env.UNST_IS_SERVER_UP
-              ? "https://reloadedd.me:3000/account"
-              : "http://localhost:2999/account",
-          scope: SCOPE,
-          grant_type: "authorization_code",
-        }),
-      })
-  ).json();
+        body: params
+      })).json();
 
   await fetch(
-      process.env.UNST_IS_SERVER_UP
-          ? "https://reloadedd.me:3000/g-drive/add"
-          : "http://localhost:2999/g-drive/add",
+      process.env.UNST_IS_SERVER_UP ? "https://reloadedd.me:3000/onedrive/add" : "http://localhost:2999/onedrive/add",
       {
         method: "POST",
         body: JSON.stringify({
@@ -157,13 +164,13 @@ async function getTokenHavingCode(req, res) {
       },
   );
 
-  res.writeHead(StatusCodes.OK, {
+  res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
+    Location: "/account",
     "Set-Cookie":
         "OneDriveToken=" +
         data.access_token +
         "; path=/; httpOnly; Max-Age=" +
-        data.expires_in,
-    "Content-Type": "text/html",
+        data.expires_in
   });
 
   return true;
@@ -175,10 +182,11 @@ async function getTokenHavingCode(req, res) {
  * ======================
  */
 module.exports = {
-  onAuth,
-  onAdd,
-  getSpace,
+  onOAuthAuthorization,
+  onDriveAddition,
+  getAvailableSpace,
   verifyUserAuthenticated,
-  getTokenHavingCode,
-  STATE
+  getTokensHavingCode,
+  ONEDRIVE_STATE,
+  ONEDRIVE_TOKEN_GRANTING_URL
 }

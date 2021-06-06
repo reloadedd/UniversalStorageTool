@@ -47,7 +47,6 @@ exports.gotCode = async (req, res) => {
             }),
         },
     );
-    console.log(data);
 
     res.writeHead(StatusCodes.OK, {
         "Set-Cookie":

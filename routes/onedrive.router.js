@@ -12,10 +12,12 @@ const { StatusCodes } = require("http-status-codes");
  * =====================
  */
 const Dispatcher = require("../util/dispatcher");
-const { onAuth,
+const { onOAuthAuthorization,
+        onDriveAddition,
+        getAvailableSpace,
         verifyUserAuthenticated,
-        getTokenHavingCode,
-        STATE } = require("../app/controllers/onedrive.controller");
+        getTokensHavingCode,
+        ONEDRIVE_STATE } = require("../app/controllers/onedrive.controller");
 
 
 /* ===============
@@ -30,7 +32,7 @@ const dispatcher = new Dispatcher();
  * =========================
  */
 dispatcher.on("GET", "/auth", (req, res) => {
-  if (req.gDriveToken) {
+  if (req.OneDriveToken) {
     res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
       Location: "/account",
     });
@@ -46,41 +48,64 @@ dispatcher.on("GET", "/auth", (req, res) => {
     res.end();
     return;
   }
-  onAuth(req, res);
+  onOAuthAuthorization(req, res);
 });
 
 dispatcher.on("GET", "/get_token", async (req, res) => {
   const state = url.parse(req.url, true).query.state;
 
-  if (state !== STATE) {
+  if (state !== ONEDRIVE_STATE) {
     res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
       Location: "/login",
     });
     res.end();
   }
 
-  if (await verifyUserAuthenticated(req, res)) {
+  if (!(await verifyUserAuthenticated(req, res))) {
     /* Terminate function execution */
     return;
   }
 
-  if (!(await getTokenHavingCode(req, res))) {
+  if (!(await getTokensHavingCode(req, res))) {
     if (req.cookies) {
-      res.writeHead(StatusCodes.OK, {
-        "Content-Type": "text/html",
+      res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
+        Location: "/account",
         "Set-Cookie": req.cookies,
       });
     } else {
-      res.writeHead(StatusCodes.OK, {
-        "Content-Type": "text/html",
+      res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
+        Location: "/account",
       });
     }
   }
 
-  res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
-    Location: "/account",
-  });
   res.end();
+});
+
+dispatcher.on("POST", "/add", async (req, res) => {
+  await onDriveAddition(req, res);
+});
+
+dispatcher.on("GET", "/get_available_space", async (req, res) => {
+  if (!req.OneDriveToken) {
+    res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
+      Location: "/account",
+    });
+    res.end();
+    return;
+  }
+
+  try {
+    jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+  } catch {
+    res.writeHead(StatusCodes.TEMPORARY_REDIRECT, {
+      Location: "/login",
+    });
+    res.end();
+    return;
+  }
+
+  await getAvailableSpace(req, res);
 });
 
 

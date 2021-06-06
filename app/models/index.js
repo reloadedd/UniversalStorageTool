@@ -4,7 +4,6 @@ const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
     dialect: dbConfig.dialect,
-    operatorsAliases: false,
     pool: {
         max: dbConfig.pool.max,
         min: dbConfig.pool.min,
@@ -21,7 +20,9 @@ db.sequelize = sequelize;
 
 db.users = require("./user.model")(sequelize, Sequelize);
 db.googleDrives = require("./googleDrive.model")(sequelize, Sequelize);
+db.onedrive = require("./onedrive.model")(sequelize, Sequelize);
 db.users.hasOne(db.googleDrives);
+db.users.hasOne(db.onedrive);
 db.sequelize.sync();
 
 module.exports = db;
