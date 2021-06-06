@@ -2,10 +2,11 @@ const Dispatcher = require("../util/dispatcher");
 const { StatusCodes } = require("http-status-codes");
 const fs = require("fs");
 const {
-    onFileGet,
+    getFiles,
     createFile,
     uploadToFile,
-    testBigFileGet,
+    createDir,
+    getFile,
 } = require("../app/controllers/file.controller");
 const jwt = require("jsonwebtoken");
 const url = require("url");
@@ -14,11 +15,9 @@ const dispatcher = new Dispatcher();
 dispatcher.on("GET", "/files", async (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        if (!url.parse(req.url, true).query.id) {
-            testBigFileGet(req, res);
-            return;
-        }
-        onFileGet(req, res);
+
+        if (!url.parse(req.url, true).query.id) getFiles(req, res);
+        else getFile(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {
             "Content-type": "application/json",
@@ -32,6 +31,7 @@ dispatcher.on("GET", "/files", async (req, res) => {
 dispatcher.on("POST", "/files", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        if (!req.gDriveToken) throw new Error();
         createFile(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {
@@ -58,12 +58,27 @@ dispatcher.on("PUT", "/files", (req, res) => {
 
         uploadToFile(req, res);
     } catch {
-        console.log("thrown here");
         res.writeHead(StatusCodes.BAD_REQUEST, {
             "Content-type": "application/json",
         });
         res.end(
             JSON.stringify({ message: "Make sure the data is set properly" }),
+        );
+    }
+});
+
+dispatcher.on("POST", "/files/newDir", (req, res) => {
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        createDir(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "log in maybe?",
+            }),
         );
     }
 });
