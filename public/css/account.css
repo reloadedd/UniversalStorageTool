@@ -1,8 +1,9 @@
 body {
     margin: 0;
-    background-image: url("../img/background.jpg");
+    background-image: url("../img/background.png");
     background-size: cover;
 }
+
 .account-details-container {
     display: flex;
     flex-wrap: wrap;
@@ -148,4 +149,22 @@ ul {
 
 .percentage {
     font-family: sans-serif;
+}
+
+#drives-list {
+    width: 25%;
+    margin-left: 37.5%;
+    position: relative;
+    top: -30px;
+    border: 1px solid #800080;
+    visibility: hidden;
+}
+
+.drive-item-btn {
+    display: block;
+}
+
+.drive-item-btn:hover {
+    cursor: pointer;
+    background-color: #800080;
 }

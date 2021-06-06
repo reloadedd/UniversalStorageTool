@@ -34,6 +34,7 @@ exports.onAdd = async (req, res) => {
             refreshToken: req.body.refreshToken,
         });
         user.setGoogleDrive(drive);
+
         res.writeHead(StatusCodes.OK, {
             "Content-Type": "application/json",
         });

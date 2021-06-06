@@ -2,6 +2,7 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 const fetch = require("node-fetch");
 const { StatusCodes } = require("http-status-codes");
+
 exports.goToLogin = (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
@@ -15,6 +16,7 @@ exports.goToLogin = (req, res) => {
 
 exports.gotCode = async (req, res) => {
     const code = url.parse(req.url, true).query.code;
+
     if (!code) return false;
 
     const data = await (
@@ -45,7 +47,6 @@ exports.gotCode = async (req, res) => {
             }),
         },
     );
-    console.log(data);
 
     res.writeHead(StatusCodes.OK, {
         "Set-Cookie":

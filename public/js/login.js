@@ -42,7 +42,8 @@ async function doLogout() {
         method: "POST",
     });
     result = await result.json();
-    if (result.message === "logged out") {
+
+    if (result.response_type === "success") {
         location.href = "login";
     }
 }

@@ -10,8 +10,10 @@ const filesRouter = require("./files.router");
 const userRouter = require("./user.router");
 const accountsRouter = require("./account.router");
 const googleDriveRouter = require("./google.drive.router");
+const onedriveRouter = require("./onedrive.router");
 const jwt = require("jsonwebtoken");
-const { refreshGoogleDriveToken } = require("../util/refreshTokens");
+const { refreshGoogleDriveToken,
+        refreshOneDriveToken } = require("../util/refreshTokens");
 const { StatusCodes } = require("http-status-codes");
 
 MIMETypes = {
@@ -26,9 +28,37 @@ MIMETypes = {
 
 dispatcher.use("/users", userRouter);
 dispatcher.use(/\//, refreshGoogleDriveToken);
+dispatcher.use(/\//, refreshOneDriveToken);
 dispatcher.use("/g-drive", googleDriveRouter);
+dispatcher.use("/onedrive", onedriveRouter);
 dispatcher.use("", accountsRouter);
 dispatcher.use("", filesRouter);
+
+dispatcher.on("GET", "/index", (req, res) => {
+    if (!req.jwtToken) {
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
+        res.end();
+        return;
+    }
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        if (req.cookies) {
+            res.writeHead(StatusCodes.OK, {
+                "Set-Cookie": req.cookies,
+                "Content-Type": "text/html",
+            });
+        } else {
+            res.writeHead(StatusCodes.OK, {
+                "Content-Type": "text/html",
+            });
+        }
+        const data = fs.readFileSync("app/views/index.html");
+        res.end(data);
+    } catch (ex) {
+        res.writeHead(StatusCodes.TEMPORARY_REDIRECT, { Location: "/login" });
+        res.end();
+    }
+});
 
 dispatcher.on("GET", /\//, (request, response) => {
     const browser = useragent.parse(request.headers["user-agent"]);
