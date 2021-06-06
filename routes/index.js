@@ -10,7 +10,6 @@ const filesRouter = require("./files.router");
 const userRouter = require("./user.router");
 const accountsRouter = require("./account.router");
 const googleDriveRouter = require("./google.drive.router");
-// TODO: Do this
 const onedriveRouter = require("./onedrive.router");
 const jwt = require("jsonwebtoken");
 const { refreshGoogleDriveToken,

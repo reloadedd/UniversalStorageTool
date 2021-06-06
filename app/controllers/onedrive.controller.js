@@ -144,7 +144,8 @@ async function getTokensHavingCode(req, res) {
   params.append("client_id", process.env.UNST_ONEDRIVE_CLIENT_ID);
   params.append("scope", ONEDRIVE_SCOPE);
   params.append("code", code.toString());
-  params.append("redirect_uri", process.env.UNST_IS_SERVER_UP ? `${ONEDRIVE_REMOTE_REDIRECT}/onedrive/get_token` : `${ONEDRIVE_LOCAL_REDIRECT}/onedrive/get_token`);
+  params.append("redirect_uri", process.env.UNST_IS_SERVER_UP ?
+      `${ONEDRIVE_REMOTE_REDIRECT}/onedrive/get_token` : `${ONEDRIVE_LOCAL_REDIRECT}/onedrive/get_token`);
   params.append("grant_type", "authorization_code");
   params.append("client_secret", process.env.UNST_ONEDRIVE_CLIENT_SECRET);
 
