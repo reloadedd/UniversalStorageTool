@@ -33,6 +33,13 @@ exports.setServerDataAndDispatch = (request, response) => {
     } catch {
         // console.log("no google drive token");
     }
+    try {
+        request.dropboxToken = cookies
+            .find((cookie) => cookie.startsWith("dropboxToken="))
+            .replace("dropboxToken=", "");
+    } catch {
+        console.log("no dropbox token");
+    }
     request.on("data", (chunk) => {
         chunks.push(chunk);
     });

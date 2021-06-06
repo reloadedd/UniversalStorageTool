@@ -13,7 +13,7 @@
         ></script>
         <script src="public/js/login.js"></script>
     </head>
-    <body onload="setGoogleDriveSpace(); setOneDriveAvailableSpace()">
+    <body onload="setGoogleDriveSpace(); setOneDriveAvailableSpace(); setDropboxSpace()">
         <header id="nav-bar"></header>
 
         <div class="account-details-container">
@@ -65,10 +65,10 @@
                     alt=""
                 />
                 <ul>
-                    <li>
+                    <li id="dropbox">
                         <h3>
-                            Dropbox<span>
-                                (25 <span class="percentage">%</span> )</span
+                            Dropbox<span id="dropbox-percentage">
+                                (0 <span class="percentage">%</span> )</span
                             >
                         </h3>
                         <span class="bar">
@@ -97,17 +97,6 @@
                             <span class="onedrive-available-space"> </span>
                         </span>
                     </li>
-
-                    <li>
-                        <h3>
-                            Box<span>
-                                ( 50 <span class="percentage">%</span> )</span
-                            >
-                        </h3>
-                        <span class="bar">
-                            <span class="box-space"> </span>
-                        </span>
-                    </li>
                 </ul>
                 <button class="add-drive-button" onclick="setDrivesListVisibility()">
                     Add Drive   <i class="fas fa-caret-down"></i>
@@ -119,7 +108,7 @@
                     <div class="drive-item-btn" onclick="addOneDrive()">
                         Microsoft OneDrive
                     </div>
-                    <div class="drive-item-btn">
+                    <div class="drive-item-btn" onclick="addDropBox()">
                         DropBox
                     </div>
                 </div>
@@ -130,6 +119,7 @@
         <script src="public/js/menu-button.js"></script>
         <script src="public/js/google-drive.js"></script>
         <script src="public/js/onedrive.js"></script>
+        <script src="public/js/dropbox.js"></script>
         <script src="public/js/drives-displaying.js"></script>
     </body>
 </html>
