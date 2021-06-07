@@ -1,5 +1,15 @@
+body {
+    margin: 0;
+    background-image: url("../img/background.png");
+    background-size: cover;
+    color: whitesmoke;
+}
+
 p {
-    text-transform: uppercase;
     font-size: 2em;
     text-align: center;
+}
+
+a {
+    text-transform: uppercase;
 }

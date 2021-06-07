@@ -1,6 +1,12 @@
+body {
+    margin: 0;
+    background-image: url("../img/background.png");
+    background-size: cover;
+}
+
 h1 {
     font-size: 4em;
-    color: black;
+    color: skyblue;
     text-align: center;
     text-transform: uppercase;
 }
@@ -17,19 +23,15 @@ span.motto {
     }
 }
 
-h1 {
-    color: purple;
-}
-
 .section a {
     margin-left: 30px;
     font-size: 3em;
-    color: purple;
+    color: skyblue;
 }
 
 .section a:hover {
-    color: red;
-    font-size: 3.2em;
+    color: #AD310B;
+    transition: color 1000ms linear;
 }
 
 .section p {

@@ -4,6 +4,7 @@ body {
     border: 0;
     padding: 0;
 }
+
 @font-face {
     font-family: "Nexa Text Demo Light";
     src: url("../fonts/NexaTextDemo-Light.eot") format("embedded-opentype");
@@ -30,8 +31,10 @@ header {
     height: 42px;
     display: flex;
     justify-content: space-between;
-    background: purple;
+    background: black;
+    opacity: 0.85;
     transition: all 400ms;
+    border-bottom: 1px solid darkmagenta;
 }
 
 .unst-btn {
@@ -62,9 +65,9 @@ header {
 }
 
 .regular-link {
-    color: red;
+    color: palevioletred;
 }
 
 .regular-link:hover {
-    color: mediumpurple;
+    color: skyblue;
 }

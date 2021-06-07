@@ -5,7 +5,9 @@
     grid-column-start: 1;
     height: inherit;
     width: 250px;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: black;
+    border-top: 1px solid darkmagenta;
+    opacity: 0.85;
 }
 
 .side-menu#side-menu-button {

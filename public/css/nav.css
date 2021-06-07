@@ -25,7 +25,7 @@
 }
 
 .nav-link a:hover {
-    color: red;
+    color: #800080;
     font-weight: 800;
     transition: 400ms;
 }
@@ -56,8 +56,8 @@
         width: 100%;
         display: flex;
         justify-content: flex-end;
-        background-color: darkmagenta;
-        opacity: 80%;
+        background-color: black;
+        opacity: 0.6;
     }
 
     .change.nav-link#menu-button {
