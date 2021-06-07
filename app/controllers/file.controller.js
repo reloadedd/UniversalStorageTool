@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
 const { setFileToUser, downloadFile } = require("../../util/files");
-const { hasFile } = require("../../util/compare");
+const { hasFile, hasDirectory } = require("../../util/compare");
 const { templateDirectoriesAndFiles } = require("../../util/templates");
 exports.getFiles = async (req, res) => {
     const browser = useragent.parse(req.headers["user-agent"]);
@@ -217,6 +217,100 @@ exports.createDir = async (req, res) => {
     res.end(
         JSON.stringify({
             message: "directory created.",
+        }),
+    );
+};
+
+exports.renameDirectory = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
+    });
+    const directory = await req.db.directories.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+    if (!(await hasDirectory(me, directory))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not yours, bro",
+            }),
+        );
+        return;
+    }
+    await directory.update({
+        name: req.body.newName,
+    });
+    if (req.cookies) {
+        res.writeHead(StatusCodes.OK, {
+            "Set-Cookie": req.cookies,
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "name updated.",
+            }),
+        );
+        return;
+    }
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "name updated.",
+        }),
+    );
+};
+
+exports.renameFile = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
+    });
+    const file = await req.db.files.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+    if (!(await hasFile(me, file))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not yours, bro",
+            }),
+        );
+        return;
+    }
+    await file.update({
+        name: req.body.newName,
+    });
+    if (req.cookies) {
+        res.writeHead(StatusCodes.OK, {
+            "Set-Cookie": req.cookies,
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "name updated.",
+            }),
+        );
+        return;
+    }
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "name updated.",
         }),
     );
 };

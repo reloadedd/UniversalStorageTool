@@ -65,7 +65,7 @@
                 </span>
             </div>
         </div>
-        <div id="new-folder-name">
+        <div id="new-folder-name" style="visibility: hidden">
             <div id="new-folder-container">
                 <h2 id="new-folder-text" style="color: white">
                     Type the folder name:
@@ -83,8 +83,26 @@
         </div>
         <div id="context-menu">
             <div class="item">Download</div>
-            <div class="item">Rename</div>
+            <div class="item" onclick="rename()">Rename</div>
             <div class="item">Delete</div>
+        </div>
+        <div id="rename" style="visibility: hidden">
+            <div id="rename-container">
+                <h2 id="rename-text" style="color: white">
+                    Type the new name:
+                </h2>
+                <input type="text" id="rename-box" maxlength="64" />
+                <button
+                    class="unst-btn"
+                    id="rename-submit"
+                    onclick="renameElement()"
+                >
+                    Rename
+                </button>
+                <button class="unst-btn" onclick="cancelRename()">
+                    Cancel
+                </button>
+            </div>
         </div>
         <script src="public/js/nav-bar.js"></script>
         <script src="public/js/menu-button.js"></script>

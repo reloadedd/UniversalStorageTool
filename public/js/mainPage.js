@@ -110,15 +110,6 @@ dirClickEventHandler = (dirId) => {
     getFiles(dirId);
 };
 
-fileClickEventHandler = (fileId) => {
-    const a = document.createElement("a");
-    a.href = "/files?id=" + fileId;
-    a.download = "";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-};
-
 createDir = async () => {
     const parentFolder = new URLSearchParams(window.location.search).get("did");
 

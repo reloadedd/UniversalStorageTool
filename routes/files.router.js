@@ -7,12 +7,14 @@ const {
     uploadToFile,
     createDir,
     getFile,
+    renameDirectory,
+    renameFile,
 } = require("../app/controllers/file.controller");
 const jwt = require("jsonwebtoken");
 const url = require("url");
 const dispatcher = new Dispatcher();
 
-dispatcher.on("GET", "/files", async (req, res) => {
+dispatcher.on("GET", "", async (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
 
@@ -28,7 +30,7 @@ dispatcher.on("GET", "/files", async (req, res) => {
     }
 });
 
-dispatcher.on("POST", "/files", (req, res) => {
+dispatcher.on("POST", "", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         if (!req.gDriveToken) throw new Error();
@@ -43,7 +45,7 @@ dispatcher.on("POST", "/files", (req, res) => {
     }
 });
 
-dispatcher.on("PUT", "/files", (req, res) => {
+dispatcher.on("PUT", "", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         if (
@@ -67,10 +69,64 @@ dispatcher.on("PUT", "/files", (req, res) => {
     }
 });
 
-dispatcher.on("POST", "/files/newDir", (req, res) => {
+dispatcher.on("POST", "/newDir", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         createDir(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "log in maybe?",
+            }),
+        );
+    }
+});
+
+dispatcher.on("PATCH", "/dir", (req, res) => {
+    if (!url.parse(req.url, true).query.id || !req.body.newName) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "bad parameters",
+            }),
+        );
+        return;
+    }
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        renameDirectory(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "log in maybe?",
+            }),
+        );
+    }
+});
+
+dispatcher.on("PATCH", "/file", (req, res) => {
+    if (!url.parse(req.url, true).query.id || !req.body.newName) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "no id provided",
+            }),
+        );
+        return;
+    }
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        renameFile(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {
             "Content-Type": "application.json",

@@ -25,3 +25,40 @@
     transform: scale(1);
     transition: transform 200ms ease-in-out;
 }
+#rename {
+    position: fixed;
+    left: 0;
+    top: -21px;
+    visibility: hidden;
+    width: 100vw;
+    height: 150vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+#rename-container {
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    /* establish flex container */
+    flex-direction: column;
+    /* make main-axis vertical */
+    justify-content: flex-end;
+    /* align items vertically, in this case */
+    align-items: center;
+    /* align items horizontally, in this case */
+}
+
+#rename-text {
+    display: block;
+    text-align: center;
+}
+#rename-box {
+    background: rgba(0, 0, 0, 0.7);
+    display: block;
+    position: center;
+    color: white;
+    height: 50px;
+    width: 50%;
+    overflow: hidden;
+}

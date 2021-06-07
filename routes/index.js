@@ -38,7 +38,7 @@ dispatcher.use("/g-drive", googleDriveRouter);
 dispatcher.use("/onedrive", onedriveRouter);
 dispatcher.use("/dropbox", dropBoxRouter);
 dispatcher.use("", accountsRouter);
-dispatcher.use("", filesRouter);
+dispatcher.use("/files", filesRouter);
 
 dispatcher.on("GET", "/index", (req, res) => {
     if (!req.jwtToken) {

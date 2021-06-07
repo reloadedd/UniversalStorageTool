@@ -3,6 +3,43 @@ const scope = document.querySelector("body");
 let dirId;
 let fileId;
 
+function rename() {
+    const renameElement = document.getElementById("rename");
+    renameElement.style.visibility = "visible";
+    contextMenu.classList.remove("visible");
+}
+
+function cancelRename() {
+    document.getElementById("rename").style.visibility = "hidden";
+}
+
+function renameElement() {
+    const newName = document.getElementById("rename-box").value;
+    document.getElementById("rename").style.visibility = "hidden";
+    if (newName === "") {
+        alert("the name cannot be empty!!");
+        return;
+    }
+    if (dirId) {
+        document.getElementById(dirId).lastElementChild.innerText = newName;
+        fetch(`/files/dir?id=${dirId.replace("dir_", "")}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                newName,
+            }),
+        });
+    }
+    if (fileId) {
+        document.getElementById(fileId).lastElementChild.innerText = newName;
+        fetch(`/files/file?id=${fileId.replace("file_", "")}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                newName,
+            }),
+        });
+    }
+}
+
 function setEventListeners() {
     const directories = document.getElementsByClassName("directory");
     for (const directory of directories) {
