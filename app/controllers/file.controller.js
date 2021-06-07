@@ -4,7 +4,7 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
-const { setFileToUser, downloadFile } = require("../../util/files");
+const { uploadToAllDrives, downloadFile } = require("../../util/files");
 const { hasFile } = require("../../util/compare");
 const { templateDirectoriesAndFiles } = require("../../util/templates");
 exports.getFiles = async (req, res) => {
@@ -126,7 +126,7 @@ exports.uploadToFile = (req, res) => {
                     message: "File upload complete",
                 }),
             );
-            setFileToUser(fid, req);
+            uploadToAllDrives(fid, req);
             return;
         }
 

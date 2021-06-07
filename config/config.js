@@ -23,6 +23,13 @@ const SSL_CA_BUNDLE = "CERTIFICATE_CA_BUNDLE_PATH";
 /* The local path where the files will be saved prior to uploading to drives */
 const LOCAL_FILE_STORAGE_PATH = './tmp';
 
+/* Fake an enum for storing the drives as key-value pairs */
+DriveEnum = Object.freeze({
+    GOOGLE_DRIVE: 0,
+    ONEDRIVE: 1,
+    DROPBOX: 2
+});
+
 colors.setTheme({
     info: "bgGreen",
     help: "cyan",
@@ -68,5 +75,6 @@ module.exports = {
     SSL_CA_BUNDLE,
     SSL_CERTIFICATE,
     SSL_PRIVATE_KEY,
-    LOCAL_FILE_STORAGE_PATH
+    LOCAL_FILE_STORAGE_PATH,
+    DriveEnum
 };
