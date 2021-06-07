@@ -101,6 +101,7 @@ getFiles = async (did = null) => {
         document
             .getElementsByClassName("loading-icon")
             .item(0).style.visibility = "hidden";
+        setEventListeners();
     }
 };
 
@@ -128,5 +129,9 @@ createDir = async () => {
     });
 
     getFiles();
+    document.getElementById("new-folder-name").style.visibility = "hidden";
+};
+
+cancelDir = () => {
     document.getElementById("new-folder-name").style.visibility = "hidden";
 };

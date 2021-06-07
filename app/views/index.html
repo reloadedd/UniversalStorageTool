@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="public/css/uploading.css" />
         <link rel="stylesheet" href="public/css/loading-icon.css" />
         <link rel="stylesheet" href="public/css/new-folder.css" />
+        <link rel="stylesheet" href="public/css/context-menu.css" />
     </head>
     <body onload="getFiles()">
         <header id="nav-bar"></header>
@@ -55,10 +56,6 @@
             </div>
         </div>
 
-        <script src="public/js/nav-bar.js"></script>
-        <script src="public/js/menu-button.js"></script>
-        <script src="public/js/side-menu-button.js"></script>
-        <script src="public/js/mainPage.js"></script>
         <div id="uploading">
             <div id="upload_container">
                 <h2 id="upload_text" style="color: white"></h2>
@@ -80,7 +77,20 @@
                 >
                     Create
                 </button>
+                <button class="unst-btn" onclick="cancelDir()">Cancel</button>
             </div>
         </div>
+        <div id="context-menu">
+            <div class="item">Option 1</div>
+            <div class="item">Option 2</div>
+            <div class="item">Option 3</div>
+            <div class="item">Option 4</div>
+            <div class="item">Option 5</div>
+        </div>
+        <script src="public/js/nav-bar.js"></script>
+        <script src="public/js/menu-button.js"></script>
+        <script src="public/js/side-menu-button.js"></script>
+        <script src="public/js/mainPage.js"></script>
+        <script src="public/js/context-menu.js"></script>
     </body>
 </html>
