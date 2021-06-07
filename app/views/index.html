@@ -81,11 +81,6 @@
                 <button class="unst-btn" onclick="cancelDir()">Cancel</button>
             </div>
         </div>
-        <div id="context-menu">
-            <div class="item">Download</div>
-            <div class="item" onclick="rename()">Rename</div>
-            <div class="item">Delete</div>
-        </div>
         <div id="rename" style="visibility: hidden">
             <div id="rename-container">
                 <h2 id="rename-text" style="color: white">
@@ -103,6 +98,11 @@
                     Cancel
                 </button>
             </div>
+        </div>
+        <div id="context-menu">
+            <div class="item" onclick="downloadElement()">Download</div>
+            <div class="item" onclick="rename()">Rename</div>
+            <div class="item">Delete</div>
         </div>
         <script src="public/js/nav-bar.js"></script>
         <script src="public/js/menu-button.js"></script>

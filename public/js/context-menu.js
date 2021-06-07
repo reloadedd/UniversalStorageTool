@@ -3,6 +3,19 @@ const scope = document.querySelector("body");
 let dirId;
 let fileId;
 
+function downloadElement() {
+    if (fileId) {
+        const a = document.createElement("a");
+        a.href = "/files?id=" + fileId.replace("file_", "");
+        a.download = "";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } else {
+        alert("We do not provide folder download yet");
+    }
+}
+
 function rename() {
     const renameElement = document.getElementById("rename");
     renameElement.style.visibility = "visible";
