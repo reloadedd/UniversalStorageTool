@@ -3,10 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title># account</title>
+        <title>Account</title>
         <link rel="stylesheet" href="public/css/style.css" />
         <link rel="stylesheet" href="public/css/nav.css" />
         <link rel="stylesheet" href="public/css/account.css" />
+
         <script
             src="https://kit.fontawesome.com/b5716d189e.js"
             crossorigin="anonymous"
@@ -61,14 +62,22 @@
                 <img
                     class="statistics-img"
                     src="public/img/statistics.png"
-                    title="Statistics icon"
+                    title="Statistics"
                     alt=""
                 />
+                <div class="loading-icon">
+                    <div class="inner-loading">
+                        <div></div>
+                        <div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
                 <ul>
                     <li id="dropbox">
                         <h3>
                             Dropbox<span id="dropbox-percentage">
-                                (0 <span class="percentage">%</span> )</span
+                                (Calculating... <span class="percentage">%</span> )</span
                             >
                         </h3>
                         <span class="bar">
@@ -79,7 +88,7 @@
                     <li id="google-drive">
                         <h3>
                             Google Drive<span id="gDrive-percentage">
-                                (0 <span class="percentage">%</span> )</span
+                                (Calculating... <span class="percentage">%</span> )</span
                             >
                         </h3>
                         <span class="bar">
@@ -89,8 +98,8 @@
 
                     <li id="onedrive">
                         <h3>
-                            Microsoft OneDrive<span id="onedrive-percentage">>
-                                ( 75 <span class="percentage">%</span> )</span
+                            Microsoft OneDrive<span id="onedrive-percentage">
+                                (Calculating... <span class="percentage">%</span> )</span
                             >
                         </h3>
                         <span class="bar">
