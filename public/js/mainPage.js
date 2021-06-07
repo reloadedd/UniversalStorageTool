@@ -8,8 +8,8 @@ uploadFiles = async () => {
     for (const file of files) totalSize += file.size;
     document.getElementById("uploading").style.visibility = "visible";
     for (const file of files) {
-        document.getElementById("upload_text").innerText =
-            "Uploading file " + file.name;
+        document.getElementById("upload_text").innerHTML =
+            `Uploading File <i>${file.name}</i>...`;
         const createFileResult = await fetch("files", {
             method: "POST",
             body: JSON.stringify({
