@@ -5,8 +5,9 @@
     grid-column-start: 1;
     height: inherit;
     width: 250px;
-    background-color: black;
     border-top: 1px solid darkmagenta;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-right: 1px solid purple;
     opacity: 0.85;
 }
 
@@ -38,7 +39,6 @@
         grid-template-columns: 42px auto;
     }
     .side-menu {
-        background-color: purple;
         width: 42px;
     }
     .side-menu > * {
@@ -50,7 +50,7 @@
         display: none;
     }
     #side-menu-button {
-        background-color: purple;
+        background-color: rgba(0, 0, 0, 0.7);
         display: block;
     }
 
