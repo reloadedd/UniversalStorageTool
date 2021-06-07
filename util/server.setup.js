@@ -10,9 +10,11 @@ exports.setServerDataAndDispatch = (request, response) => {
     const chunks = [];
     let cookies;
     try {
-        cookies = request.headers["cookie"]
-            .split(";")
-            .map((cookie) => cookie.trim());
+        if (request.headers["cookie"]) {
+            cookies = request.headers["cookie"]
+                .split(";")
+                .map((cookie) => cookie.trim());
+        }
     } catch (err) {
         console.log(err.message);
     }
@@ -22,14 +24,14 @@ exports.setServerDataAndDispatch = (request, response) => {
             .find((cookie) => cookie.startsWith("jwt="))
             .replace("jwt=", "");
     } catch {
-        console.log("no jwt token");
+        // console.log("no jwt token");
     }
     try {
         request.gDriveToken = cookies
             .find((cookie) => cookie.startsWith("gDriveToken="))
             .replace("gDriveToken=", "");
     } catch {
-        console.log("no google drive token");
+        // console.log("no google drive token");
     }
     try {
         request.dropboxToken = cookies
@@ -45,7 +47,7 @@ exports.setServerDataAndDispatch = (request, response) => {
         try {
             request.body = JSON.parse(Buffer.concat(chunks).toString());
         } catch {
-            console.log("no json body.. reverting to plain text");
+            // console.log("no json body.. reverting to plain text");
             request.data = Buffer.concat(chunks);
         } finally {
             router.dispatch(request, response);

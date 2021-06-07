@@ -10,6 +10,7 @@ dispatcher.on("POST", "/logout", (req, res) => {
     const cookies = [
         "jwt=; path=/; httpOnly; Max-Age=0",
         "gDriveToken=; path=/; httpOnly; Max-Age=0",
+        "OneDriveToken=; path=/; httpOnly; Max-Age=0",
         "dropboxToken=; path=/; httpOnly; Max-Age=0",
     ];
     res.writeHead(StatusCodes.OK, {
@@ -18,7 +19,8 @@ dispatcher.on("POST", "/logout", (req, res) => {
     });
     res.end(
         JSON.stringify({
-            message: "logged out",
+            response_type: "success",
+            message: "User successfully logged out.",
         }),
     );
 });

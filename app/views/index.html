@@ -11,8 +11,10 @@
         <link rel="stylesheet" href="public/css/account.css" />
         <link rel="stylesheet" href="public/css/side-menu.css" />
         <link rel="stylesheet" href="public/css/uploading.css" />
+        <link rel="stylesheet" href="public/css/loading-icon.css" />
+        <link rel="stylesheet" href="public/css/new-folder.css" />
     </head>
-    <body>
+    <body onload="getFiles()">
         <header id="nav-bar"></header>
         <div class="side-menu">
             <div id="side-menu-button"></div>
@@ -29,6 +31,13 @@
             >
                 Upload Files
             </button>
+
+            <button
+                class="unst-btn"
+                onclick="document.getElementById('new-folder-name').style.visibility = 'visible'"
+            >
+                New folder
+            </button>
             <div id="space-left">
                 <h6>Total available space</h6>
                 <span class="menu-side-bar">
@@ -37,11 +46,18 @@
             </div>
         </div>
         <div class="main-view"></div>
+        <div class="loading-icon">
+            <div class="inner-loading">
+                <div></div>
+                <div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
 
         <script src="public/js/nav-bar.js"></script>
         <script src="public/js/menu-button.js"></script>
         <script src="public/js/side-menu-button.js"></script>
-        <script src="public/js/demo-files.js"></script>
         <script src="public/js/mainPage.js"></script>
         <div id="uploading">
             <div id="upload_container">
@@ -49,6 +65,21 @@
                 <span id="upload_bar">
                     <span id="upload_progress"></span>
                 </span>
+            </div>
+        </div>
+        <div id="new-folder-name">
+            <div id="new-folder-container">
+                <h2 id="new-folder-text" style="color: white">
+                    Type the folder name:
+                </h2>
+                <input type="text" id="new-folder-box" maxlength="64" />
+                <button
+                    class="unst-btn"
+                    id="new-folder-submit"
+                    onclick="createDir()"
+                >
+                    Create
+                </button>
             </div>
         </div>
     </body>

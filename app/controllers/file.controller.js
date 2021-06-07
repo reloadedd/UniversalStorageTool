@@ -4,9 +4,32 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
-const fileTemplate = require("../models/file.model");
-exports.onFileGet = (req, res) => {
+const { setFileToUser, downloadFile } = require("../../util/files");
+const { hasFile } = require("../../util/compare");
+const { templateDirectoriesAndFiles } = require("../../util/templates");
+exports.getFiles = async (req, res) => {
     const browser = useragent.parse(req.headers["user-agent"]);
+
+    let files;
+    let folders;
+
+    if (!url.parse(req.url, true).query.did) {
+        const me = await req.db.users.findOne({
+            where: {
+                email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+            },
+        });
+        files = await me.getFiles();
+        folders = await me.getDirectories();
+    } else {
+        const dir = await req.db.directories.findOne({
+            where: {
+                id: url.parse(req.url, true).query.did,
+            },
+        });
+        files = await dir.getFiles();
+        folders = await dir.getDirectories();
+    }
 
     /* Log the request to the stdout */
     console.log(
@@ -18,9 +41,8 @@ exports.onFileGet = (req, res) => {
         "->",
         req.url,
     );
-    const id = url.parse(req.url, true).query.id;
     res.writeHead(StatusCodes.OK, { "Content-type": "text/plain" });
-    res.end(fileTemplate(id, id));
+    res.end(templateDirectoriesAndFiles(folders, files));
 };
 
 exports.createFile = (req, res) => {
@@ -30,12 +52,17 @@ exports.createFile = (req, res) => {
             fileName = crypto.randomBytes(32).toString("hex");
         } while (fs.existsSync("./tmp/" + fileName));
         fs.appendFileSync("./tmp/" + fileName, "");
+        const configBody = {
+            user: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+            parentFolder: req.body.parentFolder,
+            name: req.body.name,
+            totalSize: req.body.size,
+            mimeType: req.body.type,
+            written: 0,
+        };
         fs.writeFileSync(
             "./tmp/" + fileName + ".config.json",
-            JSON.stringify({
-                user: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
-                written: 0,
-            }),
+            JSON.stringify(configBody),
         );
         if (req.cookies) {
             res.writeHead(StatusCodes.CREATED, {
@@ -69,10 +96,10 @@ exports.uploadToFile = (req, res) => {
         .split("/");
     total = parseInt(total);
     const [start, end] = range.split("-").map((i) => parseInt(i));
-    if (!fileConfig.totalSize) fileConfig.totalSize = total;
     if (
         fileConfig.written !== start ||
-        parseInt(req.headers["content-length"]) !== end - start
+        parseInt(req.headers["content-length"]) !== end - start ||
+        fileConfig.totalSize !== total
     ) {
         res.writeHead(StatusCodes.BAD_REQUEST, {
             Range: "bytes=0-" + fileConfig.written,
@@ -99,6 +126,7 @@ exports.uploadToFile = (req, res) => {
                     message: "File upload complete",
                 }),
             );
+            setFileToUser(fid, req);
             return;
         }
 
@@ -122,4 +150,73 @@ exports.uploadToFile = (req, res) => {
             }),
         );
     }
+};
+
+exports.getFile = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
+    });
+
+    const thisFile = await req.db.files.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+
+    if (!thisFile) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "no such file",
+            }),
+        );
+        return;
+    }
+
+    if (!(await hasFile(me, thisFile))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not your file bro",
+            }),
+        );
+    }
+
+    downloadFile(req, res, thisFile);
+};
+
+exports.createDir = async (req, res) => {
+    const newDirectory = await req.db.directories.create({
+        name: req.body.name,
+    });
+
+    if (req.body.parentDir) {
+        const parentDir = await req.db.directories.findOne({
+            where: {
+                id: req.body.parentDir,
+            },
+        });
+        parentDir.addDirectory(newDirectory);
+    } else {
+        const me = await req.db.users.findOne({
+            where: {
+                email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+            },
+        });
+        me.addDirectory(newDirectory);
+    }
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "directory created.",
+        }),
+    );
 };
