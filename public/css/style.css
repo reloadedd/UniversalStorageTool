@@ -30,6 +30,7 @@ header {
     top: 0;
     height: 42px;
     display: flex;
+    box-sizing: border-box;
     justify-content: space-between;
     background: black;
     opacity: 0.85;
