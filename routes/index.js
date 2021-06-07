@@ -13,9 +13,11 @@ const googleDriveRouter = require("./google.drive.router");
 const onedriveRouter = require("./onedrive.router");
 const dropBoxRouter = require("./dropbox.router");
 const jwt = require("jsonwebtoken");
-const { refreshGoogleDriveToken,
-        refreshOneDriveToken,
-        refreshDropboxToken } = require("../util/refreshTokens");
+const {
+    refreshGoogleDriveToken,
+    refreshOneDriveToken,
+    refreshDropboxToken,
+} = require("../util/refreshTokens");
 const { StatusCodes } = require("http-status-codes");
 
 MIMETypes = {
