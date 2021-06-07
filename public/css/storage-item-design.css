@@ -6,11 +6,14 @@ figcaption {
 figure {
     text-align: center;
     font-size: medium;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
+    padding: 10px;
     width: 159px;
-    height: 160px;
+    height: 116px;
+}
+
+figure img {
+    width: 92px;
+    height: 92px;
 }
 
 figure:hover {
