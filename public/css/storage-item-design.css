@@ -1,0 +1,19 @@
+figcaption {
+  color: lightslategray;
+  font-weight: bolder;
+}
+
+figure {
+  text-align: center;
+  font-size: medium;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  width: 159px;
+  height: 160px;
+}
+
+figure:hover {
+  background-color: rgba(44, 3, 89, 0.8);
+  cursor: pointer;
+}
