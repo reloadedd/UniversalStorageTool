@@ -10,6 +10,7 @@ function setEventListeners() {
             event.preventDefault();
             dirId = directory.id;
             fileId = undefined;
+            console.log(directory.id);
             const { normalizedX: mouseX, normalizedY: mouseY } =
                 normalizePozition(event.clientX, event.clientY);
 
@@ -26,6 +27,7 @@ function setEventListeners() {
             event.preventDefault();
             dirId = undefined;
             fileId = file.id;
+            console.log(file.id);
             const { normalizedX: mouseX, normalizedY: mouseY } =
                 normalizePozition(event.clientX, event.clientY);
 
@@ -35,8 +37,6 @@ function setEventListeners() {
             contextMenu.classList.add("visible");
         });
     }
-    console.log(files.length);
-    console.log(directories.length);
 }
 
 scope.addEventListener("click", (e) => {

@@ -23,7 +23,9 @@ exports.templateDirectoriesAndFiles = (dirs, files) => {
 
     for (const dir of dirs) {
         res += `
-        <figure class="directory" id=${"dir_" + dir.id}>
+        <figure onclick="getFiles(${dir.id})" class="directory" id=${
+            "dir_" + dir.id
+        }>
             <img src="public/img/folder.png" alt="Directory">
             <figcaption>${fitNameInsideFigcaption(dir.name)}</figcaption>
         </figure>
