@@ -8,8 +8,9 @@ uploadFiles = async () => {
     for (const file of files) totalSize += file.size;
     document.getElementById("uploading").style.visibility = "visible";
     for (const file of files) {
-        document.getElementById("upload_text").innerText =
-            "Uploading file " + file.name;
+        document.getElementById(
+            "upload_text",
+        ).innerHTML = `Uploading File <i>${file.name}</i>...`;
         const createFileResult = await fetch("files", {
             method: "POST",
             body: JSON.stringify({
@@ -22,7 +23,7 @@ uploadFiles = async () => {
         if (createFileResult.status === 403) {
             alert("Cannot upload if no drive is linked to the account!");
             document.getElementById("uploading").style.visibility = "hidden";
-            document.getElementById("upload_progress").style.width = 0;
+            document.getElementById("upload_progress").style.width = "0";
             return;
         }
         if (createFileResult.status === 500) {
@@ -30,7 +31,7 @@ uploadFiles = async () => {
                 "We're terribly sorry.. you can't upload files right now and it's on us",
             );
             document.getElementById("uploading").style.visibility = "hidden";
-            document.getElementById("upload_progress").style.width = 0;
+            document.getElementById("upload_progress").style.width = "0";
             return;
         }
         if (createFileResult.status !== 201) return;
@@ -39,12 +40,12 @@ uploadFiles = async () => {
         if (!succeeded) {
             alert("couldn't upload a particular chunk for some reason.. sorry");
             document.getElementById("uploading").style.visibility = "hidden";
-            document.getElementById("upload_progress").style.width = 0;
+            document.getElementById("upload_progress").style.width = "0";
             return;
         }
     }
     document.getElementById("uploading").style.visibility = "hidden";
-    document.getElementById("upload_progress").style.width = 0;
+    document.getElementById("upload_progress").style.width = "0";
 };
 
 uploadFileAt = async (file, name) => {
@@ -108,6 +109,7 @@ getFiles = async (did = null) => {
 dirClickEventHandler = (dirId) => {
     getFiles(dirId);
 };
+
 fileClickEventHandler = (fileId) => {
     const a = document.createElement("a");
     a.href = "/files?id=" + fileId;

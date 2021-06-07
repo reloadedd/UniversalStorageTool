@@ -10,7 +10,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
         acquire: dbConfig.pool.acquire,
         idle: dbConfig.pool.idle,
     },
-    logging: false
+    logging: false,
 });
 
 const db = {};
@@ -21,6 +21,7 @@ db.sequelize = sequelize;
 db.users = require("./user.model")(sequelize, Sequelize);
 db.googleDrives = require("./googleDrive.model")(sequelize, Sequelize);
 db.onedrive = require("./onedrive.model")(sequelize, Sequelize);
+db.dropboxes = require("./dropbox.model")(sequelize, Sequelize);
 db.directories = require("./directory.model")(sequelize, Sequelize);
 db.files = require("./file.model")(sequelize, Sequelize);
 db.fragments = require("./fragment.model")(sequelize, Sequelize);
@@ -30,12 +31,11 @@ db.users.hasMany(db.files);
 
 db.users.hasOne(db.googleDrives);
 db.users.hasOne(db.onedrive);
+db.users.hasOne(db.dropboxes);
 
 db.directories.hasMany(db.files);
 db.directories.hasMany(db.directories);
-
 db.files.hasMany(db.fragments);
 
 db.sequelize.sync();
-
 module.exports = db;
