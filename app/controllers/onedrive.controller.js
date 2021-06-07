@@ -127,12 +127,6 @@ function verifyUserAuthenticated(req, res) {
   }
 }
 
-function printObject(jsonObj) {
-  Array.from(Object.keys(jsonObj)).forEach(function(key) {
-    console.log(key + ":" + jsonObj[key]);
-  });
-}
-
 async function getTokensHavingCode(req, res) {
   const code = url.parse(req.url, true).query.code;
 
@@ -191,5 +185,6 @@ module.exports = {
   verifyUserAuthenticated,
   getTokensHavingCode,
   ONEDRIVE_STATE,
-  ONEDRIVE_TOKEN_GRANTING_URL
+  ONEDRIVE_TOKEN_GRANTING_URL,
+  ONEDRIVE_MICROSOFT_GRAPH_URL
 }
