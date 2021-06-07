@@ -191,7 +191,7 @@ exports.getFile = async (req, res) => {
     downloadFile(req, res, thisFile);
 };
 
-exports.createDir = async (req, res) => {
+exports.createDirectory = async (req, res) => {
     const newDirectory = await req.db.directories.create({
         name: req.body.name,
     });

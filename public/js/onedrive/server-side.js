@@ -69,10 +69,10 @@ async function uploadFileToOneDrive(fileId, req) {
   thisFile.addFragment(newFileFragment);
 }
 
-async function getFragmentFromOneDrive(req, fragment) {
+async function getFileFromOneDrive(req, file) {
   return (
       await fetch(
-          `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/items/${fragment.id}/content`,
+          `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/items/${file.id}/content`,
           {
             method: "GET",
             headers: {
@@ -82,6 +82,19 @@ async function getFragmentFromOneDrive(req, fragment) {
   ).body;
 }
 
+async function deleteFileFromOneDrive(req, file) {
+  return (
+      await fetch(
+          `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/items/${file.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: "Bearer " + req.OneDriveToken
+            }
+          })
+  );
+}
+
 
 /* ======================
  * --- Module Exports ---
@@ -89,5 +102,6 @@ async function getFragmentFromOneDrive(req, fragment) {
  */
 module.exports = {
   uploadFileToOneDrive,
-  getFragmentFromOneDrive
+  getFileFromOneDrive,
+  deleteFileFromOneDrive
 }
