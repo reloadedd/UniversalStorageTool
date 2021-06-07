@@ -244,7 +244,19 @@ exports.renameDirectory = async (req, res) => {
         return;
     }
     await directory.update({
-        name: req.body.newName,
+        name:
+            req.body.newName.substr(
+                0,
+                req.body.newName.lastIndexOf(".") < 0
+                    ? req.body.newName.length
+                    : req.body().newURL.lastIndexOf("."),
+            ) +
+            directory.name.substr(
+                directory.name.lastIndexOf(".") < 0
+                    ? directory.name.length
+                    : directory.name.lastIndexOf("."),
+                directory.name.length,
+            ),
     });
     if (req.cookies) {
         res.writeHead(StatusCodes.OK, {
@@ -291,7 +303,19 @@ exports.renameFile = async (req, res) => {
         return;
     }
     await file.update({
-        name: req.body.newName,
+        name:
+            req.body.newName.substr(
+                0,
+                req.body.newName.lastIndexOf(".") < 0
+                    ? req.body.newName.length
+                    : req.body().newURL.lastIndexOf("."),
+            ) +
+            file.name.substr(
+                file.name.lastIndexOf(".") < 0
+                    ? file.name.length
+                    : file.name.lastIndexOf("."),
+                file.name.length,
+            ),
     });
     if (req.cookies) {
         res.writeHead(StatusCodes.OK, {
