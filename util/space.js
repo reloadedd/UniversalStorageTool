@@ -16,7 +16,6 @@ module.exports = async (req, res) => {
         ).json();
         totalSpace += parseInt(data.quotaBytesTotal);
         totalUsedSpace += parseInt(data.quotaBytesUsedAggregate);
-        console.log(totalSpace);
     }
     if (req.dropboxToken) {
         const data = await (
@@ -27,7 +26,6 @@ module.exports = async (req, res) => {
                 },
             })
         ).json();
-        console.log(data.allocation.allocated);
         totalSpace += parseInt(data.allocation.allocated);
         totalUsedSpace += parseInt(data.used);
     }
@@ -40,7 +38,6 @@ module.exports = async (req, res) => {
                 },
             })
         ).json();
-        console.log(data.quota.total);
         totalSpace += parseInt(data.quota.total);
         totalUsedSpace += parseInt(data.quota.used);
     }
@@ -53,5 +50,4 @@ module.exports = async (req, res) => {
             totalUsedSpace,
         }),
     );
-    console.log(totalSpace);
 };
