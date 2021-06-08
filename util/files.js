@@ -4,7 +4,7 @@
  */
 const fs = require("fs");
 const fetch = require("node-fetch");
-const { DriveEnum, CHUNK_UPLOADING_TIMEOUT } = require("../config/config");
+const { DriveEnum, CHUNK_UPLOADING_TIMEOUT, LOCAL_FILE_STORAGE_PATH } = require("../config/config");
 
 /* =====================
  * --- Local Imports ---
@@ -23,9 +23,9 @@ const DROPBOX_BYTE_STEP = 134217728; // 128 * 1024 * 1024 bytes (128Mb)
  * --- Functions ---
  * =================
  */
-uploadFileToGoogleDrive = async (fid, req) => {
+uploadFileToGoogleDrive = async (fileHash, req) => {
     const configFile = JSON.parse(
-        await fs.readFileSync("./tmp/" + fid + ".config.json"),
+        await fs.readFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`),
     );
     const User = req.db.users;
     const File = req.db.files;
@@ -63,8 +63,8 @@ uploadFileToGoogleDrive = async (fid, req) => {
         console.log("Can and will upload to google Drive");
 
         // get the file size
-        const stat = fs.statSync("./tmp/" + fid);
-        const fileStream = fs.createReadStream("./tmp/" + fid);
+        const stat = fs.statSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`);
+        const fileStream = fs.createReadStream(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`);
 
         // POST request to create a file on drive.
         const response = await fetch(
@@ -80,8 +80,8 @@ uploadFileToGoogleDrive = async (fid, req) => {
 
         const gDriveFileId = (await response.json()).id;
 
-        fs.rmSync("./tmp/" + fid + ".config.json");
-        fs.rmSync("./tmp/" + fid);
+        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`);
+        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`);
 
         const newFileFragment = await Fragment.create({
             id: gDriveFileId,
@@ -95,9 +95,9 @@ uploadFileToGoogleDrive = async (fid, req) => {
     }
 };
 
-async function setFileToUserDropbox150MBLimited(fid, req) {
+async function setFileToUserDropbox150MBLimited(fileHash, req) {
     const configFile = JSON.parse(
-        await fs.readFileSync("./tmp/" + fid + ".config.json"),
+        await fs.readFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`),
     );
     const User = req.db.users;
     const File = req.db.files;
@@ -108,6 +108,9 @@ async function setFileToUserDropbox150MBLimited(fid, req) {
         size: configFile.totalSize,
         mimeType: configFile.mimeType,
     });
+
+    console.log(`Filename: ${thisFile.name}`);
+
     if (!configFile.parentFolder) {
         const me = await User.findOne({ where: { email: configFile.user } });
         me.addFile(thisFile);
@@ -136,8 +139,8 @@ async function setFileToUserDropbox150MBLimited(fid, req) {
         console.log("Can and will upload to dropbox");
 
         // get the file size
-        const stat = fs.statSync("./tmp/" + fid);
-        const fileStream = fs.createReadStream("./tmp/" + fid);
+        const stat = fs.statSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`);
+        const fileStream = fs.createReadStream(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`);
 
         const uploadResponse = await (
             await fetch("https://content.dropboxapi.com/2/files/upload", {
@@ -157,8 +160,8 @@ async function setFileToUserDropbox150MBLimited(fid, req) {
             })
         ).json();
 
-        fs.rmSync("./tmp/" + fid + ".config.json");
-        fs.rmSync("./tmp/" + fid);
+        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`);
+        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`);
 
         const newFileFragment = await Fragment.create({
             id: uploadResponse.id,
@@ -172,13 +175,13 @@ async function setFileToUserDropbox150MBLimited(fid, req) {
     }
 }
 
-setFileToUserDropbox = async (fid, req) => {
+setFileToUserDropbox = async (fileHash, req) => {
     const configFile = JSON.parse(
-        await fs.readFileSync("./tmp/" + fid + ".config.json"),
+        await fs.readFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`),
     );
 
     if (configFile.totalSize < 157286400) {
-        setFileToUserDropbox150MBLimited(fid, req);
+        setFileToUserDropbox150MBLimited(fileHash, req);
         return;
     }
 
@@ -191,6 +194,7 @@ setFileToUserDropbox = async (fid, req) => {
         size: configFile.totalSize,
         mimeType: configFile.mimeType,
     });
+
     if (!configFile.parentFolder) {
         const me = await User.findOne({ where: { email: configFile.user } });
         me.addFile(thisFile);
@@ -237,7 +241,7 @@ setFileToUserDropbox = async (fid, req) => {
 
         const sessionId = startSessionResponse.session_id;
 
-        const stream = await fs.createReadStream("./tmp/" + fid, {
+        const stream = await fs.createReadStream(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`, {
             highWaterMark: DROPBOX_BYTE_STEP,
         });
         let byteRangeIndex = 0;
@@ -302,8 +306,8 @@ setFileToUserDropbox = async (fid, req) => {
                         )
                     ).json();
 
-                    fs.rmSync("./tmp/" + fid + ".config.json");
-                    fs.rmSync("./tmp/" + fid);
+                    fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`);
+                    fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`);
 
                     const newFileFragment = await Fragment.create({
                         id: finishSessionResponse.id,

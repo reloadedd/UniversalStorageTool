@@ -32,6 +32,14 @@ DriveEnum = Object.freeze({
     DROPBOX: 2,
 });
 
+/* Fake an enum for storing the compression algorithms as key-value pairs */
+CompressionAlgorithmEnum = Object.freeze({
+    GZIP: 0,
+    BZIP2: 1,
+    ZIP: 2,
+});
+
+
 colors.setTheme({
     info: "bgGreen",
     help: "cyan",
@@ -82,4 +90,5 @@ module.exports = {
     LOCAL_FILE_STORAGE_PATH,
     DriveEnum,
     CHUNK_UPLOADING_TIMEOUT,
+    CompressionAlgorithmEnum
 };

@@ -12,6 +12,7 @@ const {
 } = require("../app/controllers/file.controller");
 
 const { deleteFileFromOneDrive } = require("../public/js/onedrive/server-side");
+const { CompressionAlgorithmEnum } = require("../config/config");
 
 const jwt = require("jsonwebtoken");
 const url = require("url");
@@ -48,7 +49,7 @@ dispatcher.on("POST", "", (req, res) => {
     }
 });
 
-dispatcher.on("PUT", "", (req, res) => {
+function uploadFragment(req, res, archivingType) {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         if (
@@ -61,7 +62,7 @@ dispatcher.on("PUT", "", (req, res) => {
         )
             throw new Error();
 
-        uploadToLocalStorage(req, res);
+        uploadToLocalStorage(req, res, archivingType);
     } catch {
         res.writeHead(StatusCodes.BAD_REQUEST, {
             "Content-type": "application/json",
@@ -70,7 +71,19 @@ dispatcher.on("PUT", "", (req, res) => {
             JSON.stringify({ message: "Make sure the data is set properly" }),
         );
     }
-});
+}
+
+/* Route for compressing the file as normal, without compression */
+dispatcher.on("PUT", "", (req, res) => uploadFragment(req, res, null));
+
+/* Route for compressing the file as GZIP */
+dispatcher.on("PUT", "/gzip", (req, res) => uploadFragment(req, res, CompressionAlgorithmEnum.GZIP));
+
+/* Route for compressing the file as BZIP2 */
+dispatcher.on("PUT", "/bzip2", (req, res) => uploadFragment(req, res, CompressionAlgorithmEnum.BZIP2));
+
+/* Route for compressing the file as ZIP */
+dispatcher.on("PUT", "/zip", (req, res) => uploadFragment(req, res, CompressionAlgorithmEnum.ZIP));
 
 dispatcher.on("POST", "/newDir", (req, res) => {
     try {

@@ -66,8 +66,9 @@ exports.login = async (req, res) => {
         });
         res.end(
             JSON.stringify({
-                message: "Content cannot be empty!",
-            }),
+              response_type: "error",
+              message: "Unable to set cookie because either the email or password was not provided in the request."
+            })
         );
         return;
     }
