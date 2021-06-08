@@ -32,6 +32,20 @@ async function getGoogleDriveFragment(req, fragment) {
     ).body;
 }
 
+async function getDropboxFragment(req, fragment) {
+    return (
+        await fetch("https://content.dropboxapi.com/2/files/download", {
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + req.dropboxToken,
+                "Dropbox-API-Arg": JSON.stringify({
+                    path: fragment.id,
+                }),
+            },
+        })
+    ).body;
+}
+
 exports.getFragmentFromDrive = async (req, fragment) => {
     switch (fragment.driveType) {
         case DriveEnum.GOOGLE_DRIVE:
@@ -39,8 +53,6 @@ exports.getFragmentFromDrive = async (req, fragment) => {
         case DriveEnum.ONEDRIVE:
             return await getFileFromOneDrive(req, fragment);
         case DriveEnum.DROPBOX:
-        /* TODO
-          CC: @Iulian
-         */
+            return await getDropboxFragment(req, fragment);
     }
 };

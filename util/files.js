@@ -4,7 +4,7 @@
  */
 const fs = require("fs");
 const fetch = require("node-fetch");
-const { DriveEnum } = require("../config/config");
+const { DriveEnum, CHUNK_UPLOADING_TIMEOUT } = require("../config/config");
 
 /* =====================
  * --- Local Imports ---
@@ -12,6 +12,12 @@ const { DriveEnum } = require("../config/config");
  */
 const { getFragmentFromDrive } = require("./fragments");
 const { uploadFileToOneDrive } = require("../public/js/onedrive/server-side");
+
+/* =================
+ * --- Constants ---
+ * =================
+ */
+const DROPBOX_BYTE_STEP = 134217728; // 128 * 1024 * 1024 bytes (128Mb)
 
 /* =================
  * --- Functions ---
@@ -166,7 +172,7 @@ async function setFileToUserDropbox150MBLimited(fid, req) {
     }
 }
 
-exports.setFileToUserDropbox = async (fid, req) => {
+setFileToUserDropbox = async (fid, req) => {
     const configFile = JSON.parse(
         await fs.readFileSync("./tmp/" + fid + ".config.json"),
     );
@@ -212,10 +218,6 @@ exports.setFileToUserDropbox = async (fid, req) => {
     if (dropboxAvailableSpace >= configFile.totalSize) {
         console.log("Can and will upload to dropbox ");
 
-        // get the file size
-        const stat = fs.statSync("./tmp/" + fid);
-        const file = await fs.readFileSync("./tmp/" + fid);
-
         // start upload session
         const startSessionResponse = await (
             await fetch(
@@ -235,12 +237,23 @@ exports.setFileToUserDropbox = async (fid, req) => {
 
         const sessionId = startSessionResponse.session_id;
 
-        // append
+        const stream = await fs.createReadStream("./tmp/" + fid, {
+            highWaterMark: DROPBOX_BYTE_STEP,
+        });
+        let byteRangeIndex = 0;
+        let requests = 0;
+        stream.on("data", async (chunk) => {
+            const order = byteRangeIndex;
+            console.log(order);
+            byteRangeIndex++;
 
-        const step = 134217728; // 128 * 1024 * 1024 bytes (5Mb)
-        const total = configFile.totalSize;
-        for (let i = 0; i < total / step; i++) {
-            const result = await fetch(
+            const delay = (ms) =>
+                new Promise((resolve) => setTimeout(resolve, ms));
+
+            while (order !== requests) {
+                await delay(CHUNK_UPLOADING_TIMEOUT);
+            }
+            fetch(
                 "https://content.dropboxapi.com/2/files/upload_session/append_v2",
                 {
                     method: "POST",
@@ -249,61 +262,68 @@ exports.setFileToUserDropbox = async (fid, req) => {
                         "Dropbox-API-Arg": JSON.stringify({
                             cursor: {
                                 session_id: sessionId,
-                                offset: i * step,
+                                offset: order * DROPBOX_BYTE_STEP,
                             },
                             close: false,
                         }),
                         "Content-Type": "application/octet-stream",
                     },
-                    body: file.slice(i * step, (i + 1) * step),
+                    body: chunk,
                 },
-            );
-        }
+            ).then(async (response) => {
+                console.log("done" + order);
+                requests++;
 
-        // finish session
-
-        const finishSessionResponse = await (
-            await fetch(
-                "https://content.dropboxapi.com/2/files/upload_session/finish",
-                {
-                    method: "POST",
-                    headers: {
-                        Authorization: "Bearer " + req.dropboxToken,
-                        "Dropbox-API-Arg": JSON.stringify({
-                            cursor: {
-                                session_id: sessionId,
-                                offset: configFile.totalSize,
+                if (requests === byteRangeIndex) {
+                    console.log("Everything done?");
+                    const finishSessionResponse = await (
+                        await fetch(
+                            "https://content.dropboxapi.com/2/files/upload_session/finish",
+                            {
+                                method: "POST",
+                                headers: {
+                                    Authorization: "Bearer " + req.dropboxToken,
+                                    "Dropbox-API-Arg": JSON.stringify({
+                                        cursor: {
+                                            session_id: sessionId,
+                                            offset: configFile.totalSize,
+                                        },
+                                        commit: {
+                                            path: "/unst_file",
+                                            mode: "add",
+                                            autorename: true,
+                                            mute: false,
+                                            strict_conflict: false,
+                                        },
+                                    }),
+                                    "Content-Type": "application/octet-stream",
+                                },
                             },
-                            commit: {
-                                path: "/unst_file",
-                                mode: "add",
-                                autorename: true,
-                                mute: false,
-                                strict_conflict: false,
-                            },
-                        }),
-                        "Content-Type": "application/octet-stream",
-                    },
-                },
-            )
-        ).json();
+                        )
+                    ).json();
 
-        fs.rmSync("./tmp/" + fid + ".config.json");
-        fs.rmSync("./tmp/" + fid);
+                    fs.rmSync("./tmp/" + fid + ".config.json");
+                    fs.rmSync("./tmp/" + fid);
 
-        const newFileFragment = await Fragment.create({
-            id: finishSessionResponse.id,
-            // just decided: dropbox will have index 2
-            driveType: 2,
-            index: 0,
+                    const newFileFragment = await Fragment.create({
+                        id: finishSessionResponse.id,
+                        // just decided: dropbox will have index 2
+                        driveType: 2,
+                        index: 0,
+                    });
+                    thisFile.addFragment(newFileFragment);
+                }
+            });
         });
-        thisFile.addFragment(newFileFragment);
     } else {
         console.log("We are yet to fragment things");
     }
 };
 
-exports.uploadToAllDrives = uploadFileToOneDrive;
+exports.uploadToAllDrives = setFileToUserDropbox;
+//     (fid, req) => {
+//
+// }
 
 exports.downloadFile = async (req, res, file) => {
     const fragments = await file.getFragments();
