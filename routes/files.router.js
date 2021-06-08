@@ -4,7 +4,7 @@ const fs = require("fs");
 const {
     getFiles,
     createFile,
-    uploadToFile,
+    uploadToLocalStorage,
     createDirectory,
     getFile,
     renameDirectory,
@@ -61,7 +61,7 @@ dispatcher.on("PUT", "", (req, res) => {
         )
             throw new Error();
 
-        uploadToFile(req, res);
+        uploadToLocalStorage(req, res);
     } catch {
         res.writeHead(StatusCodes.BAD_REQUEST, {
             "Content-type": "application/json",
