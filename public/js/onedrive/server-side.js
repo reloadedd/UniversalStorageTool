@@ -3,9 +3,9 @@
  * ======================
  */
 const fs = require("fs");
-const util = require("util");
 const fetch = require("node-fetch");
-const request = require("request");
+const { StatusCodes } = require("http-status-codes");
+
 
 /* =====================
  * --- Local Imports ---
@@ -33,13 +33,13 @@ async function uploadFileToOneDrive(fileId, req) {
     const Directory = req.db.directories;
     const configFile = JSON.parse(
         await fs.readFileSync(
-            `${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`,
-        ),
+            `${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`
+        )
     );
     const thisFile = await File.create({
         name: configFile.name,
         size: configFile.totalSize,
-        mimeType: configFile.mimeType,
+        mimeType: configFile.mimeType
     });
 
     if (!configFile.parentFolder) {
@@ -67,11 +67,10 @@ async function uploadFileToOneDrive(fileId, req) {
                     item: {
                         "@odata.type":
                             "microsoft.graph.driveItemUploadableProperties",
-                        "@microsoft.graph.conflictBehavior": "replace",
-                        // "fileSize": configFile.totalSize
-                    },
-                }),
-            },
+                        "@microsoft.graph.conflictBehavior": "replace"
+                    }
+                })
+            }
         )
     ).json();
 
@@ -82,14 +81,13 @@ async function uploadFileToOneDrive(fileId, req) {
 
         fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}`);
         fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`);
-        return;
     } else {
         const readStream = fs.createReadStream(
             `${LOCAL_FILE_STORAGE_PATH}/${fileId}`,
             { highWaterMark: ONEDRIVE_BYTE_RANGE },
         );
-        let byteRangeIndex = 0;
 
+        let byteRangeIndex = 0;
         let requests = 0;
         readStream.on("data", async (chunk) => {
             const startByteRange = byteRangeIndex * ONEDRIVE_BYTE_RANGE;
@@ -119,7 +117,7 @@ async function uploadFileToOneDrive(fileId, req) {
                 requests++;
                 console.log(response.status + "  ||  " + order);
 
-                if (response.status === 201) {
+                if (response.status === StatusCodes.CREATED) {
                     const fileMetadata = await getFileMetadataFromOneDrive(req, `${ONEDRIVE_UPLOAD_FOLDER}/${fileId}`)
 
                     const newFileFragment = await Fragment.create({
