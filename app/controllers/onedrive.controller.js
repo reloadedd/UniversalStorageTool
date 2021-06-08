@@ -27,7 +27,9 @@ const ONEDRIVE_SCOPE = 'Files.ReadWrite.All Files.ReadWrite.AppFolder Files.Read
 const ONEDRIVE_STATE = `ONEDRIVE_${generateRandomHex()}`;
 const ONEDRIVE_LOCAL_REDIRECT = 'http://localhost:2999'
 const ONEDRIVE_REMOTE_REDIRECT = 'https://reloadedd.me:3000'
-const ONEDRIVE_BYTE_RANGE = 327680 * 30  /* 327,680 bytes, 320 KiB (required by OneDrive) */
+const ONEDRIVE_BYTE_RANGE = 327680 * 192  /* 327,680 bytes, 320 KiB (required by OneDrive) */
+const ONEDRIVE_UPLOAD_FOLDER = '.unst'
+
 
 /* =================
  * --- Functions ---
@@ -187,5 +189,6 @@ module.exports = {
   ONEDRIVE_STATE,
   ONEDRIVE_TOKEN_GRANTING_URL,
   ONEDRIVE_MICROSOFT_GRAPH_URL,
-  ONEDRIVE_BYTE_RANGE
+  ONEDRIVE_BYTE_RANGE,
+  ONEDRIVE_UPLOAD_FOLDER
 }

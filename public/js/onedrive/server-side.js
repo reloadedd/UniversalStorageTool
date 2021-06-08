@@ -14,10 +14,12 @@ const request = require("request");
 const {
     ONEDRIVE_MICROSOFT_GRAPH_URL,
     ONEDRIVE_BYTE_RANGE,
+    ONEDRIVE_UPLOAD_FOLDER
 } = require("../../../app/controllers/onedrive.controller");
 const {
     LOCAL_FILE_STORAGE_PATH,
     DriveEnum,
+    CHUNK_UPLOADING_TIMEOUT
 } = require("../../../config/config");
 
 /* =================
@@ -54,7 +56,7 @@ async function uploadFileToOneDrive(fileId, req) {
 
     const createUploadSessionResponse = await (
         await fetch(
-            `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/root:/.unst/${fileId}:/createUploadSession`,
+            `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/root:/${ONEDRIVE_UPLOAD_FOLDER}/${fileId}:/createUploadSession`,
             {
                 method: "POST",
                 headers: {
@@ -77,6 +79,9 @@ async function uploadFileToOneDrive(fileId, req) {
         console.log(
             `[ ERROR ]: Failed to create upload session. More details: '${createUploadSessionResponse.error.message}'`,
         );
+
+        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}`);
+        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`);
         return;
     } else {
         const readStream = fs.createReadStream(
@@ -100,7 +105,7 @@ async function uploadFileToOneDrive(fileId, req) {
             );
 
             while (order !== requests) {
-                await delay(100);
+                await delay(CHUNK_UPLOADING_TIMEOUT);
             }
 
             fetch(createUploadSessionResponse.uploadUrl, {
@@ -110,22 +115,40 @@ async function uploadFileToOneDrive(fileId, req) {
                     "Content-Range": `bytes ${startByteRange}-${endByteRange}/${configFile.totalSize}`,
                 },
                 body: chunk,
-            }).then((response) => {
+            }).then(async (response) => {
                 requests++;
                 console.log(response.status + "  ||  " + order);
+
+                if (response.status === 201) {
+                    const fileMetadata = await getFileMetadataFromOneDrive(req, `${ONEDRIVE_UPLOAD_FOLDER}/${fileId}`)
+
+                    const newFileFragment = await Fragment.create({
+                        id: fileMetadata.id,
+                        driveType: DriveEnum.ONEDRIVE,
+                        index: 1,
+                    });
+                    thisFile.addFragment(newFileFragment);
+
+                    fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}`);
+                    fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`);
+                }
             });
         });
-
-        const newFileFragment = await Fragment.create({
-            id: fileId,
-            driveType: DriveEnum.ONEDRIVE,
-            index: 1,
-        });
-        thisFile.addFragment(newFileFragment);
     }
+}
 
-    fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}`);
-    fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`);
+async function getFileMetadataFromOneDrive(req, path) {
+    return (
+        await fetch(
+            `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/items/root:/${path}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + req.OneDriveToken,
+                },
+            },
+        )
+    ).json();
 }
 
 async function getFileFromOneDrive(req, file) {

@@ -23,6 +23,9 @@ const SSL_CA_BUNDLE = "CERTIFICATE_CA_BUNDLE_PATH";
 /* The local path where the files will be saved prior to uploading to drives */
 const LOCAL_FILE_STORAGE_PATH = './tmp';
 
+/* In ms */
+const CHUNK_UPLOADING_TIMEOUT = 100;
+
 /* Fake an enum for storing the drives as key-value pairs */
 DriveEnum = Object.freeze({
     GOOGLE_DRIVE: 0,
@@ -76,5 +79,6 @@ module.exports = {
     SSL_CERTIFICATE,
     SSL_PRIVATE_KEY,
     LOCAL_FILE_STORAGE_PATH,
-    DriveEnum
+    DriveEnum,
+    CHUNK_UPLOADING_TIMEOUT
 };
