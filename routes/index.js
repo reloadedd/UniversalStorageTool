@@ -18,6 +18,7 @@ const {
     refreshOneDriveToken,
     refreshDropboxToken,
 } = require("../util/refreshTokens");
+const getTotalSpace = require("../util/space");
 const { StatusCodes } = require("http-status-codes");
 
 MIMETypes = {
@@ -34,6 +35,7 @@ dispatcher.use("/users", userRouter);
 dispatcher.use(/\//, refreshGoogleDriveToken);
 dispatcher.use(/\//, refreshOneDriveToken);
 dispatcher.use(/\//, refreshDropboxToken);
+dispatcher.on("GET", "/space", getTotalSpace);
 dispatcher.use("/g-drive", googleDriveRouter);
 dispatcher.use("/onedrive", onedriveRouter);
 dispatcher.use("/dropbox", dropBoxRouter);

@@ -89,5 +89,6 @@
     height: 12px;
     float: left;
     background: #00ff00;
-    width: 75%;
+    width: 0;
+    transition-duration: 2s;
 }

@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="/public/css/storage-item-design.css" />
         <link rel="stylesheet" href="/public/css/context-menu.css" />
     </head>
-    <body onload="getFiles()">
+    <body onload="getFiles(); getTotalSize()">
         <header id="nav-bar"></header>
         <div class="side-menu">
             <div id="side-menu-button"></div>
@@ -41,9 +41,9 @@
                 New folder
             </button>
             <div id="space-left">
-                <h6>Total available space</h6>
+                <h6 id="total-space">Calculating...</h6>
                 <span class="menu-side-bar">
-                    <span class="total-used-space"></span>
+                    <span id="total-space-bar" class="total-used-space"></span>
                 </span>
             </div>
         </div>

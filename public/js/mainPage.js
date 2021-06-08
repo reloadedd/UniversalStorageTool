@@ -128,3 +128,25 @@ createDir = async () => {
 cancelDir = () => {
     document.getElementById("new-folder-name").style.visibility = "hidden";
 };
+
+getTotalSize = () => {
+    fetch("/space")
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.totalSpace === 0) {
+                document.getElementById("total-space").innerText =
+                    "No Drives Linked";
+                return;
+            }
+            document.getElementById("total-space").innerText = `Total space: ${(
+                data.totalUsedSpace /
+                1024 /
+                1024 /
+                1024
+            ).toFixed(2)} of ${(data.totalSpace / 1024 / 1024 / 1024).toFixed(
+                2,
+            )} GB used.`;
+            document.getElementById("total-space-bar").style.width =
+                Math.round((data.totalUsedSpace / data.totalSpace) * 100) + "%";
+        });
+};
