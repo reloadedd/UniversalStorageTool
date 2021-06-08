@@ -120,7 +120,6 @@ exports.refreshDropboxToken = async (req, res) => {
                 ].join("&"),
             })
         ).json();
-
         if (data.access_token && data.expires_in) {
             if (!req.cookies) req.cookies = [];
             req.cookies.push(

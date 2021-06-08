@@ -4,10 +4,7 @@ function addDropBox() {
 
 async function setDropboxSpace() {
     try {
-        console.log("from setDropboxSpace");
         const data = await (await fetch("/dropbox/space")).json();
-        console.log("from setDropboxSpace");
-        console.log(data);
         if (data.totalSpace && data.usedSpace) {
             document.getElementById("dropbox-percentage").innerHTML =
                 "(" +

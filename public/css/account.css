@@ -78,7 +78,7 @@ body {
 
 .dropbox-space {
     width: 0%;
-    animation: dropbox-anim 2s;
+    transition-duration: 2s;
 }
 
 .google-drive-space {

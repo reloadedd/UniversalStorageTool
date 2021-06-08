@@ -88,8 +88,6 @@ exports.getSpace = async (req, res) => {
             "Content-Type": "application/json",
         });
     }
-    console.log("from dropbox.controller.getSpace");
-    console.log(data);
     res.end(
         JSON.stringify({
             totalSpace: data.allocation.allocated,
