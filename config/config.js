@@ -1,15 +1,37 @@
+/* ======================
+ * --- Global Imports ---
+ * ======================
+ */
+const colors = require("colors");
+
+/* =================
+ * --- Constants ---
+ * =================
+ */
 /* The port used by the application */
 const PORT = 2999;
 
 /* The application's version which follows Semantic Versioning conventions */
-const VERSION = "0.3.1";
+const VERSION = "0.4.0";
 
 /* Environment variables needed for setting up the SSL Certificate on the Node.js server */
 const SSL_CERTIFICATE = "CERTIFICATE_FILE_CRT_PATH";
 const SSL_PRIVATE_KEY = "CERTIFICATE_PRIVATE_KEY_PATH";
 const SSL_CA_BUNDLE = "CERTIFICATE_CA_BUNDLE_PATH";
 
-const colors = require("colors");
+/* The local path where the files will be saved prior to uploading to drives */
+const LOCAL_FILE_STORAGE_PATH = "./tmp";
+
+/* In ms */
+const CHUNK_UPLOADING_TIMEOUT = 100;
+
+/* Fake an enum for storing the drives as key-value pairs */
+DriveEnum = Object.freeze({
+    GOOGLE_DRIVE: 0,
+    ONEDRIVE: 1,
+    DROPBOX: 2,
+});
+
 colors.setTheme({
     info: "bgGreen",
     help: "cyan",
@@ -18,9 +40,13 @@ colors.setTheme({
     error: "red",
 });
 
+/* =================
+ * --- Functions ---
+ * =================
+ */
 function displayBanner(httpsAvailable) {
     console.log(
-        "                                                                \n" +
+        "                                                                  \n" +
             "\t8 8888      88 b.             8    d888888o. 8888888 8888888888 \n" +
             "\t8 8888      88 888o.          8  .`8888:' `88.     8 8888       \n" +
             "\t8 8888      88 Y88888o.       8  8.`8888.   Y8     8 8888       \n" +
@@ -39,16 +65,21 @@ function displayBanner(httpsAvailable) {
         "\n" + "\tʜᴛᴛᴘs:\t\t".warn,
         httpsAvailable,
         "\n" + "\tsᴛᴀᴛᴜs:\t\t".warn,
-        "up and running".underline,
-        "\n",
+        "up and running\n".underline,
     );
 }
 
-/* Export the following objects from this module */
+/* ======================
+ * --- Module Exports ---
+ * ======================
+ */
 module.exports = {
-    PORT: PORT,
-    displayBanner: displayBanner,
-    SSL_CA_BUNDLE: SSL_CA_BUNDLE,
-    SSL_CERTIFICATE: SSL_CERTIFICATE,
-    SSL_PRIVATE_KEY: SSL_PRIVATE_KEY,
+    PORT,
+    displayBanner,
+    SSL_CA_BUNDLE,
+    SSL_CERTIFICATE,
+    SSL_PRIVATE_KEY,
+    LOCAL_FILE_STORAGE_PATH,
+    DriveEnum,
+    CHUNK_UPLOADING_TIMEOUT,
 };

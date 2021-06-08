@@ -1,7 +1,23 @@
+/* ======================
+ * --- Global Imports ---
+ * ======================
+ */
 const fs = require("fs");
 const fetch = require("node-fetch");
-const { getFrag } = require("./frags");
-exports.setFileToUser = async (fid, req) => {
+const { DriveEnum } = require("../config/config");
+
+/* =====================
+ * --- Local Imports ---
+ * =====================
+ */
+const { getFragmentFromDrive } = require("./fragments");
+const { uploadFileToOneDrive } = require("../public/js/onedrive/server-side");
+
+/* =================
+ * --- Functions ---
+ * =================
+ */
+uploadFileToGoogleDrive = async (fid, req) => {
     const configFile = JSON.parse(
         await fs.readFileSync("./tmp/" + fid + ".config.json"),
     );
@@ -64,7 +80,7 @@ exports.setFileToUser = async (fid, req) => {
         const newFileFragment = await Fragment.create({
             id: gDriveFileId,
             // just decided: google drive will have index 0
-            driveType: 0,
+            driveType: DriveEnum.GOOGLE_DRIVE,
             index: 0,
         });
         thisFile.addFragment(newFileFragment);
@@ -287,6 +303,8 @@ exports.setFileToUserDropbox = async (fid, req) => {
     }
 };
 
+exports.uploadToAllDrives = uploadFileToOneDrive;
+
 exports.downloadFile = async (req, res, file) => {
     const fragments = await file.getFragments();
     fragments.sort((a, b) =>
@@ -299,7 +317,7 @@ exports.downloadFile = async (req, res, file) => {
     });
     const fragRes = [];
     for (let i = 0; i < fragments.length; i++) {
-        fragRes.push(await getFrag(req, fragments[i]));
+        fragRes.push(await getFragmentFromDrive(req, fragments[i]));
     }
     if (fragRes.length > 1) {
         fragRes[0].pipe(res, { end: false });

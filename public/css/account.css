@@ -86,9 +86,9 @@ body {
     transition-duration: 2s;
 }
 
-.microsoft-onedrive-space {
-    width: 75%;
-    animation: microsoft-onedrive-anim 2s;
+.onedrive-available-space {
+    width: 0;
+    transition-duration: 2s;
 }
 
 .box-space {

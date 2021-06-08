@@ -4,11 +4,7 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
-const {
-    setFileToUser,
-    setFileToUserDropbox,
-    downloadFile,
-} = require("../../util/files");
+const { downloadFile, uploadToAllDrives } = require("../../util/files");
 const { hasFile, hasDirectory } = require("../../util/compare");
 const { templateDirectoriesAndFiles } = require("../../util/templates");
 exports.getFiles = async (req, res) => {
@@ -130,8 +126,7 @@ exports.uploadToFile = (req, res) => {
                     message: "File upload complete",
                 }),
             );
-            setFileToUserDropbox(fid, req);
-            // setFileToUser(fid, req);
+            uploadToAllDrives(fid, req);
             return;
         }
 
@@ -196,7 +191,7 @@ exports.getFile = async (req, res) => {
     downloadFile(req, res, thisFile);
 };
 
-exports.createDir = async (req, res) => {
+exports.createDirectory = async (req, res) => {
     const newDirectory = await req.db.directories.create({
         name: req.body.name,
     });

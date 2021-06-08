@@ -5,11 +5,14 @@ const {
     getFiles,
     createFile,
     uploadToFile,
-    createDir,
+    createDirectory,
     getFile,
     renameDirectory,
     renameFile,
 } = require("../app/controllers/file.controller");
+
+const { deleteFileFromOneDrive } = require("../public/js/onedrive/server-side");
+
 const jwt = require("jsonwebtoken");
 const url = require("url");
 const dispatcher = new Dispatcher();
@@ -72,7 +75,7 @@ dispatcher.on("PUT", "", (req, res) => {
 dispatcher.on("POST", "/newDir", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        createDir(req, res);
+        createDirectory(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {
             "Content-Type": "application.json",
@@ -134,6 +137,24 @@ dispatcher.on("PATCH", "/file", (req, res) => {
         res.end(
             JSON.stringify({
                 message: "log in maybe?",
+            }),
+        );
+    }
+});
+
+dispatcher.on("DELETE", "/files", (req, res) => {
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        // deleteFileFromOneDrive(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                response_type: "error",
+                message:
+                    "Could not perform delete action because the user is not authenticated.",
             }),
         );
     }
