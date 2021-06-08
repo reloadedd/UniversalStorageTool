@@ -25,34 +25,14 @@ const {
  * --- Functions ---
  * =================
  */
-async function uploadFileToOneDrive(fileId, req) {
-    const User = req.db.users;
-    const File = req.db.files;
-    const Fragment = req.db.fragments;
-    const Directory = req.db.directories;
-    const configFile = JSON.parse(
-        await fs.readFileSync(
-            `${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`,
-        ),
-    );
-    const thisFile = await File.create({
-        name: configFile.name,
-        size: configFile.totalSize,
-        mimeType: configFile.mimeType,
-    });
-
-    if (!configFile.parentFolder) {
-        const me = await User.findOne({ where: { email: configFile.user } });
-        me.addFile(thisFile);
-    } else {
-        const parentDir = await Directory.findOne({
-            where: {
-                id: configFile.parentFolder,
-            },
-        });
-        parentDir.addFile(thisFile);
-    }
-
+async function uploadFileToOneDrive(
+    fileId,
+    fileStream,
+    req,
+    thisFile,
+    index,
+    fileSize,
+) {
     const createUploadSessionResponse = await (
         await fetch(
             `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/root:/${ONEDRIVE_UPLOAD_FOLDER}/${fileId}:/createUploadSession`,
@@ -77,18 +57,10 @@ async function uploadFileToOneDrive(fileId, req) {
         console.log(
             `[ ERROR ]: Failed to create upload session. More details: '${createUploadSessionResponse.error.message}'`,
         );
-
-        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}`);
-        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`);
     } else {
-        const readStream = fs.createReadStream(
-            `${LOCAL_FILE_STORAGE_PATH}/${fileId}`,
-            { highWaterMark: ONEDRIVE_BYTE_RANGE },
-        );
-
         let byteRangeIndex = 0;
         let requests = 0;
-        readStream.on("data", async (chunk) => {
+        fileStream.on("data", async (chunk) => {
             const startByteRange = byteRangeIndex * ONEDRIVE_BYTE_RANGE;
             const endByteRange = startByteRange + chunk.length - 1;
             const order = byteRangeIndex;
@@ -105,7 +77,7 @@ async function uploadFileToOneDrive(fileId, req) {
                 method: "PUT",
                 headers: {
                     "Content-Length": chunk.length,
-                    "Content-Range": `bytes ${startByteRange}-${endByteRange}/${configFile.totalSize}`,
+                    "Content-Range": `bytes ${startByteRange}-${endByteRange}/${fileSize}`,
                 },
                 body: chunk,
             }).then(async (response) => {
@@ -117,17 +89,12 @@ async function uploadFileToOneDrive(fileId, req) {
                         `${ONEDRIVE_UPLOAD_FOLDER}/${fileId}`,
                     );
 
-                    const newFileFragment = await Fragment.create({
+                    const newFileFragment = await req.db.fragments.create({
                         id: fileMetadata.id,
                         driveType: DriveEnum.ONEDRIVE,
-                        index: 1,
+                        index,
                     });
                     thisFile.addFragment(newFileFragment);
-
-                    fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}`);
-                    fs.rmSync(
-                        `${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`,
-                    );
                 }
             });
         });
