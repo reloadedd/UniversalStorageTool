@@ -5,7 +5,7 @@
     grid-column-start: 1;
     height: inherit;
     width: 250px;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: black;
     border-right: 1px solid purple;
     opacity: 0.85;
 }
@@ -62,7 +62,7 @@
     .change.side-menu {
         width: 250px;
         transition: none;
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: black;
     }
 
     .change.side-menu > * {
