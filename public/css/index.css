@@ -31,3 +31,22 @@ body {
     width: 100%;
     font-size: 12px;
 }
+
+#contextMenu {
+    display: none;
+    position: absolute;
+    width : 200px;
+    border: 1px solid #800080;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.context-menu-item {
+    width: 100%;
+    border: 1px solid #800080;
+    color: white;
+    cursor: pointer;
+}
+
+.context-menu-item:hover {
+    background: #800080;
+}

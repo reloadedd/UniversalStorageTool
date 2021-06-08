@@ -107,13 +107,29 @@ getFiles = async (did = null) => {
 dirClickEventHandler = (dirId) => {
     getFiles(dirId);
 };
-fileClickEventHandler = (fileId) => {
-    const a = document.createElement("a");
-    a.href = "/files?id=" + fileId;
-    a.download = "";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+
+filecontextMenuEventHandler = (fileId) => {
+    const windowEvent = window.event;
+    windowEvent.preventDefault();
+    const contextMenu = document.getElementById("contextMenu");
+    contextMenu.style.display = "block";
+    contextMenu.style.left = windowEvent.clientX.toString() + "px";
+    contextMenu.style.top = windowEvent.clientY.toString() + "px";
+    const contextMenuActions =
+        document.getElementsByClassName("context-menu-item");
+    contextMenuActions.item(0).addEventListener("click", function () {
+        const a = document.createElement("a");
+        a.href = "/files?id=" + fileId;
+        a.download = "";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+    return false;
+};
+
+hideContextMenu = function () {
+    document.getElementById("contextMenu").style.display = "none";
 };
 
 createDir = async () => {

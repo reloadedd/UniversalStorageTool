@@ -91,11 +91,6 @@ body {
     animation: microsoft-onedrive-anim 2s;
 }
 
-.box-space {
-    width: 50%;
-    animation: box-anim 2s;
-}
-
 @keyframes dropbox-anim {
     0% {
         width: 0;
@@ -111,15 +106,6 @@ body {
     }
     100% {
         width: 75%;
-    }
-}
-
-@keyframes box-anim {
-    0% {
-        width: 0;
-    }
-    100% {
-        width: 50%;
     }
 }
 

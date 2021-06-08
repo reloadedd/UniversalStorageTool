@@ -12,7 +12,7 @@ exports.templateDirectoriesAndFiles = (dirs, files) => {
     }
     for (const file of files) {
         res += `
-        <figure onclick="fileClickEventHandler(${
+        <figure oncontextmenu="filecontextMenuEventHandler(${
             file.id
         })" style="width: min-content" id=${"file_" + file.id}>
             <img src="public/img/file.png" alt="File">

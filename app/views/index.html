@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="public/css/loading-icon.css" />
         <link rel="stylesheet" href="public/css/new-folder.css" />
     </head>
-    <body onload="getFiles()">
+    <body onload="getFiles()" onclick="hideContextMenu()">
         <header id="nav-bar"></header>
         <div class="side-menu">
             <div id="side-menu-button"></div>
@@ -81,6 +81,10 @@
                     Create
                 </button>
             </div>
+        </div>
+        <div id="contextMenu">
+            <div class="context-menu-item">Download</div>
+            <div class="context-menu-item">Delete</div>
         </div>
     </body>
 </html>
