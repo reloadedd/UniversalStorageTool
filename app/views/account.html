@@ -15,7 +15,7 @@
         <script src="public/js/login.js"></script>
     </head>
     <body
-        onload="setGoogleDriveSpace(); setOneDriveAvailableSpace(); setDropboxSpace()"
+        onload="userInformationLoading(); setGoogleDriveSpace(); setOneDriveAvailableSpace(); setDropboxSpace()"
     >
         <header id="nav-bar"></header>
 
@@ -31,19 +31,17 @@
                     <ul>
                         <li>
                             <span class="user-info-span">
-                                <i class="fas fa-user"> # </i>
+                                <i class="fas fa-user" id="username"> Calculating...</i>
                             </span>
                         </li>
                         <li>
                             <span class="user-info-span">
-                                <i class="fas fa-clock"> Registered on # </i>
+                                <i class="fas fa-clock" id="register-date"> Calculating...</i>
                             </span>
                         </li>
                         <li>
                             <span class="user-info-span">
-                                <i class="fas fa-cloud-upload-alt">
-                                    # Gb uploaded
-                                </i>
+                                <i class="fas fa-cloud-upload-alt" id="upload-stats"> Calculating...</i>
                             </span>
                         </li>
                     </ul>
@@ -132,6 +130,7 @@
             </div>
         </div>
 
+        <script src="public/js/account.js"></script>
         <script src="public/js/nav-bar.js"></script>
         <script src="public/js/menu-button.js"></script>
         <script src="public/js/google-drive.js"></script>
