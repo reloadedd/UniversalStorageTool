@@ -35,8 +35,11 @@ async function uploadFileToOneDrive(
     index,
     fileSize,
 ) {
+    // because for a big file, upload takes over an hour and the token expires.
     req.OneDriveToken = undefined;
     await refreshOneDriveToken(req, null);
+
+    console.log("before upload session")
     const createUploadSessionResponse = await (
         await fetch(
             `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/root:/${ONEDRIVE_UPLOAD_FOLDER}/${fileId}:/createUploadSession`,
@@ -57,6 +60,7 @@ async function uploadFileToOneDrive(
         )
     ).json();
 
+    console.log("got upload session")
     if (createUploadSessionResponse.error) {
         console.log(
             `[ ERROR ]: Failed to create upload session. More details: '${createUploadSessionResponse.error.message}'`,
@@ -86,24 +90,28 @@ async function uploadFileToOneDrive(
                 body: chunk,
             }).then(async (response) => {
                 requests++;
+                console.log("Done " + order)
 
                 if (response.status === StatusCodes.CREATED) {
                     // because for a big file, upload takes over an hour and the token expires.
                     req.OneDriveToken = undefined;
                     await refreshOneDriveToken(req, null);
 
+                    console.log("Before metadata")
                     const fileMetadata = await getFileMetadataFromOneDrive(
                         req,
                         `${ONEDRIVE_UPLOAD_FOLDER}/${fileId}`,
                     );
+                    console.log(fileMetadata);
 
+                    console.log("Before creating fragment")
                     const newFileFragment = await req.db.fragments.create({
                         id: fileMetadata.id,
                         driveType: DriveEnum.ONEDRIVE,
                         index,
                     });
                     thisFile.addFragment(newFileFragment);
-                    console.log("Finished uploading to OneDrive");
+                    console.log("Done uploading to OneDrive")
                 }
             });
         });
