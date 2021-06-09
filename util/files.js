@@ -79,19 +79,46 @@ async function setFileToUserDropbox(
 
     const sessionId = startSessionResponse.session_id;
 
-    let byteRangeIndex = 0;
-    let requests = 0;
-    let writtenSize = 0;
-    fileStream.on("data", async (chunk) => {
-        const order = byteRangeIndex;
-        byteRangeIndex++;
-        console.log(order)
-
-        const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-        while (order !== requests) {
-            await delay(CHUNK_UPLOADING_TIMEOUT);
+    let iHave = Buffer.alloc(0);
+    let iWant = DROPBOX_BYTE_STEP;
+    let i = 0;
+    fileStream.on('data', async (chunk) => {
+        fileStream.pause();
+        iHave = Buffer.concat([iHave, chunk.slice(0, Math.min(chunk.length, iWant))]);
+        iWant -= chunk.length;
+        console.log("Dropbox chunk length: " + chunk.length);
+        if(iWant <= 0){
+            await fetch(
+                "https://content.dropboxapi.com/2/files/upload_session/append_v2",
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Bearer " + req.dropboxToken,
+                        "Dropbox-API-Arg": JSON.stringify({
+                            cursor: {
+                                session_id: sessionId,
+                                offset: i * DROPBOX_BYTE_STEP,
+                            },
+                            close: false,
+                        }),
+                        "Content-Type": "application/octet-stream",
+                    },
+                    body: iHave,
+                })
+            console.log("Uploaded " + iHave.length + "Bytes to DropBox");
+            iHave = Buffer.alloc(0);
+            i++;
         }
+        if(iWant === 0)
+            iWant = DROPBOX_BYTE_STEP;
+        else if( iWant < 0){
+            iHave = Buffer.concat([iHave, chunk.slice(chunk.length + iWant, chunk.length)])
+            iWant += DROPBOX_BYTE_STEP;
+        }
+        fileStream.resume();
+    })
+
+    fileStream.on("end", async () => {
         await fetch(
             "https://content.dropboxapi.com/2/files/upload_session/append_v2",
             {
@@ -101,60 +128,50 @@ async function setFileToUserDropbox(
                     "Dropbox-API-Arg": JSON.stringify({
                         cursor: {
                             session_id: sessionId,
-                            offset: order * DROPBOX_BYTE_STEP,
+                            offset: i * DROPBOX_BYTE_STEP,
                         },
                         close: false,
                     }),
                     "Content-Type": "application/octet-stream",
                 },
-                body: chunk,
+                body: iHave,
             })
-        requests++;
-        writtenSize += chunk.length
-
-        console.log("Dropbox done " + order);
-        console.log(chunk.length)
-
-        if (requests === byteRangeIndex) {
-            const finishSessionResponse = await (
-                await fetch(
-                    "https://content.dropboxapi.com/2/files/upload_session/finish",
-                    {
-                        method: "POST",
-                        headers: {
-                            Authorization: "Bearer " + req.dropboxToken,
-                            "Dropbox-API-Arg": JSON.stringify({
-                                cursor: {
-                                    session_id: sessionId,
-                                    offset: streamSize,
-                                },
-                                commit: {
-                                    path: "/unst_file",
-                                    mode: "add",
-                                    autorename: true,
-                                    mute: false,
-                                    strict_conflict: false,
-                                },
-                            }),
-                            "Content-Type": "application/octet-stream",
-                        },
+        const finishSessionResponse = await (
+            await fetch(
+                "https://content.dropboxapi.com/2/files/upload_session/finish",
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Bearer " + req.dropboxToken,
+                        "Dropbox-API-Arg": JSON.stringify({
+                            cursor: {
+                                session_id: sessionId,
+                                offset: streamSize,
+                            },
+                            commit: {
+                                path: "/unst_file",
+                                mode: "add",
+                                autorename: true,
+                                mute: false,
+                                strict_conflict: false,
+                            },
+                        }),
+                        "Content-Type": "application/octet-stream",
                     },
-                )
-            ).json();
-            console.log(streamSize)
-            console.log(writtenSize)
-            console.log(finishSessionResponse);
+                },
+            )
+        ).json();
 
-            const newFileFragment = await req.db.fragments.create({
-                id: finishSessionResponse.id,
-                // just decided: dropbox will have index 2
-                driveType: DriveEnum.DROPBOX,
-                index,
-            });
-            thisFile.addFragment(newFileFragment);
-            console.log("Done uploading to Dropbox")
-        }
-    });
+        const newFileFragment = await req.db.fragments.create({
+            id: finishSessionResponse.id,
+            // just decided: dropbox will have index 2
+            driveType: DriveEnum.DROPBOX,
+            index,
+        });
+        thisFile.addFragment(newFileFragment);
+        console.log("Done uploading to Dropbox")
+    })
+
 }
 
 async function uploadToAllDrives(fid, req) {
@@ -164,7 +181,6 @@ async function uploadToAllDrives(fid, req) {
     );
     let start = 0;
     let index = 0;
-    let gDriveStream, dropboxStream;
     const User = req.db.users;
     const File = req.db.files;
     const Directory = req.db.directories;
@@ -209,9 +225,8 @@ async function uploadToAllDrives(fid, req) {
             return;
         } else if (gDriveAvailableSpace !== 0) {
             console.log("Upload to Google Drive");
-            gDriveStream = fs.createReadStream("./tmp/" + fid, {start, end: gDriveAvailableSpace - 1,})
             uploadFileToGoogleDrive(
-                gDriveStream,
+                fs.createReadStream("./tmp/" + fid, {start, end: gDriveAvailableSpace - 1,}),
                 req,
                 thisFile,
                 index,
@@ -236,77 +251,10 @@ async function uploadToAllDrives(fid, req) {
         if (dropboxAvailableSpace >= configFile.totalSize - start) {
             console.log("Last Upload to DropBox");
             console.log("Total size: " + configFile.totalSize);
-            dropboxStream = fs.createReadStream("./tmp/" + fid, {
-                start,
-                highWaterMark: DROPBOX_BYTE_STEP,
-            })
-            if (gDriveStream) {
-                gDriveStream.on("end", () => {
-                    setFileToUserDropbox(
-                        dropboxStream,
-                        req,
-                        thisFile,
-                        index,
-                        configFile.totalSize - start,
-                    );
-                    fs.rmSync("./tmp/" + fid + ".config.json");
-                    fs.rmSync("./tmp/" + fid);
-                    return;
-                })
-            } else {
                 setFileToUserDropbox(
-                    dropboxStream,
-                    req,
-                    thisFile,
-                    index,
-                    configFile.totalSize - start,
-                );
-                fs.rmSync("./tmp/" + fid + ".config.json");
-                fs.rmSync("./tmp/" + fid);
-                return;
-            }
-        } else if (dropboxAvailableSpace !== 0) {
-            console.log("Upload to dropBox");
-            console.log(start + dropboxAvailableSpace - 1)
-            dropboxStream = fs.createReadStream("./tmp/" + fid, {
-                start,
-                end: start + dropboxAvailableSpace - 1,
-                highWaterMark: DROPBOX_BYTE_STEP,
-            })
-            if (gDriveStream) {
-                gDriveStream.on("end", () => {
-                    setFileToUserDropbox(
-                        dropboxStream,
-                        req,
-                        thisFile,
-                        index,
-                        dropboxAvailableSpace,
-                    );
-                    start += dropboxAvailableSpace;
-                    index++;
-                })
-            } else {
-                setFileToUserDropbox(
-                    dropboxStream,
-                    req,
-                    thisFile,
-                    index,
-                    dropboxAvailableSpace,
-                );
-                start += dropboxAvailableSpace;
-                index++;
-            }
-        }
-    }
-    if (req.OneDriveToken) {
-        console.log("finally upload to OneDrive");
-        if (dropboxStream) {
-            dropboxStream.on("end", () => {
-                uploadFileToOneDrive(
-                    fid,
                     fs.createReadStream("./tmp/" + fid, {
                         start,
-                        highWaterMark: ONEDRIVE_BYTE_RANGE,
+                        highWaterMark: DROPBOX_BYTE_STEP,
                     }),
                     req,
                     thisFile,
@@ -315,9 +263,27 @@ async function uploadToAllDrives(fid, req) {
                 );
                 fs.rmSync("./tmp/" + fid + ".config.json");
                 fs.rmSync("./tmp/" + fid);
-                console.log("After File remove");
-            })
-        } else {
+                return;
+        } else if (dropboxAvailableSpace !== 0) {
+            console.log("Upload to dropBox");
+            console.log(start + dropboxAvailableSpace - 1)
+                setFileToUserDropbox(
+                    fs.createReadStream("./tmp/" + fid, {
+                        start,
+                        end: start + dropboxAvailableSpace - 1,
+                        highWaterMark: DROPBOX_BYTE_STEP,
+                    }),
+                    req,
+                    thisFile,
+                    index,
+                    dropboxAvailableSpace,
+                );
+                start += dropboxAvailableSpace;
+                index++;
+        }
+    }
+    if (req.OneDriveToken) {
+        console.log("finally upload to OneDrive");
             uploadFileToOneDrive(
                 fid,
                 fs.createReadStream("./tmp/" + fid, {
@@ -332,7 +298,6 @@ async function uploadToAllDrives(fid, req) {
             fs.rmSync("./tmp/" + fid + ".config.json");
             fs.rmSync("./tmp/" + fid);
             console.log("After File remove");
-        }
     }
 }
 
