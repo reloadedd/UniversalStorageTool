@@ -3,13 +3,11 @@ const fs = require("fs");
 const url = require("url");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const zlib = require("zlib");
 const { StatusCodes } = require("http-status-codes");
 const { downloadFile, uploadToAllDrives } = require("../../util/files");
 const { hasFile, hasDirectory } = require("../../util/compare");
 const { templateDirectoriesAndFiles } = require("../../util/templates");
-const { LOCAL_FILE_STORAGE_PATH, CompressionAlgorithmEnum } = require("../../config/config");
-const compressjs = require('compressjs');
+const { LOCAL_FILE_STORAGE_PATH } = require("../../config/config");
 
 
 exports.getFiles = async (req, res) => {
@@ -57,8 +55,6 @@ exports.createFile = (req, res) => {
             fileName = crypto.randomBytes(32).toString("hex");
         } while (fs.existsSync(`${LOCAL_FILE_STORAGE_PATH}/${fileName}`));
         fs.appendFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileName}`, "");
-
-        /* Write metadata into a file matching the pattern <fileHash>.config.json file */
         const configBody = {
             user: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
             parentFolder: req.body.parentFolder,
@@ -68,7 +64,6 @@ exports.createFile = (req, res) => {
             written: 0,
         };
         fs.writeFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileName}.config.json`,JSON.stringify(configBody));
-
         if (req.cookies) {
             res.writeHead(StatusCodes.CREATED, {
                 "Set-Cookie": req.cookies,
@@ -81,7 +76,6 @@ exports.createFile = (req, res) => {
                 "Content-Length": 0,
             });
         }
-
         res.end();
     } catch (err) {
         console.log(err.message);
@@ -92,10 +86,10 @@ exports.createFile = (req, res) => {
     }
 };
 
-exports.uploadToLocalStorage = (req, res, archivingType) => {
-    const fileHash = req.headers["location"];
+exports.uploadToLocalStorage = (req, res) => {
+    const fid = req.headers["location"];
     const fileConfig = JSON.parse(
-        fs.readFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`).toString("utf-8"),
+        fs.readFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fid}.config.json`).toString("utf-8"),
     );
     let [range, total] = req.headers["content-range"]
         .replace("bytes ", "")
@@ -116,41 +110,9 @@ exports.uploadToLocalStorage = (req, res, archivingType) => {
     }
 
     try {
-        switch (archivingType) {
-            case CompressionAlgorithmEnum.GZIP: {
-                zlib.gzipSync(req.data, (_, gzipData) => {
-                    fs.appendFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`, gzipData);
-                });
-                fileConfig.name = `${fileConfig.name}.gzip`;
-
-                break;
-            }
-
-            case CompressionAlgorithmEnum.BZIP2: {
-                let bzip2 = compressjs.Bzip2;
-                fs.appendFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`, bzip2.compressFile(req.data));
-                fileConfig.name = `${fileConfig.name}.bzip2`;
-
-                break;
-            }
-
-            case CompressionAlgorithmEnum.ZIP: {
-                zlib.deflateSync(req.data, (_, deflateData) => {
-                    fs.appendFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`, deflateData);
-                })
-                fileConfig.name = `${fileConfig.name}.zip`;
-
-                break;
-            }
-
-            /* This case is being followed when thee `archivingType` is null, which means no archiving */
-            default: {
-                fs.appendFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`, req.data);
-            }
-        }
-
+        fs.appendFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fid}`, req.data);
         fileConfig.written = end;
-        fs.writeFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`,JSON.stringify(fileConfig));
+        fs.writeFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileName}.config.json`,JSON.stringify(fileConfig));
         if (end === total) {
             res.writeHead(StatusCodes.OK, {
                 Range: "bytes=0-" + fileConfig.written,
@@ -161,7 +123,7 @@ exports.uploadToLocalStorage = (req, res, archivingType) => {
                     message: "File upload complete",
                 }),
             );
-            uploadToAllDrives(fileHash, req);
+            uploadToAllDrives(fid, req);
             return;
         }
 
