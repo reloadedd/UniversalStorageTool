@@ -106,7 +106,15 @@
                     <a href="#user-manual">4. User Manual</a>
                     <ol role="directory">
                         <li>
-                            <a href="#user-authentication">4.1. Authentication & Registration</a>
+                            <a href="#account">4.1. Account</a>
+                            <ol role="directory">
+                                <li>
+                                    <a href="#user-authentication">4.1.1. Authentication & Registration</a>
+                                </li>
+                                <li>
+                                    <a href="#account-settings">4.1.2. Account Settings</a>
+                                </li>
+                            </ol>
                         </li>
                         <li>
                             <a href="#files-directory-management">4.2. Files & Directories management</a>
@@ -130,6 +138,14 @@
                         </li>
                         <li>
                             <a href="#drivers-management">4.3. Drivers Management</a>
+                            <ol role="directory">
+                                <li>
+                                    <a href="#add-drive">4.3.1. Add a drive</a>
+                                </li>
+                                <li>
+                                    <a href="#see-drives-statistics">4.3.2. See Drivers Statistics</a>
+                                </li>
+                            </ol>
                         </li>
                     </ol>
                 </li>
@@ -485,28 +501,41 @@
         </section>
 
         <section id="user-manual">
-            <h2>4.1. User Manual</h2>
+            <h2>4. User Manual</h2>
             <p>
                 In this section we will show you how to use this application as its
                 user.
             </p>
-            <section id="login-register">
-                <h4>4.1. Authentication & Registration</h4>
-                <p>
-                    Enter on the "/login" path (or "/" or "/index" and will
-                    be redirected to "/login" if you are not signed in)
-                    and a page form will be shown. If you are register on
-                    UnST enter your registration name and password and
-                    after that you will be redirected to the home page.
-                    If you are not registered, you can do it by completing
-                    the form from "/login" and press the "Register" button.
-                    Make sure that the username and password fields are
-                    completed and not empty and they respect the following
-                    properties: the length of the username is at least 6 and
-                    maximum 32 characters long and the length of the password
-                    is at least 8 and maximum 32 characters long. If the
-                    username is already taken, retry another one.
-                </p>
+            <section id="account">
+                <h3>4.1. Account</h3>
+                <section href="login-register">
+                    <h4>4.1.1. Authentication & Registration</h4>
+                    <p>
+                        Enter on the "/login" path (or "/" or "/index" and will
+                        be redirected to "/login" if you are not signed in)
+                        and a page form will be shown. If you are register on
+                        UnST enter your registration name and password and
+                        after that you will be redirected to the home page.
+                        If you are not registered, you can do it by completing
+                        the form from "/login" and press the "Register" button.
+                        Make sure that the username and password fields are
+                        completed and not empty and they respect the following
+                        properties: the length of the username is at least 6 and
+                        maximum 32 characters long and the length of the password
+                        is at least 8 and maximum 32 characters long. If the
+                        username is already taken, retry another one.
+                    </p>
+                </section>
+                <section id="account-settings">
+                    <h4>4.1.2. Account Settings</h4>
+                    <p>
+                        This application also gives you the options to edit your
+                        account username and password. And if you want to delete
+                        your account, all the files that you stored in this app
+                        will be deleted or not from all the drivers the are stored
+                        into, according to your decision.
+                    </p>
+                </section>
             </section>
             <section id="files-directory-management">
                 <h3>4.2. Files & Directories management</h3>
@@ -566,7 +595,27 @@
             <section id="drivers-management">
                 <h3>4.3. Drivers Management</h3>
                 <section id="add-drive">
-                    
+                    <h4>4.3.1. Add a drive</h4>
+                    <p>
+                        To add a drive enter on the "/account" page and click on
+                        the "Add Drive" button and select a drive that you want to
+                        add from the pool(currently only Google Drive, OneDrive and
+                        Dropbox). After that you will be redirected to a page where
+                        you authorize us to have access to your drive account that
+                        you just logged in. Now, you are able to upload, delete and
+                        list files from drivers that you linked to this application.
+                    </p>
+                </section>
+                <section id="see-drives-statistics">
+                    <h4>4.3.2. See Drivers Statistics</h4>
+                    <p>
+                        If you have drivers from the pool linked to our application,
+                        then you can see different statistics regarding the space
+                        available on those drives. On "/account" page you have listed
+                        the available space on every single drive linked and on the
+                        "/index" or "/" page you have the total available space
+                        displayed in the bottom of the left side menu.
+                    </p>
                 </section>
             </section>
         </section>
