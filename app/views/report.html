@@ -97,10 +97,48 @@
                                 </li>
                             </ol>
                         </li>
+                        <li>
+                            <a href="#server-side">3.3 Server Side Role</a>
+                        </li>
                     </ol>
                 </li>
-                <li><a href="#conclusions">4. Conclusions</a></li>
-                <li><a href="#references">5. References</a></li>
+                <li>
+                    <a href="#user-manual">4. User Manual</a>
+                    <ol role="directory">
+                        <li>
+                            <a href="#user-authentication">4.1. Authentication & Registration</a>
+                        </li>
+                        <li>
+                            <a href="#files-directory-management">4.2. Files & Directories management</a>
+                            <ol role="directory">
+                                <li>
+                                    <a href="#list-files">4.2.1 See your listed directories/files</a>
+                                </li>
+                                <li>
+                                    <a href="#create-directory">4.2.2 How to create a directory</a>
+                                </li>
+                                <li>
+                                    <a href="#uploading-files">4.2.3 How to upload a file</a>
+                                </li>
+                                <li>
+                                    <a href="#download-file">4.2.4 How to download a file</a>
+                                </li>
+                                <li>
+                                    <a href="#delete-files-directory">4.2.5 How to delete a file/directory</a>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            <a href="#drivers-management">4.3. Drivers Management</a>
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <a href="#conclusions">5. Conclusions</a>
+                </li>
+                <li>
+                    <a href="#references">6. References</a>
+                </li>
             </ol>
             <dl>
                 <dt property="schema:author" typeof="sa:ContributorRole">
@@ -415,6 +453,120 @@
                             fact.
                         </p>
                     </section>
+                </section>
+            </section>
+            <section id="server-side">
+                <h3>3.2. Server Side Role</h3>
+                <p>
+                    On the Server Side, <i>Universal Storage Tool</i> has the
+                    logic of the application implemented. In this section,
+                    we will show you how the server interacts with the client
+                    and how the users of this app should use this app.
+                </p>
+                <section id="entry-point">
+                    <h4>3.2.1. Entry Point of the application</h4>
+                    <p>
+                        On the "/index" or "/" route is the Entry point of UnST
+                        application. When the an user enters here, firstly, if
+                        he is not logged in aka does not have its user data saved
+                        on browser cookies, It will be redirected on the
+                        login page. Otherwise, the needed data from server will
+                        be loaded on this page.
+                    </p>
+                    <p>
+                        So, in the bottom of the side left menu of the page will
+                        be seen the amount of available space that the user has.
+                        If no drivers are linked, an appropriate message will be
+                        shown. The possibility of uploading a file, or creating
+                        a directory( See section 4.1
+                    </p>
+                </section>
+            </section>
+        </section>
+
+        <section id="user-manual">
+            <h2>4.1. User Manual</h2>
+            <p>
+                In this section we will show you how to use this application as its
+                user.
+            </p>
+            <section id="login-register">
+                <h4>4.1. Authentication & Registration</h4>
+                <p>
+                    Enter on the "/login" path (or "/" or "/index" and will
+                    be redirected to "/login" if you are not signed in)
+                    and a page form will be shown. If you are register on
+                    UnST enter your registration name and password and
+                    after that you will be redirected to the home page.
+                    If you are not registered, you can do it by completing
+                    the form from "/login" and press the "Register" button.
+                    Make sure that the username and password fields are
+                    completed and not empty and they respect the following
+                    properties: the length of the username is at least 6 and
+                    maximum 32 characters long and the length of the password
+                    is at least 8 and maximum 32 characters long. If the
+                    username is already taken, retry another one.
+                </p>
+            </section>
+            <section id="files-directory-management">
+                <h3>4.2. Files & Directories management</h3>
+                <section id="list-files">
+                    <h4>4.2.1 See your listed directories/files</h4>
+                    <p>
+                        Enter on "/" or "/index" page and in the files directories
+                        container will be listed all the files and directories.
+                        From here you can navigate through directories and see their
+                        content by simply clicking them to open.
+                    </p>
+                </section>
+                <section id="create-directory">
+                    <h4>4.2.2 How to create a directory</h4>
+                    <p>
+                        Enter on "/" or "/index" page and in the files directories
+                        container will be listed all the files and directories.
+                        From here you can create a directory on the current directory
+                        that you are into by clicking the "New folder" button situated
+                        on the of the left side menu from index page.
+                    </p>
+                </section>
+                <section id="uploading-files">
+                    <h4>4.2.3 How to upload a file</h4>
+                    <p>
+                        Enter on "/" or "/index" page and click the "Upload Files"
+                        button situated in the top part of the side menu.To upload a
+                        file or more, select them from the window that popped out
+                        after you clicked the "Upload Files" button. The server will
+                        handle the request after and give you a response. The uploaded
+                        file will be situated on the current directory that you are in.
+                    </p>
+                </section>
+                <section id="download-file">
+                    <h4>4.2.4 How to download a file</h4>
+                    <p>
+                        Enter on "/" or "/index" page and in the files & directories
+                        container will be listed all the files and directories. From
+                        here you can download a file by right clicking on a file and
+                        from the context menu select "Download" and immediately after
+                        that the download of that file will be initiated.
+                    </p>
+                </section>
+                <section id="delete-files-directory">
+                    <h4>4.2.5 How to delete a file/directory</h4>
+                    <p>
+                        Enter on "/" or "/index" page and in the files & directories
+                        container will be listed all the files and directories. From
+                        here you can delete a file by right clicking on a file and
+                        from the context menu select "Delete" and immediately after
+                        that the selected file/directory. If a directory has more
+                        files and/or directories and the user deletes it, the operation
+                        will be done recursively.
+                    </p>
+                </section>
+            </section>
+            <section id="drivers-management">
+                <h3>4.3. Drivers Management</h3>
+                <section id="add-drive">
+                    
                 </section>
             </section>
         </section>
