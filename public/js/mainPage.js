@@ -5,46 +5,63 @@ uploadFiles = async () => {
     const parentFolder = new URLSearchParams(window.location.search).get("did");
     totalSize = 0;
     uploadedSize = 0;
+    const driveSpace = await (await fetch("/space")).json();
     for (const file of files) totalSize += file.size;
+
+    if (totalSize > driveSpace.totalSpace - driveSpace.totalUsedSpace) {
+        if (files.length > 1)
+            alert("The selected files wouldn't fit in your drives!!");
+        else alert("The selected file wouldn't fit in your drives!!");
+        return;
+    }
     document.getElementById("uploading").style.visibility = "visible";
     for (const file of files) {
-        document.getElementById("upload_text").innerText =
-            "Uploading file " + file.name;
-        const createFileResult = await fetch("files", {
-            method: "POST",
-            body: JSON.stringify({
-                parentFolder,
-                name: file.name,
-                size: file.size,
-                type: file.type,
-            }),
-        });
-        if (createFileResult.status === 403) {
-            alert("Cannot upload if no drive is linked to the account!");
-            document.getElementById("uploading").style.visibility = "hidden";
-            document.getElementById("upload_progress").style.width = 0;
-            return;
-        }
-        if (createFileResult.status === 500) {
-            alert(
-                "We're terribly sorry.. you can't upload files right now and it's on us",
-            );
-            document.getElementById("uploading").style.visibility = "hidden";
-            document.getElementById("upload_progress").style.width = 0;
-            return;
-        }
-        if (createFileResult.status !== 201) return;
-        const fileId = createFileResult.headers.get("Location");
-        const succeeded = await uploadFileAt(file, fileId);
-        if (!succeeded) {
-            alert("couldn't upload a particular chunk for some reason.. sorry");
-            document.getElementById("uploading").style.visibility = "hidden";
-            document.getElementById("upload_progress").style.width = 0;
-            return;
-        }
+        document.getElementById(
+            "upload_text",
+        ).innerHTML = `Uploading File <i>${file.name}</i>...`;
+        try {
+            const createFileResult = await fetch("files", {
+                method: "POST",
+                body: JSON.stringify({
+                    parentFolder,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                }),
+            });
+            if (createFileResult.status === 403) {
+                alert("Cannot upload if no drive is linked to the account!");
+                document.getElementById("uploading").style.visibility =
+                    "hidden";
+                document.getElementById("upload_progress").style.width = "0";
+                return;
+            }
+            if (createFileResult.status === 500) {
+                alert(
+                    "We're terribly sorry.. you can't upload files right now and it's on us",
+                );
+                document.getElementById("uploading").style.visibility =
+                    "hidden";
+                document.getElementById("upload_progress").style.width = "0";
+                return;
+            }
+            if (createFileResult.status !== 201) return;
+            const fileId = createFileResult.headers.get("Location");
+            const succeeded = await uploadFileAt(file, fileId);
+            if (!succeeded) {
+                alert(
+                    "couldn't upload a particular chunk for some reason.. sorry",
+                );
+                document.getElementById("uploading").style.visibility =
+                    "hidden";
+                document.getElementById("upload_progress").style.width = "0";
+                return;
+            }
+        } catch {}
     }
     document.getElementById("uploading").style.visibility = "hidden";
-    document.getElementById("upload_progress").style.width = 0;
+    document.getElementById("upload_progress").style.width = "0";
+    getFiles();
 };
 
 uploadFileAt = async (file, name) => {
@@ -101,19 +118,12 @@ getFiles = async (did = null) => {
         document
             .getElementsByClassName("loading-icon")
             .item(0).style.visibility = "hidden";
+        setEventListeners();
     }
 };
 
 dirClickEventHandler = (dirId) => {
     getFiles(dirId);
-};
-fileClickEventHandler = (fileId) => {
-    const a = document.createElement("a");
-    a.href = "/files?id=" + fileId;
-    a.download = "";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
 };
 
 createDir = async () => {
@@ -127,6 +137,32 @@ createDir = async () => {
         }),
     });
 
-    getFiles();
     document.getElementById("new-folder-name").style.visibility = "hidden";
+    getFiles();
+};
+
+cancelDir = () => {
+    document.getElementById("new-folder-name").style.visibility = "hidden";
+};
+
+getTotalSize = () => {
+    fetch("/space")
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.totalSpace === 0) {
+                document.getElementById("total-space").innerText =
+                    "No Drives Linked";
+                return;
+            }
+            document.getElementById("total-space").innerText = `Total space: ${(
+                data.totalUsedSpace /
+                1024 /
+                1024 /
+                1024
+            ).toFixed(2)} of ${(data.totalSpace / 1024 / 1024 / 1024).toFixed(
+                2,
+            )} GB used.`;
+            document.getElementById("total-space-bar").style.width =
+                Math.round((data.totalUsedSpace / data.totalSpace) * 100) + "%";
+        });
 };

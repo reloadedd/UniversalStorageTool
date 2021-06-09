@@ -4,17 +4,19 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
         <title>Universal Storage Tool</title>
-        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" href="public/css/style.css" />
-        <link rel="stylesheet" href="public/css/index.css" />
-        <link rel="stylesheet" href="public/css/nav.css" />
-        <link rel="stylesheet" href="public/css/account.css" />
-        <link rel="stylesheet" href="public/css/side-menu.css" />
-        <link rel="stylesheet" href="public/css/uploading.css" />
-        <link rel="stylesheet" href="public/css/loading-icon.css" />
-        <link rel="stylesheet" href="public/css/new-folder.css" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="/public/css/style.css" />
+        <link rel="stylesheet" href="/public/css/index.css" />
+        <link rel="stylesheet" href="/public/css/nav.css" />
+        <link rel="stylesheet" href="/public/css/account.css" />
+        <link rel="stylesheet" href="/public/css/side-menu.css" />
+        <link rel="stylesheet" href="/public/css/uploading.css" />
+        <link rel="stylesheet" href="/public/css/loading-icon.css" />
+        <link rel="stylesheet" href="/public/css/new-folder.css" />
+        <link rel="stylesheet" href="/public/css/storage-item-design.css" />
+        <link rel="stylesheet" href="/public/css/context-menu.css" />
     </head>
-    <body onload="getFiles()">
+    <body onload="getFiles(); getTotalSize()">
         <header id="nav-bar"></header>
         <div class="side-menu">
             <div id="side-menu-button"></div>
@@ -39,9 +41,9 @@
                 New folder
             </button>
             <div id="space-left">
-                <h6>Total available space</h6>
+                <h6 id="total-space">Calculating...</h6>
                 <span class="menu-side-bar">
-                    <span class="total-used-space"></span>
+                    <span id="total-space-bar" class="total-used-space"></span>
                 </span>
             </div>
         </div>
@@ -55,10 +57,6 @@
             </div>
         </div>
 
-        <script src="public/js/nav-bar.js"></script>
-        <script src="public/js/menu-button.js"></script>
-        <script src="public/js/side-menu-button.js"></script>
-        <script src="public/js/mainPage.js"></script>
         <div id="uploading">
             <div id="upload_container">
                 <h2 id="upload_text" style="color: white"></h2>
@@ -67,7 +65,7 @@
                 </span>
             </div>
         </div>
-        <div id="new-folder-name">
+        <div id="new-folder-name" style="visibility: hidden">
             <div id="new-folder-container">
                 <h2 id="new-folder-text" style="color: white">
                     Type the folder name:
@@ -80,7 +78,36 @@
                 >
                     Create
                 </button>
+                <button class="unst-btn" onclick="cancelDir()">Cancel</button>
             </div>
         </div>
+        <div id="rename" style="visibility: hidden">
+            <div id="rename-container">
+                <h2 id="rename-text" style="color: white">
+                    Type the new name:
+                </h2>
+                <input type="text" id="rename-box" maxlength="64" />
+                <button
+                    class="unst-btn"
+                    id="rename-submit"
+                    onclick="renameElement()"
+                >
+                    Rename
+                </button>
+                <button class="unst-btn" onclick="cancelRename()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+        <div id="context-menu">
+            <div class="item" onclick="downloadElement()">Download</div>
+            <div class="item" onclick="rename()">Rename</div>
+            <div class="item" onclick="deleteElement()">Delete</div>
+        </div>
+        <script src="public/js/nav-bar.js"></script>
+        <script src="public/js/menu-button.js"></script>
+        <script src="public/js/side-menu-button.js"></script>
+        <script src="public/js/mainPage.js"></script>
+        <script src="public/js/context-menu.js"></script>
     </body>
 </html>

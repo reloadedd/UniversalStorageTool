@@ -5,7 +5,9 @@
     grid-column-start: 1;
     height: inherit;
     width: 250px;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: black;
+    border-right: 1px solid purple;
+    opacity: 0.85;
 }
 
 .side-menu#side-menu-button {
@@ -36,7 +38,6 @@
         grid-template-columns: 42px auto;
     }
     .side-menu {
-        background-color: purple;
         width: 42px;
     }
     .side-menu > * {
@@ -48,7 +49,7 @@
         display: none;
     }
     #side-menu-button {
-        background-color: purple;
+        background-color: rgba(0, 0, 0, 0.7);
         display: block;
     }
 
@@ -61,7 +62,7 @@
     .change.side-menu {
         width: 250px;
         transition: none;
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: black;
     }
 
     .change.side-menu > * {
@@ -88,5 +89,6 @@
     height: 12px;
     float: left;
     background: #00ff00;
-    width: 75%;
+    width: 0;
+    transition-duration: 2s;
 }

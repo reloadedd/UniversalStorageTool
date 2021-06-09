@@ -1,4 +1,20 @@
+/* ======================
+ * --- Global Imports ---
+ * ======================
+ */
 const fetch = require("node-fetch");
+
+/* =====================
+ * --- Local Imports ---
+ * =====================
+ */
+const { getFileFromOneDrive } = require("../public/js/onedrive/server-side");
+const { DriveEnum } = require("../config/config");
+
+/* =================
+ * --- Functions ---
+ * =================
+ */
 async function getGoogleDriveFragment(req, fragment) {
     return (
         await fetch(
@@ -30,11 +46,13 @@ async function getDropboxFragment(req, fragment) {
     ).body;
 }
 
-exports.getFrag = async (req, fragment) => {
+exports.getFragmentFromDrive = async (req, fragment) => {
     switch (fragment.driveType) {
-        case 0:
+        case DriveEnum.GOOGLE_DRIVE:
             return await getGoogleDriveFragment(req, fragment);
-        case 2:
+        case DriveEnum.ONEDRIVE:
+            return await getFileFromOneDrive(req, fragment);
+        case DriveEnum.DROPBOX:
             return await getDropboxFragment(req, fragment);
     }
 };

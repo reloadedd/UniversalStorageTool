@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
-    return sequelize.define("OneDrive", {
+    return sequelize.define("Dropbox", {
         refreshToken: {
-            type: Sequelize.STRING(512),
+            type: Sequelize.STRING,
         },
     });
 };

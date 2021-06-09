@@ -77,8 +77,8 @@ body {
 }
 
 .dropbox-space {
-    width: 25%;
-    animation: dropbox-anim 2s;
+    width: 0%;
+    transition-duration: 2s;
 }
 
 .google-drive-space {
@@ -86,9 +86,9 @@ body {
     transition-duration: 2s;
 }
 
-.microsoft-onedrive-space {
-    width: 75%;
-    animation: microsoft-onedrive-anim 2s;
+.onedrive-available-space {
+    width: 0;
+    transition-duration: 2s;
 }
 
 .box-space {
@@ -101,7 +101,7 @@ body {
         width: 0;
     }
     100% {
-        width: 25%;
+        width: 0%;
     }
 }
 

@@ -5,13 +5,13 @@
 const jwt = require("jsonwebtoken");
 const fetch = require("node-fetch");
 
-
 /* =====================
  * --- Local Imports ---
  * =====================
  */
-const { ONEDRIVE_TOKEN_GRANTING_URL } = require("../app/controllers/onedrive.controller");
-
+const {
+    ONEDRIVE_TOKEN_GRANTING_URL,
+} = require("../app/controllers/onedrive.controller");
 
 /* =================
  * --- Functions ---
@@ -62,27 +62,73 @@ exports.refreshOneDriveToken = async (req, res) => {
         const drive = await thisUser.getOneDrive();
         if (!drive) return;
 
-        let params = new URLSearchParams();
+        const params = new URLSearchParams();
         params.append("client_id", process.env.UNST_ONEDRIVE_CLIENT_ID);
         params.append("client_secret", process.env.UNST_ONEDRIVE_CLIENT_SECRET);
         params.append("grant_type", "refresh_token");
         params.append("refresh_token", drive.refreshToken);
 
-        const data = await (await fetch(ONEDRIVE_TOKEN_GRANTING_URL,
-            {
+        const data = await (
+            await fetch(ONEDRIVE_TOKEN_GRANTING_URL, {
                 method: "POST",
-                body: params
-            })).json();
+                body: params,
+            })
+        ).json();
 
         if (data.access_token && data.expires_in) {
             if (!req.cookies) req.cookies = [];
             req.cookies.push(
                 "OneDriveToken=" +
-                data.access_token +
-                "; path=/; HttpOnly; Max-Age=" +
-                data.expires_in,
+                    data.access_token +
+                    "; path=/; HttpOnly; Max-Age=" +
+                    data.expires_in,
             );
             req.OneDriveToken = data.access_token;
+        }
+    } catch (err) {
+        console.log(err.message);
+    }
+};
+
+exports.refreshDropboxToken = async (req, res) => {
+    if (req.dropboxToken || !req.jwtToken) return;
+
+    const User = req.db.users;
+    try {
+        const userEmail = jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email;
+        const thisUser = await User.findOne({ where: { email: userEmail } });
+        const dropbox = await thisUser.getDropbox();
+        if (!dropbox) return;
+
+        const data = await (
+            await fetch("https://api.dropboxapi.com/oauth2/token", {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded;charset=UTF-8",
+                    Authorization:
+                        "Basic " +
+                        Buffer.from(
+                            process.env.UNST_DROPBOX_APP_KEY +
+                                ":" +
+                                process.env.UNST_DROPBOX_APP_SECRET,
+                        ).toString("base64"),
+                },
+                body: [
+                    "grant_type=refresh_token",
+                    "refresh_token=" + dropbox.refreshToken,
+                ].join("&"),
+            })
+        ).json();
+        if (data.access_token && data.expires_in) {
+            if (!req.cookies) req.cookies = [];
+            req.cookies.push(
+                "dropboxToken=" +
+                    data.access_token +
+                    "; path=/; HttpOnly; Max-Age=" +
+                    data.expires_in,
+            );
+            req.dropboxToken = data.access_token;
         }
     } catch (err) {
         console.log(err.message);

@@ -1,0 +1,64 @@
+#context-menu {
+    position: fixed;
+    z-index: 10000;
+    width: 150px;
+    background: #1b1a1a;
+    border-radius: 5px;
+    transform: scale(0);
+    transform-origin: top left;
+}
+
+#context-menu .item {
+    padding: 8px 10px;
+    font-size: 15px;
+    color: #eee;
+    cursor: pointer;
+    border-radius: inherit;
+}
+
+#context-menu .item:hover {
+    background: purple;
+}
+
+#context-menu.visible {
+    display: block;
+    transform: scale(1);
+    transition: transform 200ms ease-in-out;
+}
+#rename {
+    position: fixed;
+    left: 0;
+    top: -21px;
+    visibility: hidden;
+    width: 100vw;
+    height: 150vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+#rename-container {
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    /* establish flex container */
+    flex-direction: column;
+    /* make main-axis vertical */
+    justify-content: flex-end;
+    /* align items vertically, in this case */
+    align-items: center;
+    /* align items horizontally, in this case */
+}
+
+#rename-text {
+    display: block;
+    text-align: center;
+}
+#rename-box {
+    background: rgba(0, 0, 0, 0.7);
+    display: block;
+    position: center;
+    color: white;
+    height: 50px;
+    width: 50%;
+    overflow: hidden;
+}

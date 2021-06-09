@@ -1,24 +1,45 @@
+/* =================
+ * --- Constants ---
+ * =================
+ */
+const MAX_ITEM_LENGTH = 17;
+
+/* =================
+ * --- Functions ---
+ * =================
+ */
+function fitNameInsideFigcaption(itemName) {
+    let fitItemName = itemName.substring(0, MAX_ITEM_LENGTH);
+
+    if (itemName.length > MAX_ITEM_LENGTH) {
+        fitItemName += "...";
+    }
+
+    return fitItemName;
+}
+
 exports.templateDirectoriesAndFiles = (dirs, files) => {
     let res = "";
+
     for (const dir of dirs) {
         res += `
-        <figure onclick="dirClickEventHandler(${
-            dir.id
-        })" style="width: min-content" id=${"dir_" + dir.id}>
+        <figure onclick="getFiles(${dir.id})" class="directory" id=${
+            "dir_" + dir.id
+        }>
             <img src="public/img/folder.png" alt="Directory">
-            <figcaption >${dir.name}</figcaption>
+            <figcaption>${fitNameInsideFigcaption(dir.name)}</figcaption>
         </figure>
         `;
     }
+
     for (const file of files) {
         res += `
-        <figure onclick="fileClickEventHandler(${
-            file.id
-        })" style="width: min-content" id=${"file_" + file.id}>
+        <figure class="file" id=${"file_" + file.id}>
             <img src="public/img/file.png" alt="File">
-            <figcaption>${file.name}</figcaption>
+            <figcaption>${fitNameInsideFigcaption(file.name)}</figcaption>
         </figure>
         `;
     }
+
     return res;
 };

@@ -5,14 +5,21 @@ const {
     getFiles,
     createFile,
     uploadToFile,
-    createDir,
+    createDirectory,
     getFile,
+    renameDirectory,
+    renameFile,
+    deleteFile,
+    deleteDirectory,
 } = require("../app/controllers/file.controller");
+
+const { deleteFileFromOneDrive } = require("../public/js/onedrive/server-side");
+
 const jwt = require("jsonwebtoken");
 const url = require("url");
 const dispatcher = new Dispatcher();
 
-dispatcher.on("GET", "/files", async (req, res) => {
+dispatcher.on("GET", "", async (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
 
@@ -28,7 +35,7 @@ dispatcher.on("GET", "/files", async (req, res) => {
     }
 });
 
-dispatcher.on("POST", "/files", (req, res) => {
+dispatcher.on("POST", "", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         if (!req.gDriveToken) throw new Error();
@@ -43,7 +50,7 @@ dispatcher.on("POST", "/files", (req, res) => {
     }
 });
 
-dispatcher.on("PUT", "/files", (req, res) => {
+dispatcher.on("PUT", "", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         if (
@@ -67,10 +74,10 @@ dispatcher.on("PUT", "/files", (req, res) => {
     }
 });
 
-dispatcher.on("POST", "/files/newDir", (req, res) => {
+dispatcher.on("POST", "/newDir", (req, res) => {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        createDir(req, res);
+        createDirectory(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {
             "Content-Type": "application.json",
@@ -78,6 +85,118 @@ dispatcher.on("POST", "/files/newDir", (req, res) => {
         res.end(
             JSON.stringify({
                 message: "log in maybe?",
+            }),
+        );
+    }
+});
+
+dispatcher.on("PATCH", "/dir", (req, res) => {
+    if (!url.parse(req.url, true).query.id || !req.body.newName) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "bad parameters",
+            }),
+        );
+        return;
+    }
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        renameDirectory(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "log in maybe?",
+            }),
+        );
+    }
+});
+
+dispatcher.on("PATCH", "/file", (req, res) => {
+    if (!url.parse(req.url, true).query.id || !req.body.newName) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "no id provided",
+            }),
+        );
+        return;
+    }
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        renameFile(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "log in maybe?",
+            }),
+        );
+    }
+});
+
+dispatcher.on("DELETE", "/file", (req, res) => {
+    if (!url.parse(req.url, true).query.id) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "no id provided",
+            }),
+        );
+        return;
+    }
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        deleteFile(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                response_type: "error",
+                message:
+                    "Could not perform delete action because the user is not authenticated.",
+            }),
+        );
+    }
+});
+
+dispatcher.on("DELETE", "/dir", (req, res) => {
+    if (!url.parse(req.url, true).query.id) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "no id provided",
+            }),
+        );
+        return;
+    }
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        deleteDirectory(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                response_type: "error",
+                message:
+                    "Could not perform delete action because the user is not authenticated.",
             }),
         );
     }

@@ -4,8 +4,13 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
-const { setFileToUser, downloadFile } = require("../../util/files");
-const { hasFile } = require("../../util/compare");
+const {
+    downloadFile,
+    uploadToAllDrives,
+    deleteFile,
+    deleteDirectory,
+} = require("../../util/files");
+const { hasFile, hasDirectory } = require("../../util/compare");
 const { templateDirectoriesAndFiles } = require("../../util/templates");
 exports.getFiles = async (req, res) => {
     const browser = useragent.parse(req.headers["user-agent"]);
@@ -126,7 +131,7 @@ exports.uploadToFile = (req, res) => {
                     message: "File upload complete",
                 }),
             );
-            setFileToUser(fid, req);
+            uploadToAllDrives(fid, req);
             return;
         }
 
@@ -191,7 +196,7 @@ exports.getFile = async (req, res) => {
     downloadFile(req, res, thisFile);
 };
 
-exports.createDir = async (req, res) => {
+exports.createDirectory = async (req, res) => {
     const newDirectory = await req.db.directories.create({
         name: req.body.name,
     });
@@ -217,6 +222,190 @@ exports.createDir = async (req, res) => {
     res.end(
         JSON.stringify({
             message: "directory created.",
+        }),
+    );
+};
+
+exports.renameDirectory = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
+    });
+    const directory = await req.db.directories.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+    if (!(await hasDirectory(me, directory))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not yours, bro",
+            }),
+        );
+        return;
+    }
+    await directory.update({
+        name:
+            req.body.newName.substr(
+                0,
+                req.body.newName.lastIndexOf(".") < 0
+                    ? req.body.newName.length
+                    : req.body().newURL.lastIndexOf("."),
+            ) +
+            directory.name.substr(
+                directory.name.lastIndexOf(".") < 0
+                    ? directory.name.length
+                    : directory.name.lastIndexOf("."),
+                directory.name.length,
+            ),
+    });
+    if (req.cookies) {
+        res.writeHead(StatusCodes.OK, {
+            "Set-Cookie": req.cookies,
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "name updated.",
+            }),
+        );
+        return;
+    }
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "name updated.",
+        }),
+    );
+};
+
+exports.renameFile = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
+    });
+    const file = await req.db.files.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+    if (!(await hasFile(me, file))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not yours, bro",
+            }),
+        );
+        return;
+    }
+    await file.update({
+        name:
+            req.body.newName.substr(
+                0,
+                req.body.newName.lastIndexOf(".") < 0
+                    ? req.body.newName.length
+                    : req.body().newURL.lastIndexOf("."),
+            ) +
+            file.name.substr(
+                file.name.lastIndexOf(".") < 0
+                    ? file.name.length
+                    : file.name.lastIndexOf("."),
+                file.name.length,
+            ),
+    });
+    if (req.cookies) {
+        res.writeHead(StatusCodes.OK, {
+            "Set-Cookie": req.cookies,
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "name updated.",
+            }),
+        );
+        return;
+    }
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "name updated.",
+        }),
+    );
+};
+
+exports.deleteFile = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
+    });
+    const file = await req.db.files.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+    if (!(await hasFile(me, file))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not yours, bro",
+            }),
+        );
+        return;
+    }
+    deleteFile(req, file);
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "file deleted",
+        }),
+    );
+};
+
+exports.deleteDirectory = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
+    });
+    const directory = await req.db.directories.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+    if (!(await hasDirectory(me, directory))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not yours, bro",
+            }),
+        );
+        return;
+    }
+    deleteDirectory(req, directory);
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "directory deleted",
         }),
     );
 };

@@ -11,9 +11,14 @@ const userRouter = require("./user.router");
 const accountsRouter = require("./account.router");
 const googleDriveRouter = require("./google.drive.router");
 const onedriveRouter = require("./onedrive.router");
+const dropBoxRouter = require("./dropbox.router");
 const jwt = require("jsonwebtoken");
-const { refreshGoogleDriveToken,
-        refreshOneDriveToken } = require("../util/refreshTokens");
+const {
+    refreshGoogleDriveToken,
+    refreshOneDriveToken,
+    refreshDropboxToken,
+} = require("../util/refreshTokens");
+const getTotalSpace = require("../util/space");
 const { StatusCodes } = require("http-status-codes");
 
 MIMETypes = {
@@ -29,10 +34,13 @@ MIMETypes = {
 dispatcher.use("/users", userRouter);
 dispatcher.use(/\//, refreshGoogleDriveToken);
 dispatcher.use(/\//, refreshOneDriveToken);
+dispatcher.use(/\//, refreshDropboxToken);
+dispatcher.on("GET", "/space", getTotalSpace);
 dispatcher.use("/g-drive", googleDriveRouter);
 dispatcher.use("/onedrive", onedriveRouter);
+dispatcher.use("/dropbox", dropBoxRouter);
 dispatcher.use("", accountsRouter);
-dispatcher.use("", filesRouter);
+dispatcher.use("/files", filesRouter);
 
 dispatcher.on("GET", "/index", (req, res) => {
     if (!req.jwtToken) {

@@ -15,5 +15,6 @@ module.exports = {
         "prettier/prettier": "error",
         "no-unused-vars": 0,
         "require-jsdoc": 0,
+        "new-cap": 0,
     },
 };

@@ -1,0 +1,22 @@
+figcaption {
+    color: lightslategray;
+    font-weight: bolder;
+}
+
+figure {
+    text-align: center;
+    font-size: medium;
+    padding: 10px;
+    width: 159px;
+    height: 135px;
+}
+
+figure img {
+    width: 92px;
+    height: 92px;
+}
+
+figure:hover {
+    background-color: rgba(44, 3, 89, 0.8);
+    cursor: pointer;
+}
