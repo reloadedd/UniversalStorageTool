@@ -4,13 +4,13 @@
  */
 const fs = require("fs");
 const fetch = require("node-fetch");
-const { DriveEnum, CHUNK_UPLOADING_TIMEOUT } = require("../config/config");
+const {DriveEnum, CHUNK_UPLOADING_TIMEOUT} = require("../config/config");
 
 /* =====================
  * --- Local Imports ---
  * =====================
  */
-const { getFragmentFromDrive } = require("./fragments");
+const {getFragmentFromDrive} = require("./fragments");
 const {
     uploadFileToOneDrive,
     deleteFileFromOneDrive,
@@ -113,6 +113,7 @@ async function setFileToUserDropbox(
         writtenSize += chunk.length
 
         console.log("Dropbox done " + order);
+        console.log(chunk.length)
 
         if (requests === byteRangeIndex) {
             const finishSessionResponse = await (
@@ -163,6 +164,7 @@ async function uploadToAllDrives(fid, req) {
     );
     let start = 0;
     let index = 0;
+    let gDriveStream, dropboxStream;
     const User = req.db.users;
     const File = req.db.files;
     const Directory = req.db.directories;
@@ -172,7 +174,7 @@ async function uploadToAllDrives(fid, req) {
         mimeType: configFile.mimeType,
     });
     if (!configFile.parentFolder) {
-        const me = await User.findOne({ where: { email: configFile.user } });
+        const me = await User.findOne({where: {email: configFile.user}});
         me.addFile(thisFile);
     } else {
         const parentDir = await Directory.findOne({
@@ -207,11 +209,9 @@ async function uploadToAllDrives(fid, req) {
             return;
         } else if (gDriveAvailableSpace !== 0) {
             console.log("Upload to Google Drive");
+            gDriveStream = fs.createReadStream("./tmp/" + fid, {start, end: gDriveAvailableSpace - 1,})
             uploadFileToGoogleDrive(
-                fs.createReadStream("./tmp/" + fid, {
-                    start,
-                    end: gDriveAvailableSpace - 1,
-                }),
+                gDriveStream,
                 req,
                 thisFile,
                 index,
@@ -236,10 +236,93 @@ async function uploadToAllDrives(fid, req) {
         if (dropboxAvailableSpace >= configFile.totalSize - start) {
             console.log("Last Upload to DropBox");
             console.log("Total size: " + configFile.totalSize);
-            setFileToUserDropbox(
+            dropboxStream = fs.createReadStream("./tmp/" + fid, {
+                start,
+                highWaterMark: DROPBOX_BYTE_STEP,
+            })
+            if (gDriveStream) {
+                gDriveStream.on("end", () => {
+                    setFileToUserDropbox(
+                        dropboxStream,
+                        req,
+                        thisFile,
+                        index,
+                        configFile.totalSize - start,
+                    );
+                    fs.rmSync("./tmp/" + fid + ".config.json");
+                    fs.rmSync("./tmp/" + fid);
+                    return;
+                })
+            } else {
+                setFileToUserDropbox(
+                    dropboxStream,
+                    req,
+                    thisFile,
+                    index,
+                    configFile.totalSize - start,
+                );
+                fs.rmSync("./tmp/" + fid + ".config.json");
+                fs.rmSync("./tmp/" + fid);
+                return;
+            }
+        } else if (dropboxAvailableSpace !== 0) {
+            console.log("Upload to dropBox");
+            console.log(start + dropboxAvailableSpace - 1)
+            dropboxStream = fs.createReadStream("./tmp/" + fid, {
+                start,
+                end: start + dropboxAvailableSpace - 1,
+                highWaterMark: DROPBOX_BYTE_STEP,
+            })
+            if (gDriveStream) {
+                gDriveStream.on("end", () => {
+                    setFileToUserDropbox(
+                        dropboxStream,
+                        req,
+                        thisFile,
+                        index,
+                        dropboxAvailableSpace,
+                    );
+                    start += dropboxAvailableSpace;
+                    index++;
+                })
+            } else {
+                setFileToUserDropbox(
+                    dropboxStream,
+                    req,
+                    thisFile,
+                    index,
+                    dropboxAvailableSpace,
+                );
+                start += dropboxAvailableSpace;
+                index++;
+            }
+        }
+    }
+    if (req.OneDriveToken) {
+        console.log("finally upload to OneDrive");
+        if (dropboxStream) {
+            dropboxStream.on("end", () => {
+                uploadFileToOneDrive(
+                    fid,
+                    fs.createReadStream("./tmp/" + fid, {
+                        start,
+                        highWaterMark: ONEDRIVE_BYTE_RANGE,
+                    }),
+                    req,
+                    thisFile,
+                    index,
+                    configFile.totalSize - start,
+                );
+                fs.rmSync("./tmp/" + fid + ".config.json");
+                fs.rmSync("./tmp/" + fid);
+                console.log("After File remove");
+            })
+        } else {
+            uploadFileToOneDrive(
+                fid,
                 fs.createReadStream("./tmp/" + fid, {
                     start,
-                    highWaterMark: DROPBOX_BYTE_STEP,
+                    highWaterMark: ONEDRIVE_BYTE_RANGE,
                 }),
                 req,
                 thisFile,
@@ -248,41 +331,8 @@ async function uploadToAllDrives(fid, req) {
             );
             fs.rmSync("./tmp/" + fid + ".config.json");
             fs.rmSync("./tmp/" + fid);
-            return;
-        } else if (dropboxAvailableSpace !== 0) {
-            console.log("Upload to dropBox");
-            console.log(start + dropboxAvailableSpace - 1)
-            setFileToUserDropbox(
-                fs.createReadStream("./tmp/" + fid, {
-                    start,
-                    end: start + dropboxAvailableSpace - 1,
-                    highWaterMark: DROPBOX_BYTE_STEP,
-                }),
-                req,
-                thisFile,
-                index,
-                dropboxAvailableSpace,
-            );
-            start += dropboxAvailableSpace;
-            index++;
+            console.log("After File remove");
         }
-    }
-    if (req.OneDriveToken) {
-        console.log("finally upload to OneDrive");
-        uploadFileToOneDrive(
-            fid,
-            fs.createReadStream("./tmp/" + fid, {
-                start,
-                highWaterMark: ONEDRIVE_BYTE_RANGE,
-            }),
-            req,
-            thisFile,
-            index,
-            configFile.totalSize - start,
-        );
-        fs.rmSync("./tmp/" + fid + ".config.json");
-        fs.rmSync("./tmp/" + fid);
-        console.log("After File remove");
     }
 }
 

@@ -68,9 +68,8 @@ async function uploadFileToOneDrive(
     } else {
         let byteRangeIndex = 0;
         let requests = 0;
+        let writtenSize = 0;
         fileStream.on("data", async (chunk) => {
-            const startByteRange = byteRangeIndex * ONEDRIVE_BYTE_RANGE;
-            const endByteRange = startByteRange + chunk.length - 1;
             const order = byteRangeIndex;
             byteRangeIndex++;
 
@@ -85,10 +84,11 @@ async function uploadFileToOneDrive(
                 method: "PUT",
                 headers: {
                     "Content-Length": chunk.length,
-                    "Content-Range": `bytes ${startByteRange}-${endByteRange}/${fileSize}`,
+                    "Content-Range": `bytes ${writtenSize}-${writtenSize + chunk.length - 1}/${fileSize}`,
                 },
                 body: chunk,
             }).then(async (response) => {
+                writtenSize += chunk.length
                 requests++;
                 console.log("Done " + order)
 
