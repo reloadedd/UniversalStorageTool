@@ -5,7 +5,15 @@ uploadFiles = async () => {
     const parentFolder = new URLSearchParams(window.location.search).get("did");
     totalSize = 0;
     uploadedSize = 0;
+    const driveSpace = await (await fetch("/space")).json();
     for (const file of files) totalSize += file.size;
+
+    if (totalSize > driveSpace.totalSpace - driveSpace.totalUsedSpace) {
+        if (files.length > 1)
+            alert("The selected files wouldn't fit in your drives!!");
+        else alert("The selected file wouldn't fit in your drives!!");
+        return;
+    }
     document.getElementById("uploading").style.visibility = "visible";
     for (const file of files) {
         document.getElementById(
