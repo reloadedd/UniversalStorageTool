@@ -36,7 +36,11 @@ exports.onToken = async (req, res) => {
             },
             body: [
                 "grant_type=authorization_code",
-                "redirect_uri=http://localhost:2999/dropbox/token",
+                "redirect_uri=" +
+                    (process.env.UNST_IS_SERVER_UP
+                        ? "https://reloadedd.me:3000/dropbox/token"
+                        : "http://localhost:2999/dropbox/token"),
+                ,
                 "code=" + authorizationCode,
             ].join("&"),
         })

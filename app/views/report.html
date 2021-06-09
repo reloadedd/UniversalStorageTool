@@ -97,10 +97,70 @@
                                 </li>
                             </ol>
                         </li>
+                        <li>
+                            <a href="#database">3.3. Database Architecture</a>
+                        </li>
+                        <li>
+                            <a href="#server-side">3.4. Server Side Role</a>
+                        </li>
                     </ol>
                 </li>
-                <li><a href="#conclusions">4. Conclusions</a></li>
-                <li><a href="#references">5. References</a></li>
+                <li>
+                    <a href="#user-manual">4. User Manual</a>
+                    <ol role="directory">
+                        <li>
+                            <a href="#account">4.1. Account</a>
+                            <ol role="directory">
+                                <li>
+                                    <a href="#user-authentication">4.1.1. Authentication & Registration</a>
+                                </li>
+                                <li>
+                                    <a href="#account-settings">4.1.2. Account Settings</a>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            <a href="#files-directory-management">4.2. Files & Directories management</a>
+                            <ol role="directory">
+                                <li>
+                                    <a href="#list-files">4.2.1 See your listed directories/files</a>
+                                </li>
+                                <li>
+                                    <a href="#create-directory">4.2.2 How to create a directory</a>
+                                </li>
+                                <li>
+                                    <a href="#uploading-files">4.2.3 How to upload a file</a>
+                                </li>
+                                <li>
+                                    <a href="#download-file">4.2.4 How to download a file</a>
+                                </li>
+                                <li>
+                                    <a href="#delete-files-directory">4.2.5 How to delete a file/directory</a>
+                                </li>
+                                <li>
+                                    <a href="#rename-files-directory">4.2.5 How to rename a file/directory</a>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            <a href="#drivers-management">4.3. Drivers Management</a>
+                            <ol role="directory">
+                                <li>
+                                    <a href="#add-drive">4.3.1. Add a drive</a>
+                                </li>
+                                <li>
+                                    <a href="#see-drives-statistics">4.3.2. See Drivers Statistics</a>
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <a href="#conclusions">5. Conclusions</a>
+                </li>
+                <li>
+                    <a href="#references">6. References</a>
+                </li>
             </ol>
             <dl>
                 <dt property="schema:author" typeof="sa:ContributorRole">
@@ -415,6 +475,185 @@
                             fact.
                         </p>
                     </section>
+                </section>
+            </section>
+            <section id="database">
+                <h3>3.3. Database</h3>
+                <p>
+                    The Database architecture is as follows:
+                    <img src="public/img/DatabaseUML.jpg" alt="not found">
+                    The structure and the all the names are clear, so all the
+                    fields express their responsibilities by their names.
+                </p>
+            </section>
+            <section id="server-side">
+                <h3>3.4. Server Side Role</h3>
+                <p>
+                    On the Server Side, <i>Universal Storage Tool</i> has the
+                    logic of the application implemented. In this section,
+                    we will show you how the server interacts with the client
+                    and how the users of this app should use this app.
+                </p>
+                <section id="entry-point">
+                    <h4>3.4.1. Entry Point of the application</h4>
+                    <p>
+                        On the "/index" or "/" route is the Entry point of UnST
+                        application. When the an user enters here, firstly, if
+                        he is not logged in, aka does not have its user data saved
+                        on browser cookies, It will be redirected on the
+                        login page. Otherwise, the needed data from server will
+                        be loaded on this page: total available space, all user
+                        files and folders and others.
+                    </p>
+                    <p>
+                        So, in the bottom of the side left menu of the page will
+                        be seen the amount of available space that the user has.
+                        If no drivers are linked, an appropriate message will be
+                        shown. You have possibility of uploading a file, or creating
+                        a directory (See section 4.2.3 & 4.2.2) and also downloading
+                        and delete a file (See section 4.2.4 & 4.2.5)
+                    </p>
+                    <p>
+                        The total available space is provided by the server by
+                        requesting all the available space from all the user
+                        linked drives and summed up.
+                    </p>
+                    <p>
+
+                    </p>
+                </section>
+                <section id="drivers-routes">
+                    <h4>3.4.2. Drivers Routes</h4>
+                    <p>
+                        Every driver that is linked to this app will have access
+                        to the following routes "[driver name]/space",
+                    </p>
+                    <section id="drivers-space">
+                        <h5>3.4.2.1. Drivers space routes</h5>
+                        <p>
+
+                        </p>
+                    </section>
+                </section>
+            </section>
+        </section>
+
+        <section id="user-manual">
+            <h2>4. User Manual</h2>
+            <p>
+                In this section we will show you how to use this application as its
+                user.
+            </p>
+            <section id="account">
+                <h3>4.1. Account</h3>
+                <section href="login-register">
+                    <h4>4.1.1. Authentication & Registration</h4>
+                    <p>
+                        Enter on the "/login" path (or "/" or "/index" and will
+                        be redirected to "/login" if you are not signed in)
+                        and a page form will be shown. If you are register on
+                        UnST enter your registration name and password and
+                        after that you will be redirected to the home page.
+                        If you are not registered, you can do it by completing
+                        the form from "/login" and press the "Register" button.
+                        Make sure that the username and password fields are
+                        completed and not empty and they respect the following
+                        properties: the length of the username is at least 6 and
+                        maximum 32 characters long and the length of the password
+                        is at least 8 and maximum 32 characters long. If the
+                        username is already taken, retry another one.
+                    </p>
+                </section>
+                <section id="account-settings">
+                    <h4>4.1.2. Account Settings</h4>
+                    <p>
+                        This application also gives you the options to edit your
+                        account username and password. And if you want to delete
+                        your account, all the files that you stored in this app
+                        will be deleted or not from all the drivers the are stored
+                        into, according to your decision.
+                    </p>
+                </section>
+            </section>
+            <section id="files-directory-management">
+                <h3>4.2. Files & Directories management</h3>
+                <section id="list-files">
+                    <h4>4.2.1 See your listed directories/files</h4>
+                    <p>
+                        Enter on "/" or "/index" page and in the files directories
+                        container will be listed all the files and directories.
+                        From here you can navigate through directories and see their
+                        content by simply clicking them to open.
+                    </p>
+                </section>
+                <section id="create-directory">
+                    <h4>4.2.2 How to create a directory</h4>
+                    <p>
+                        Enter on "/" or "/index" page and in the files directories
+                        container will be listed all the files and directories.
+                        From here you can create a directory on the current directory
+                        that you are into by clicking the "New folder" button situated
+                        on the of the left side menu from index page.
+                    </p>
+                </section>
+                <section id="uploading-files">
+                    <h4>4.2.3 How to upload a file</h4>
+                    <p>
+                        Enter on "/" or "/index" page and click the "Upload Files"
+                        button situated in the top part of the side menu.To upload a
+                        file or more, select them from the window that popped out
+                        after you clicked the "Upload Files" button. The server will
+                        handle the request after and give you a response. The uploaded
+                        file will be situated on the current directory that you are in.
+                    </p>
+                </section>
+                <section id="download-file">
+                    <h4>4.2.4 How to download a file</h4>
+                    <p>
+                        Enter on "/" or "/index" page and in the files & directories
+                        container will be listed all the files and directories. From
+                        here you can download a file by right clicking on a file and
+                        from the context menu select "Download" and immediately after
+                        that the download of that file will be initiated.
+                    </p>
+                </section>
+                <section id="delete-files-directory">
+                    <h4>4.2.5 How to delete a file/directory</h4>
+                    <p>
+                        Enter on "/" or "/index" page and in the files & directories
+                        container will be listed all the files and directories. From
+                        here you can delete a file by right clicking on a file and
+                        from the context menu select "Delete" and immediately after
+                        that the selected file/directory. If a directory has more
+                        files and/or directories and the user deletes it, the operation
+                        will be done recursively.
+                    </p>
+                </section>
+            </section>
+            <section id="drivers-management">
+                <h3>4.3. Drivers Management</h3>
+                <section id="add-drive">
+                    <h4>4.3.1. Add a drive</h4>
+                    <p>
+                        To add a drive enter on the "/account" page and click on
+                        the "Add Drive" button and select a drive that you want to
+                        add from the pool(currently only Google Drive, OneDrive and
+                        Dropbox). After that you will be redirected to a page where
+                        you authorize us to have access to your drive account that
+                        you just logged in. Now, you are able to upload, delete and
+                        list files from drivers that you linked to this application.
+                    </p>
+                </section>
+                <section id="see-drives-statistics">
+                    <h4>4.3.2. See Drivers Statistics</h4>
+                    <p>
+                        If you have drivers from the pool linked to our application,
+                        then you can see different statistics regarding the space
+                        available on those drives. On "/account" page you have listed
+                        the available space on every single drive linked and on the
+                        "/index" or "/" page you have the total available space
+                        displayed in the bottom of the left side menu.
+                    </p>
                 </section>
             </section>
         </section>
