@@ -98,15 +98,18 @@ async function uploadFileToOneDrive(
         })
 
         fileStream.on("end", async () => {
-            await fetch(createUploadSessionResponse.uploadUrl, {
-                method: "PUT",
-                headers: {
-                    "Content-Length": iHave.length,
-                    "Content-Range": `bytes ${i * ONEDRIVE_BYTE_RANGE}-${i * ONEDRIVE_BYTE_RANGE + iHave.length - 1}/${fileSize}`,
-                },
-                body: iHave,
-            })
-
+            if(iHave.length === 0)
+                console.log("Wow, THIS happened")
+            else {
+                await fetch(createUploadSessionResponse.uploadUrl, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Length": iHave.length,
+                        "Content-Range": `bytes ${i * ONEDRIVE_BYTE_RANGE}-${i * ONEDRIVE_BYTE_RANGE + iHave.length - 1}/${fileSize}`,
+                    },
+                    body: iHave,
+                })
+            }
             // because for a big file, upload takes over an hour and the token expires.
             req.OneDriveToken = undefined;
             await refreshOneDriveToken(req, null);

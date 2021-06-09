@@ -119,23 +119,28 @@ async function setFileToUserDropbox(
     })
 
     fileStream.on("end", async () => {
-        await fetch(
-            "https://content.dropboxapi.com/2/files/upload_session/append_v2",
-            {
-                method: "POST",
-                headers: {
-                    Authorization: "Bearer " + req.dropboxToken,
-                    "Dropbox-API-Arg": JSON.stringify({
-                        cursor: {
-                            session_id: sessionId,
-                            offset: i * DROPBOX_BYTE_STEP,
-                        },
-                        close: false,
-                    }),
-                    "Content-Type": "application/octet-stream",
-                },
-                body: iHave,
-            })
+        if(iHave.length === 0){
+            console.log("wow this happened")
+        }
+        else {
+            await fetch(
+                "https://content.dropboxapi.com/2/files/upload_session/append_v2",
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Bearer " + req.dropboxToken,
+                        "Dropbox-API-Arg": JSON.stringify({
+                            cursor: {
+                                session_id: sessionId,
+                                offset: i * DROPBOX_BYTE_STEP,
+                            },
+                            close: false,
+                        }),
+                        "Content-Type": "application/octet-stream",
+                    },
+                    body: iHave,
+                })
+        }
         const finishSessionResponse = await (
             await fetch(
                 "https://content.dropboxapi.com/2/files/upload_session/finish",
@@ -315,20 +320,25 @@ async function downloadFile(req, res, file) {
     for (let i = 0; i < fragments.length; i++) {
         fragRes.push(await getFragmentFromDrive(req, fragments[i]));
     }
-    if (fragRes.length > 1) {
-        fragRes[0].pipe(res, {end: false});
-        fragRes[0].on("end", () => {
-            if (fragRes.length > 2) {
-                fragRes[1].pipe(res, {end: false});
-                fragRes[1].on("end", () => {
-                    fragRes[2].pipe(res);
-                });
-            } else {
-                fragRes[1].pipe(res);
-            }
-        });
-    } else {
-        fragRes[0].pipe(res);
+    try {
+        if (fragRes.length > 1) {
+            fragRes[0].pipe(res, {end: false});
+            fragRes[0].on("end", () => {
+                if (fragRes.length > 2) {
+                    fragRes[1].pipe(res, {end: false});
+                    fragRes[1].on("end", () => {
+                        fragRes[2].pipe(res);
+                    });
+                } else {
+                    fragRes[1].pipe(res);
+                }
+            });
+        } else {
+            fragRes[0].pipe(res);
+        }
+    } catch {
+        console.log("sorry, no download for you")
+        res.end();
     }
 }
 
