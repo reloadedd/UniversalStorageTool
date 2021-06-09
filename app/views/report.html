@@ -101,7 +101,7 @@
                             <a href="#database">3.3. Database Architecture</a>
                         </li>
                         <li>
-                            <a href="#server-side">3.3 Server Side Role</a>
+                            <a href="#server-side">3.4. Server Side Role</a>
                         </li>
                     </ol>
                 </li>
@@ -136,6 +136,9 @@
                                 </li>
                                 <li>
                                     <a href="#delete-files-directory">4.2.5 How to delete a file/directory</a>
+                                </li>
+                                <li>
+                                    <a href="#rename-files-directory">4.2.5 How to rename a file/directory</a>
                                 </li>
                             </ol>
                         </li>
@@ -484,7 +487,7 @@
                 </p>
             </section>
             <section id="server-side">
-                <h3>3.2. Server Side Role</h3>
+                <h3>3.4. Server Side Role</h3>
                 <p>
                     On the Server Side, <i>Universal Storage Tool</i> has the
                     logic of the application implemented. In this section,
@@ -492,22 +495,45 @@
                     and how the users of this app should use this app.
                 </p>
                 <section id="entry-point">
-                    <h4>3.2.1. Entry Point of the application</h4>
+                    <h4>3.4.1. Entry Point of the application</h4>
                     <p>
                         On the "/index" or "/" route is the Entry point of UnST
                         application. When the an user enters here, firstly, if
-                        he is not logged in aka does not have its user data saved
+                        he is not logged in, aka does not have its user data saved
                         on browser cookies, It will be redirected on the
                         login page. Otherwise, the needed data from server will
-                        be loaded on this page.
+                        be loaded on this page: total available space, all user
+                        files and folders and others.
                     </p>
                     <p>
                         So, in the bottom of the side left menu of the page will
                         be seen the amount of available space that the user has.
                         If no drivers are linked, an appropriate message will be
-                        shown. The possibility of uploading a file, or creating
-                        a directory( See section 4.1)
+                        shown. You have possibility of uploading a file, or creating
+                        a directory (See section 4.2.3 & 4.2.2) and also downloading
+                        and delete a file (See section 4.2.4 & 4.2.5)
                     </p>
+                    <p>
+                        The total available space is provided by the server by
+                        requesting all the available space from all the user
+                        linked drives and summed up.
+                    </p>
+                    <p>
+
+                    </p>
+                </section>
+                <section id="drivers-routes">
+                    <h4>3.4.2. Drivers Routes</h4>
+                    <p>
+                        Every driver that is linked to this app will have access
+                        to the following routes "[driver name]/space",
+                    </p>
+                    <section id="drivers-space">
+                        <h5>3.4.2.1. Drivers space routes</h5>
+                        <p>
+
+                        </p>
+                    </section>
                 </section>
             </section>
         </section>
