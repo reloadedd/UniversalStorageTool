@@ -5,6 +5,7 @@
 const fs = require("fs");
 const fetch = require("node-fetch");
 const { StatusCodes } = require("http-status-codes");
+const util = require("util");
 
 /* =====================
  * --- Local Imports ---
@@ -20,19 +21,21 @@ const {
     DriveEnum,
     CHUNK_UPLOADING_TIMEOUT,
 } = require("../../../config/config");
+const { cleanupFromLocalStorage } = require("../../../util/helpers");
+
 
 /* =================
  * --- Functions ---
  * =================
  */
-async function uploadFileToOneDrive(fileId, req) {
+async function uploadFileToOneDrive(fileHash, req) {
     const User = req.db.users;
     const File = req.db.files;
     const Fragment = req.db.fragments;
     const Directory = req.db.directories;
     const configFile = JSON.parse(
         await fs.readFileSync(
-            `${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`,
+            `${LOCAL_FILE_STORAGE_PATH}/${fileHash.split('.')[0]}.config.json`,
         ),
     );
     const thisFile = await File.create({
@@ -53,9 +56,11 @@ async function uploadFileToOneDrive(fileId, req) {
         parentDir.addFile(thisFile);
     }
 
+    console.log(`The file hash: ${fileHash}`);
+
     const createUploadSessionResponse = await (
         await fetch(
-            `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/root:/${ONEDRIVE_UPLOAD_FOLDER}/${fileId}:/createUploadSession`,
+            `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/root:/${ONEDRIVE_UPLOAD_FOLDER}/${fileHash}:/createUploadSession`,
             {
                 method: "POST",
                 headers: {
@@ -78,13 +83,10 @@ async function uploadFileToOneDrive(fileId, req) {
             `[ ERROR ]: Failed to create upload session. More details: '${createUploadSessionResponse.error.message}'`,
         );
 
-        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}`);
-        fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`);
+        cleanupFromLocalStorage(fileHash);
     } else {
-        const readStream = fs.createReadStream(
-            `${LOCAL_FILE_STORAGE_PATH}/${fileId}`,
-            { highWaterMark: ONEDRIVE_BYTE_RANGE },
-        );
+        const readStream = fs.createReadStream(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`,
+            { highWaterMark: ONEDRIVE_BYTE_RANGE });
 
         let byteRangeIndex = 0;
         let requests = 0;
@@ -112,22 +114,20 @@ async function uploadFileToOneDrive(fileId, req) {
                 requests++;
 
                 if (response.status === StatusCodes.CREATED) {
+                    console.log("The file has been created on drive");
                     const fileMetadata = await getFileMetadataFromOneDrive(
                         req,
-                        `${ONEDRIVE_UPLOAD_FOLDER}/${fileId}`,
+                        `${ONEDRIVE_UPLOAD_FOLDER}/${fileHash}`,
                     );
 
+                    console.log(`The id is ${util.inspect(fileMetadata, { depth: null })}`);
                     const newFileFragment = await Fragment.create({
                         id: fileMetadata.id,
                         driveType: DriveEnum.ONEDRIVE,
                         index: 1,
                     });
                     thisFile.addFragment(newFileFragment);
-
-                    fs.rmSync(`${LOCAL_FILE_STORAGE_PATH}/${fileId}`);
-                    fs.rmSync(
-                        `${LOCAL_FILE_STORAGE_PATH}/${fileId}.config.json`,
-                    );
+                    cleanupFromLocalStorage(fileHash);
                 }
             });
         });

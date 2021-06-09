@@ -33,11 +33,11 @@ dispatcher.on("GET", "", async (req, res) => {
     }
 });
 
-dispatcher.on("POST", "", (req, res) => {
+function initiateFileCreationOnLocalStorage(req, res, compressFile) {
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
         if (!req.gDriveToken) throw new Error();
-        createFile(req, res);
+        createFile(req, res, compressFile);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {
             "Content-type": "application/json",
@@ -46,7 +46,13 @@ dispatcher.on("POST", "", (req, res) => {
             JSON.stringify({ message: "Cannot get a file if not logged in" }),
         );
     }
-});
+}
+
+/* Route for compressing the file as normal, without compression */
+dispatcher.on("POST", "", (req, res) => initiateFileCreationOnLocalStorage(req, res, false));
+
+/* Route for compressing the file as GZIP */
+dispatcher.on("POST", "/gzip", (req, res) => initiateFileCreationOnLocalStorage(req, res, true));
 
 dispatcher.on("PUT", "", (req, res) => {
     try {

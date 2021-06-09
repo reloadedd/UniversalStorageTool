@@ -3,6 +3,7 @@ const fs = require("fs");
 const url = require("url");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const zlib = require("zlib");
 const { StatusCodes } = require("http-status-codes");
 const { downloadFile, uploadToAllDrives } = require("../../util/files");
 const { hasFile, hasDirectory } = require("../../util/compare");
@@ -48,7 +49,7 @@ exports.getFiles = async (req, res) => {
     res.end(templateDirectoriesAndFiles(folders, files));
 };
 
-exports.createFile = (req, res) => {
+exports.createFile = (req, res, compressFile) => {
     try {
         let fileName;
         do {
@@ -62,8 +63,10 @@ exports.createFile = (req, res) => {
             totalSize: req.body.size,
             mimeType: req.body.type,
             written: 0,
+            compressed: compressFile    /* Boolean which indicate whether to compress or not */
         };
-        fs.writeFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileName}.config.json`,JSON.stringify(configBody));
+
+        fs.writeFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileName}.config.json`, JSON.stringify(configBody));
         if (req.cookies) {
             res.writeHead(StatusCodes.CREATED, {
                 "Set-Cookie": req.cookies,
@@ -87,9 +90,9 @@ exports.createFile = (req, res) => {
 };
 
 exports.uploadToLocalStorage = (req, res) => {
-    const fid = req.headers["location"];
+    let fileHash = req.headers["location"];
     const fileConfig = JSON.parse(
-        fs.readFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fid}.config.json`).toString("utf-8"),
+        fs.readFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`).toString("utf-8"),
     );
     let [range, total] = req.headers["content-range"]
         .replace("bytes ", "")
@@ -110,9 +113,9 @@ exports.uploadToLocalStorage = (req, res) => {
     }
 
     try {
-        fs.appendFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fid}`, req.data);
+        fs.appendFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`, req.data);
         fileConfig.written = end;
-        fs.writeFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileName}.config.json`,JSON.stringify(fileConfig));
+        fs.writeFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`,JSON.stringify(fileConfig));
         if (end === total) {
             res.writeHead(StatusCodes.OK, {
                 Range: "bytes=0-" + fileConfig.written,
@@ -123,7 +126,26 @@ exports.uploadToLocalStorage = (req, res) => {
                     message: "File upload complete",
                 }),
             );
-            uploadToAllDrives(fid, req);
+
+            if (fileConfig.compressed) {
+                const gzipStream = zlib.createGzip();
+                const writeStream = fs.createWriteStream(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.gzip`);
+                const readStream = fs.createReadStream(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}`);
+                readStream.pipe(gzipStream).pipe(writeStream);
+
+                writeStream.on("finish", () => {
+                    fileConfig.name = `${fileConfig.name}.gzip`;
+                    fileConfig.totalSize = fs.statSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.gzip`).size;
+                    fileConfig.mimeType = 'application/gzip';
+                    fs.writeFileSync(`${LOCAL_FILE_STORAGE_PATH}/${fileHash}.config.json`,JSON.stringify(fileConfig));
+
+                    console.log(`Filename: ${fileConfig.name} | Total size: ${fileConfig.totalSize}`)
+                    uploadToAllDrives(`${fileHash}.gzip`, req);
+                });
+            } else {
+                uploadToAllDrives(fileHash, req);
+            }
+
             return;
         }
 
