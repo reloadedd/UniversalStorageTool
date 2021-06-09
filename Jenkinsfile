@@ -61,7 +61,7 @@ pipeline {
             }
 
             steps {
-                sh "docker-compose --env-file /etc/unst/.env build --remove-orphans"
+                sh "docker-compose --env-file /etc/unst/.env build"
             }
         }
 
@@ -79,7 +79,7 @@ pipeline {
             }
 
             steps {
-                sh "docker-compose --env-file /etc/unst/.env down"
+                sh "docker-compose --env-file /etc/unst/.env down --remove-orphans"
                 sh "docker-compose --env-file /etc/unst/.env up --detach --no-deps"
             }
         }
