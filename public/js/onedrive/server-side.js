@@ -21,6 +21,8 @@ const {
     CHUNK_UPLOADING_TIMEOUT,
 } = require("../../../config/config");
 
+const { refreshOneDriveToken } = require("../../../util/refreshTokens");
+
 /* =================
  * --- Functions ---
  * =================
@@ -84,6 +86,10 @@ async function uploadFileToOneDrive(
                 requests++;
 
                 if (response.status === StatusCodes.CREATED) {
+                    // because for a big file, upload takes over an hour and the token expires.
+                    req.OneDriveToken = undefined;
+                    await refreshOneDriveToken(req, res);
+
                     const fileMetadata = await getFileMetadataFromOneDrive(
                         req,
                         `${ONEDRIVE_UPLOAD_FOLDER}/${fileId}`,
