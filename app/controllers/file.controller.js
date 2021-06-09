@@ -4,7 +4,12 @@ const url = require("url");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { StatusCodes } = require("http-status-codes");
-const { downloadFile, uploadToAllDrives } = require("../../util/files");
+const {
+    downloadFile,
+    uploadToAllDrives,
+    deleteFile,
+    deleteDirectory,
+} = require("../../util/files");
 const { hasFile, hasDirectory } = require("../../util/compare");
 const { templateDirectoriesAndFiles } = require("../../util/templates");
 exports.getFiles = async (req, res) => {
@@ -335,6 +340,72 @@ exports.renameFile = async (req, res) => {
     res.end(
         JSON.stringify({
             message: "name updated.",
+        }),
+    );
+};
+
+exports.deleteFile = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
+    });
+    const file = await req.db.files.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+    if (!(await hasFile(me, file))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not yours, bro",
+            }),
+        );
+        return;
+    }
+    deleteFile(req, file);
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "file deleted",
+        }),
+    );
+};
+
+exports.deleteDirectory = async (req, res) => {
+    const me = await req.db.users.findOne({
+        where: {
+            email: jwt.verify(req.jwtToken, req.UNST_JWT_SECRET).email,
+        },
+    });
+    const directory = await req.db.directories.findOne({
+        where: {
+            id: url.parse(req.url, true).query.id,
+        },
+    });
+    if (!(await hasDirectory(me, directory))) {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "not yours, bro",
+            }),
+        );
+        return;
+    }
+    deleteDirectory(req, directory);
+    res.writeHead(StatusCodes.OK, {
+        "Content-Type": "application/json",
+    });
+    res.end(
+        JSON.stringify({
+            message: "directory deleted",
         }),
     );
 };

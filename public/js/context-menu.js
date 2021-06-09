@@ -3,6 +3,20 @@ const scope = document.querySelector("body");
 let dirId;
 let fileId;
 
+async function deleteElement() {
+    contextMenu.classList.remove("visible");
+    if (fileId) {
+        await fetch(`/files/file?id=${fileId.replace("file_", "")}`, {
+            method: "DELETE",
+        });
+    } else {
+        await fetch(`/files/dir?id=${dirId.replace("dir_", "")}`, {
+            method: "DELETE",
+        });
+    }
+    getTotalSize();
+    getFiles();
+}
 function downloadElement() {
     if (fileId) {
         const a = document.createElement("a");
@@ -12,6 +26,7 @@ function downloadElement() {
         a.click();
         document.body.removeChild(a);
     } else {
+        contextMenu.classList.remove("visible");
         alert("We do not provide folder download yet");
     }
 }

@@ -9,6 +9,8 @@ const {
     getFile,
     renameDirectory,
     renameFile,
+    deleteFile,
+    deleteDirectory,
 } = require("../app/controllers/file.controller");
 
 const { deleteFileFromOneDrive } = require("../public/js/onedrive/server-side");
@@ -142,10 +144,50 @@ dispatcher.on("PATCH", "/file", (req, res) => {
     }
 });
 
-dispatcher.on("DELETE", "/files", (req, res) => {
+dispatcher.on("DELETE", "/file", (req, res) => {
+    if (!url.parse(req.url, true).query.id) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "no id provided",
+            }),
+        );
+        return;
+    }
     try {
         jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
-        // deleteFileFromOneDrive(req, res);
+        deleteFile(req, res);
+    } catch {
+        res.writeHead(StatusCodes.FORBIDDEN, {
+            "Content-Type": "application.json",
+        });
+        res.end(
+            JSON.stringify({
+                response_type: "error",
+                message:
+                    "Could not perform delete action because the user is not authenticated.",
+            }),
+        );
+    }
+});
+
+dispatcher.on("DELETE", "/dir", (req, res) => {
+    if (!url.parse(req.url, true).query.id) {
+        res.writeHead(StatusCodes.BAD_REQUEST, {
+            "Content-Type": "application/json",
+        });
+        res.end(
+            JSON.stringify({
+                message: "no id provided",
+            }),
+        );
+        return;
+    }
+    try {
+        jwt.verify(req.jwtToken, req.UNST_JWT_SECRET);
+        deleteDirectory(req, res);
     } catch {
         res.writeHead(StatusCodes.FORBIDDEN, {
             "Content-Type": "application.json",

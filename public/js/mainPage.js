@@ -19,41 +19,49 @@ uploadFiles = async () => {
         document.getElementById(
             "upload_text",
         ).innerHTML = `Uploading File <i>${file.name}</i>...`;
-        const createFileResult = await fetch("files", {
-            method: "POST",
-            body: JSON.stringify({
-                parentFolder,
-                name: file.name,
-                size: file.size,
-                type: file.type,
-            }),
-        });
-        if (createFileResult.status === 403) {
-            alert("Cannot upload if no drive is linked to the account!");
-            document.getElementById("uploading").style.visibility = "hidden";
-            document.getElementById("upload_progress").style.width = "0";
-            return;
-        }
-        if (createFileResult.status === 500) {
-            alert(
-                "We're terribly sorry.. you can't upload files right now and it's on us",
-            );
-            document.getElementById("uploading").style.visibility = "hidden";
-            document.getElementById("upload_progress").style.width = "0";
-            return;
-        }
-        if (createFileResult.status !== 201) return;
-        const fileId = createFileResult.headers.get("Location");
-        const succeeded = await uploadFileAt(file, fileId);
-        if (!succeeded) {
-            alert("couldn't upload a particular chunk for some reason.. sorry");
-            document.getElementById("uploading").style.visibility = "hidden";
-            document.getElementById("upload_progress").style.width = "0";
-            return;
-        }
+        try {
+            const createFileResult = await fetch("files", {
+                method: "POST",
+                body: JSON.stringify({
+                    parentFolder,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                }),
+            });
+            if (createFileResult.status === 403) {
+                alert("Cannot upload if no drive is linked to the account!");
+                document.getElementById("uploading").style.visibility =
+                    "hidden";
+                document.getElementById("upload_progress").style.width = "0";
+                return;
+            }
+            if (createFileResult.status === 500) {
+                alert(
+                    "We're terribly sorry.. you can't upload files right now and it's on us",
+                );
+                document.getElementById("uploading").style.visibility =
+                    "hidden";
+                document.getElementById("upload_progress").style.width = "0";
+                return;
+            }
+            if (createFileResult.status !== 201) return;
+            const fileId = createFileResult.headers.get("Location");
+            const succeeded = await uploadFileAt(file, fileId);
+            if (!succeeded) {
+                alert(
+                    "couldn't upload a particular chunk for some reason.. sorry",
+                );
+                document.getElementById("uploading").style.visibility =
+                    "hidden";
+                document.getElementById("upload_progress").style.width = "0";
+                return;
+            }
+        } catch {}
     }
     document.getElementById("uploading").style.visibility = "hidden";
     document.getElementById("upload_progress").style.width = "0";
+    getFiles();
 };
 
 uploadFileAt = async (file, name) => {
@@ -129,8 +137,8 @@ createDir = async () => {
         }),
     });
 
-    getFiles();
     document.getElementById("new-folder-name").style.visibility = "hidden";
+    getFiles();
 };
 
 cancelDir = () => {

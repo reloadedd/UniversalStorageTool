@@ -35,6 +35,8 @@ async function uploadFileToOneDrive(
     index,
     fileSize,
 ) {
+    req.OneDriveToken = undefined;
+    await refreshOneDriveToken(req, null);
     const createUploadSessionResponse = await (
         await fetch(
             `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/root:/${ONEDRIVE_UPLOAD_FOLDER}/${fileId}:/createUploadSession`,
@@ -88,7 +90,7 @@ async function uploadFileToOneDrive(
                 if (response.status === StatusCodes.CREATED) {
                     // because for a big file, upload takes over an hour and the token expires.
                     req.OneDriveToken = undefined;
-                    await refreshOneDriveToken(req, res);
+                    await refreshOneDriveToken(req, null);
 
                     const fileMetadata = await getFileMetadataFromOneDrive(
                         req,
@@ -101,6 +103,7 @@ async function uploadFileToOneDrive(
                         index,
                     });
                     thisFile.addFragment(newFileFragment);
+                    console.log("Finished uploading to OneDrive");
                 }
             });
         });

@@ -11,7 +11,10 @@ const { DriveEnum, CHUNK_UPLOADING_TIMEOUT } = require("../config/config");
  * =====================
  */
 const { getFragmentFromDrive } = require("./fragments");
-const { uploadFileToOneDrive } = require("../public/js/onedrive/server-side");
+const {
+    uploadFileToOneDrive,
+    deleteFileFromOneDrive,
+} = require("../public/js/onedrive/server-side");
 
 /* =================
  * --- Constants ---
@@ -26,7 +29,7 @@ const DROPBOX_BYTE_STEP = 134217728; // 128 * 1024 * 1024 bytes (128Mb)
  * --- Functions ---
  * =================
  */
-uploadFileToGoogleDrive = async (fileStream, req, thisFile, index) => {
+async function uploadFileToGoogleDrive(fileStream, req, thisFile, index) {
     // POST request to create a file on drive.
     const response = await fetch(
         "https://www.googleapis.com/upload/drive/v3/files?uploadType=media",
@@ -48,9 +51,16 @@ uploadFileToGoogleDrive = async (fileStream, req, thisFile, index) => {
         index,
     });
     thisFile.addFragment(newFileFragment);
-};
+    console.log("Finished uploading to Google Drive");
+}
 
-setFileToUserDropbox = async (fileStream, req, thisFile, index, streamSize) => {
+async function setFileToUserDropbox(
+    fileStream,
+    req,
+    thisFile,
+    index,
+    streamSize,
+) {
     const startSessionResponse = await (
         await fetch(
             "https://content.dropboxapi.com/2/files/upload_session/start",
@@ -126,7 +136,6 @@ setFileToUserDropbox = async (fileStream, req, thisFile, index, streamSize) => {
                         },
                     )
                 ).json();
-                console.log(finishSessionResponse);
 
                 const newFileFragment = await req.db.fragments.create({
                     id: finishSessionResponse.id,
@@ -135,12 +144,13 @@ setFileToUserDropbox = async (fileStream, req, thisFile, index, streamSize) => {
                     index,
                 });
                 thisFile.addFragment(newFileFragment);
+                console.log("Finished uploading to dropbox");
             }
         });
     });
-};
+}
 
-exports.uploadToAllDrives = async (fid, req) => {
+async function uploadToAllDrives(fid, req) {
     console.log("We'll upload now");
     const configFile = JSON.parse(
         await fs.readFileSync("./tmp/" + fid + ".config.json"),
@@ -266,9 +276,9 @@ exports.uploadToAllDrives = async (fid, req) => {
         fs.rmSync("./tmp/" + fid);
         console.log("After File remove");
     }
-};
+}
 
-exports.downloadFile = async (req, res, file) => {
+async function downloadFile(req, res, file) {
     const fragments = await file.getFragments();
     fragments.sort((a, b) =>
         a.index > b.index ? 1 : b.index > a.index ? -1 : 0,
@@ -297,4 +307,62 @@ exports.downloadFile = async (req, res, file) => {
     } else {
         fragRes[0].pipe(res);
     }
+}
+
+async function deleteFragment(req, fragment) {
+    switch (fragment.driveType) {
+        case DriveEnum.GOOGLE_DRIVE:
+            await fetch(
+                `https://www.googleapis.com/drive/v2/files/${fragment.id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: "Bearer " + req.gDriveToken,
+                    },
+                },
+            );
+        case DriveEnum.DROPBOX:
+            await fetch("https://api.dropboxapi.com/2/files/delete_v2", {
+                method: "POST",
+                headers: {
+                    Authorization: "Bearer " + req.dropboxToken,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    path: fragment.id,
+                }),
+            });
+
+        case DriveEnum.ONEDRIVE:
+            await deleteFileFromOneDrive(req, fragment);
+    }
+    fragment.destroy();
+}
+
+async function deleteFile(req, file) {
+    const fragments = await file.getFragments();
+    for (const fragment of fragments) {
+        deleteFragment(req, fragment);
+    }
+    file.destroy();
+}
+
+async function deleteDirectory(req, dir) {
+    const files = await dir.getFiles();
+    for (const file of files) {
+        deleteFile(req, file);
+    }
+    const directories = await dir.getDirectories();
+    for (const directory of directories) {
+        deleteDirectory(req, directory);
+    }
+    dir.destroy();
+}
+
+module.exports = {
+    setFileToUserDropbox,
+    uploadToAllDrives,
+    downloadFile,
+    deleteFile,
+    deleteDirectory,
 };
