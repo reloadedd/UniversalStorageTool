@@ -316,17 +316,17 @@ async function downloadFile(req, res, file) {
         "Content-Length": file.size,
         "Content-Disposition": "attachment; filename=" + file.name,
     });
-    const fragRes = [];
-    for (let i = 0; i < fragments.length; i++) {
-        fragRes.push(await getFragmentFromDrive(req, fragments[i]));
-    }
+    let fragRes = [];
     try {
-        if (fragRes.length > 1) {
+        if (fragments.length > 1) {
+            fragRes.push(await getFragmentFromDrive(req, fragments[0]));
             fragRes[0].pipe(res, {end: false});
-            fragRes[0].on("end", () => {
-                if (fragRes.length > 2) {
+            fragRes[0].on("end", async () => {
+                fragRes.push(await getFragmentFromDrive(req, fragments[1]));
+                if (fragments.length > 2) {
                     fragRes[1].pipe(res, {end: false});
-                    fragRes[1].on("end", () => {
+                    fragRes[1].on("end", async () => {
+                        fragRes.push(await getFragmentFromDrive(req, fragments[2]));
                         fragRes[2].pipe(res);
                     });
                 } else {
@@ -334,6 +334,7 @@ async function downloadFile(req, res, file) {
                 }
             });
         } else {
+            fragRes.push(await getFragmentFromDrive(req, fragments[0]));
             fragRes[0].pipe(res);
         }
     } catch {
