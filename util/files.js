@@ -15,7 +15,7 @@ const {
     uploadFileToOneDrive,
     deleteFileFromOneDrive,
 } = require("../public/js/onedrive/server-side");
-const { cleanup } = require("./cleanup");
+const { cleanup } = require("../util/helpers");
 
 /* =================
  * --- Constants ---
@@ -322,7 +322,6 @@ async function uploadToAllDrives(fileHash, req) {
             configFile.totalSize - start,
             true,
         );
-        cleanup(fileHash);
     }
 }
 
