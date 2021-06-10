@@ -47,7 +47,6 @@
         width: 220px;
         display: flex;
         align-items: flex-end;
-        justify-content: revert;
         flex-direction: column;
     }
 
