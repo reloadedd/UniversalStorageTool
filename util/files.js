@@ -15,6 +15,7 @@ const {
     uploadFileToOneDrive,
     deleteFileFromOneDrive,
 } = require("../public/js/onedrive/server-side");
+const { cleanup } = require("./cleanup");
 
 /* =================
  * --- Constants ---
@@ -43,7 +44,6 @@ async function uploadFileToGoogleDrive(fileStream, req, thisFile, index) {
     );
 
     const gDriveFileId = (await response.json()).id;
-
     const newFileFragment = await req.db.fragments.create({
         id: gDriveFileId,
         // just decided: google drive will have index 0
@@ -179,10 +179,10 @@ async function setFileToUserDropbox(
 
 }
 
-async function uploadToAllDrives(fid, req) {
+async function uploadToAllDrives(fileHash, req) {
     console.log("We'll upload now");
     const configFile = JSON.parse(
-        await fs.readFileSync("./tmp/" + fid + ".config.json"),
+        await fs.readFileSync("./tmp/" + fileHash + ".config.json"),
     );
     let start = 0;
     let index = 0;
@@ -220,18 +220,18 @@ async function uploadToAllDrives(fid, req) {
         if (gDriveAvailableSpace >= configFile.totalSize) {
             console.log("Only Upload to google drive");
             uploadFileToGoogleDrive(
-                fs.createReadStream("./tmp/" + fid),
+                fs.createReadStream("./tmp/" + fileHash),
                 req,
                 thisFile,
                 0,
             );
-            fs.rmSync("./tmp/" + fid + ".config.json");
-            fs.rmSync("./tmp/" + fid);
+            // fs.rmSync("./tmp/" + fileHash + ".config.json");
+            // fs.rmSync("./tmp/" + fileHash);
             return;
         } else if (gDriveAvailableSpace !== 0) {
             console.log("Upload to Google Drive");
             uploadFileToGoogleDrive(
-                fs.createReadStream("./tmp/" + fid, {start, end: gDriveAvailableSpace - 1,}),
+                fs.createReadStream("./tmp/" + fileHash, {start, end: gDriveAvailableSpace - 1,}),
                 req,
                 thisFile,
                 index,
@@ -257,7 +257,7 @@ async function uploadToAllDrives(fid, req) {
             console.log("Last Upload to DropBox");
             console.log("Total size: " + configFile.totalSize);
                 setFileToUserDropbox(
-                    fs.createReadStream("./tmp/" + fid, {
+                    fs.createReadStream("./tmp/" + fileHash, {
                         start,
                         highWaterMark: DROPBOX_BYTE_STEP,
                     }),
@@ -266,14 +266,13 @@ async function uploadToAllDrives(fid, req) {
                     index,
                     configFile.totalSize - start,
                 );
-                fs.rmSync("./tmp/" + fid + ".config.json");
-                fs.rmSync("./tmp/" + fid);
+                cleanup(fileHash);
                 return;
         } else if (dropboxAvailableSpace !== 0) {
             console.log("Upload to dropBox");
             console.log(start + dropboxAvailableSpace - 1)
                 setFileToUserDropbox(
-                    fs.createReadStream("./tmp/" + fid, {
+                    fs.createReadStream("./tmp/" + fileHash, {
                         start,
                         end: start + dropboxAvailableSpace - 1,
                         highWaterMark: DROPBOX_BYTE_STEP,
@@ -290,8 +289,8 @@ async function uploadToAllDrives(fid, req) {
     if (req.OneDriveToken) {
         console.log("finally upload to OneDrive");
             uploadFileToOneDrive(
-                fid,
-                fs.createReadStream("./tmp/" + fid, {
+                fileHash,
+                fs.createReadStream("./tmp/" + fileHash, {
                     start,
                     highWaterMark: ONEDRIVE_BYTE_RANGE,
                 }),
@@ -300,8 +299,7 @@ async function uploadToAllDrives(fid, req) {
                 index,
                 configFile.totalSize - start,
             );
-            fs.rmSync("./tmp/" + fid + ".config.json");
-            fs.rmSync("./tmp/" + fid);
+            cleanup(fileHash);
             console.log("After File remove");
     }
 }
@@ -311,6 +309,7 @@ async function downloadFile(req, res, file) {
     fragments.sort((a, b) =>
         a.index > b.index ? 1 : b.index > a.index ? -1 : 0,
     );
+    console.log(`Fragments array: ${fragments}`);
     res.writeHead(200, {
         "Content-Type": file.mimeType,
         "Content-Length": file.size,
@@ -337,8 +336,8 @@ async function downloadFile(req, res, file) {
             fragRes.push(await getFragmentFromDrive(req, fragments[0]));
             fragRes[0].pipe(res);
         }
-    } catch {
-        console.log("sorry, no download for you")
+    } catch (err) {
+        console.log(`ERROR: ${err}`);
         res.end();
     }
 }
