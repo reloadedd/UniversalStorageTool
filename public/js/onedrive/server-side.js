@@ -15,6 +15,8 @@ const {
     ONEDRIVE_BYTE_RANGE,
     ONEDRIVE_UPLOAD_FOLDER,
 } = require("../../../app/controllers/onedrive.controller");
+
+const { cleanup } = require("../../../util/helpers");
 const {
     LOCAL_FILE_STORAGE_PATH,
     DriveEnum,
@@ -34,12 +36,13 @@ async function uploadFileToOneDrive(
     thisFile,
     index,
     fileSize,
+    deleteFiles = false,
 ) {
     // because for a big file, upload takes over an hour and the token expires.
     req.OneDriveToken = undefined;
     await refreshOneDriveToken(req, null);
 
-    console.log("before upload session")
+    console.log("before upload session");
     const createUploadSessionResponse = await (
         await fetch(
             `${ONEDRIVE_MICROSOFT_GRAPH_URL}/me/drive/root:/${ONEDRIVE_UPLOAD_FOLDER}/${fileId}:/createUploadSession`,
@@ -60,76 +63,84 @@ async function uploadFileToOneDrive(
         )
     ).json();
 
-    console.log("got upload session")
+    console.log("got upload session");
     if (createUploadSessionResponse.error) {
         console.log(
             `[ ERROR ]: Failed to create upload session. More details: '${createUploadSessionResponse.error.message}'`,
         );
     } else {
-
         let iHave = Buffer.alloc(0);
         let iWant = ONEDRIVE_BYTE_RANGE;
         let i = 0;
-        fileStream.on('data', async (chunk) => {
+        fileStream.on("data", async (chunk) => {
             fileStream.pause();
-            iHave = Buffer.concat([iHave, chunk.slice(0, Math.min(chunk.length, iWant))]);
+            iHave = Buffer.concat([
+                iHave,
+                chunk.slice(0, Math.min(chunk.length, iWant)),
+            ]);
             iWant -= chunk.length;
             console.log("OneDrive chunk length: " + chunk.length);
-            if(iWant <= 0){
+            if (iWant <= 0) {
                 await fetch(createUploadSessionResponse.uploadUrl, {
                     method: "PUT",
                     headers: {
                         "Content-Length": iHave.length,
-                        "Content-Range": `bytes ${i * ONEDRIVE_BYTE_RANGE}-${(i + 1) * ONEDRIVE_BYTE_RANGE - 1}/${fileSize}`,
+                        "Content-Range": `bytes ${i * ONEDRIVE_BYTE_RANGE}-${
+                            (i + 1) * ONEDRIVE_BYTE_RANGE - 1
+                        }/${fileSize}`,
                     },
                     body: iHave,
-                })
+                });
                 console.log("Uploaded " + iHave.length + " Bytes to OneDrive");
                 iHave = Buffer.alloc(0);
                 i++;
             }
-            if(iWant === 0)
-                iWant = ONEDRIVE_BYTE_RANGE;
-            else if( iWant < 0){
-                iHave = Buffer.concat([iHave, chunk.slice(chunk.length + iWant, chunk.length)])
+            if (iWant === 0) iWant = ONEDRIVE_BYTE_RANGE;
+            else if (iWant < 0) {
+                iHave = Buffer.concat([
+                    iHave,
+                    chunk.slice(chunk.length + iWant, chunk.length),
+                ]);
                 iWant += ONEDRIVE_BYTE_RANGE;
             }
             fileStream.resume();
-        })
+        });
 
         fileStream.on("end", async () => {
-            if(iHave.length === 0)
-                console.log("Wow, THIS happened")
+            if (iHave.length === 0) console.log("Wow, THIS happened");
             else {
                 await fetch(createUploadSessionResponse.uploadUrl, {
                     method: "PUT",
                     headers: {
                         "Content-Length": iHave.length,
-                        "Content-Range": `bytes ${i * ONEDRIVE_BYTE_RANGE}-${i * ONEDRIVE_BYTE_RANGE + iHave.length - 1}/${fileSize}`,
+                        "Content-Range": `bytes ${i * ONEDRIVE_BYTE_RANGE}-${
+                            i * ONEDRIVE_BYTE_RANGE + iHave.length - 1
+                        }/${fileSize}`,
                     },
                     body: iHave,
-                })
+                });
             }
             // because for a big file, upload takes over an hour and the token expires.
             req.OneDriveToken = undefined;
             await refreshOneDriveToken(req, null);
 
-            console.log("Before metadata")
+            console.log("Before metadata");
             const fileMetadata = await getFileMetadataFromOneDrive(
                 req,
                 `${ONEDRIVE_UPLOAD_FOLDER}/${fileId}`,
             );
             console.log(fileMetadata);
 
-            console.log("Before creating fragment")
+            console.log("Before creating fragment");
             const newFileFragment = await req.db.fragments.create({
                 id: fileMetadata.id,
                 driveType: DriveEnum.ONEDRIVE,
                 index,
             });
             thisFile.addFragment(newFileFragment);
-            console.log("Done uploading to OneDrive")
-        })
+            console.log("Done uploading to OneDrive");
+            if (deleteFiles) cleanup(fileId);
+        });
     }
 }
 
