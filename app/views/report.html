@@ -101,7 +101,21 @@
                             <a href="#database">3.3. Database Architecture</a>
                         </li>
                         <li>
-                            <a href="#server-side">3.4. Server Side Role</a>
+                            <a href="#server-side">3.4. Server Side Role - Routes</a>
+                            <ol role="directory">
+                                <li>
+                                    <a href="#entry-point">3.4.1. Entry Point of the application, Root Route</a>
+                                </li>
+                                <li>
+                                    <a href="#drivers-routes">3.4.2. Drivers Routes</a>
+                                </li>
+                                <li>
+                                    <a href="#user-routes">3.4.3. User Routes</a>
+                                </li>
+                                <li>
+                                    <a href="#file-routes">3.4.4. File Routes</a>
+                                </li>
+                            </ol>
                         </li>
                     </ol>
                 </li>
@@ -112,7 +126,7 @@
                             <a href="#account">4.1. Account</a>
                             <ol role="directory">
                                 <li>
-                                    <a href="#user-authentication">4.1.1. Authentication & Registration</a>
+                                    <a href="#login-register">4.1.1. Authentication & Registration</a>
                                 </li>
                                 <li>
                                     <a href="#account-settings">4.1.2. Account Settings</a>
@@ -136,9 +150,6 @@
                                 </li>
                                 <li>
                                     <a href="#delete-files-directory">4.2.5 How to delete a file/directory</a>
-                                </li>
-                                <li>
-                                    <a href="#rename-files-directory">4.2.5 How to rename a file/directory</a>
                                 </li>
                             </ol>
                         </li>
@@ -481,21 +492,23 @@
                 <h3>3.3. Database</h3>
                 <p>
                     The Database architecture is as follows:
-                    <img src="public/img/DatabaseUML.jpg" alt="not found">
+                    <img src="public/img/DatabaseUML.jpg" alt="database">
                     The structure and the all the names are clear, so all the
                     fields express their responsibilities by their names.
                 </p>
             </section>
             <section id="server-side">
-                <h3>3.4. Server Side Role</h3>
+                <h3>3.4. Server Side Role - Routes</h3>
                 <p>
+                    <img src="public/img/UniversalStorageTool_Infrastructure.png"
+                        alt="client-server" width="100%">
                     On the Server Side, <i>Universal Storage Tool</i> has the
                     logic of the application implemented. In this section,
                     we will show you how the server interacts with the client
-                    and how the users of this app should use this app.
+                    by mostly referring to application routes.
                 </p>
                 <section id="entry-point">
-                    <h4>3.4.1. Entry Point of the application</h4>
+                    <h4>3.4.1. Entry Point of the application, Root Route</h4>
                     <p>
                         On the "/index" or "/" route is the Entry point of UnST
                         application. When the an user enters here, firstly, if
@@ -506,34 +519,84 @@
                         files and folders and others.
                     </p>
                     <p>
-                        So, in the bottom of the side left menu of the page will
-                        be seen the amount of available space that the user has.
-                        If no drivers are linked, an appropriate message will be
-                        shown. You have possibility of uploading a file, or creating
-                        a directory (See section 4.2.3 & 4.2.2) and also downloading
-                        and delete a file (See section 4.2.4 & 4.2.5)
-                    </p>
-                    <p>
                         The total available space is provided by the server by
                         requesting all the available space from all the user
                         linked drives and summed up.
                     </p>
                     <p>
-
+                        All user files name and drivers corresponding ids are
+                        stored in the database. So everytime when uploading
+                        or deleting a file, that file isn't gone be only
+                        uploaded/deleted, but it will also have its name, id,
+                        parent folder and driver that is from in the database.
+                    </p>
+                    <p>
+                        When listing all the files, the server will only list
+                        the name of files and directories from database that
+                        are in the current directory.
+                    </p>
+                    <p>
+                        When downloading a selected file, the server will
+                        actually request that file with its specific id,
+                        from its specific driver/drivers.
+                    </p>
+                    <p>
+                        Before entering in any route, the server will refresh
+                        the access token saved as browser cookie from every
+                        linked drive.
                     </p>
                 </section>
                 <section id="drivers-routes">
                     <h4>3.4.2. Drivers Routes</h4>
                     <p>
                         Every driver that is linked to this app will have access
-                        to the following routes "[driver name]/space",
+                        to the following routes "[driver name]/space", "[driver
+                        name]/auth", "[driver name]/token", where [driver name]
+                        can potentially be "g-drive","onedrive" or "dropbox".
                     </p>
-                    <section id="drivers-space">
-                        <h5>3.4.2.1. Drivers space routes</h5>
-                        <p>
-
-                        </p>
-                    </section>
+                    <p>
+                        The "/space" from every driver route will give you as
+                        response in body the total available space in that specific
+                        drive and also the amount of used space from it.
+                    </p>
+                    <p>
+                        The "/auth" and "/token" from every driver route will
+                        be used to grand permission to the user drivers and
+                        to get a refresh token that will be stored on the
+                        database.
+                    </p>
+                </section>
+                <section id="user-routes">
+                    <h4>3.4.3. User Routes</h4>
+                    <p>
+                        The "/login", "/register" and "/logout" are that user
+                        specific routes. On login the server will take the username
+                        and password and will make a database verification to see
+                        if that data is valid and exist in the database. On register
+                        the server will add a new user in the database with that
+                        specific username and password, only if that user does not
+                        already exists in the database.After login or register the
+                        user id is saved via browser cookies. On logout the browser
+                        cookies are cleared.
+                    </p>
+                </section>
+                <section id="file-routes">
+                    <h4>3.4.4. File Routes</h4>
+                    <p>
+                        On "/file" route, depending on the method: delete or patch,
+                        the server will delete or rename the specifies file with
+                        the file id in the query.
+                    </p>
+                    <p>
+                        On "/dir" route, depending on the method: delete or patch,
+                        the server will delete or rename the specified directory
+                        with the directory id in the query.
+                    </p>
+                    <p>
+                        On "/newDir" route (post) a new directory will be created
+                        with the name and parent-directory id specified in the
+                        body request.
+                    </p>
                 </section>
             </section>
         </section>
@@ -546,7 +609,7 @@
             </p>
             <section id="account">
                 <h3>4.1. Account</h3>
-                <section href="login-register">
+                <section id="login-register">
                     <h4>4.1.1. Authentication & Registration</h4>
                     <p>
                         Enter on the "/login" path (or "/" or "/index" and will
