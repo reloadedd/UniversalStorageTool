@@ -24,7 +24,7 @@
 
 ## Want to see it live?
 
-Say no more, here it goes: https://www.reloadedd.me:3000.
+<s>Say no more, here it goes: https://www.reloadedd.me:3000.</s> Money ain't growing in trees.
 
 ## [Demo video](https://youtu.be/-6wveI1wAbw)
 
