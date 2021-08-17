@@ -15,8 +15,6 @@
                               ㄩ几丨ᐯ乇尺丂卂ㄥ 丂ㄒㄖ尺卂Ꮆ乇 ㄒㄖㄖㄥ
 
 ```
-
-[![Build Status](https://reloadedd.me:8443/buildStatus/icon?job=UniversalStorageToolMultibranch%2Fmaster)](https://reloadedd.me:8443/job/UniversalStorageToolMultibranch/job/master/)
 ![Languages](https://img.shields.io/github/languages/count/reloadedd/UniversalStorageTool)
 ![Top Language](https://img.shields.io/github/languages/top/reloadedd/UniversalStorageTool)
 ![Total Lines of code](https://img.shields.io/tokei/lines/github/reloadedd/UniversalStorageTool)
